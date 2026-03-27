@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Recetas | SmartBite</title>
+    <!-- Favicon SVG -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='128' fill='%2316a34a'/><path fill='white' transform='translate(96,96) scale(0.625)' d='M384 320c-14.12 0-25.91 10.37-27.76 24.32C344.2 437.5 241.6 512 124.6 512C81.98 512 43.14 496 11.4 472.3c-11.02-8.3-25.2 .5-25.2 14.1C-13.8 501.9 .8245 512 16 512H80c44.18 0 80-35.82 80-80c0-11-2.188-21.43-5.836-31.23c-1.393-3.791-.5391-8.113 2.195-11.05C161.4 384.3 169.4 384 176 384h208c17.67 0 32-14.33 32-32S401.7 320 384 320zM491.7 20.34C480.9 9.531 465.1 3.203 448 3.203c-74.9 0-163.6 22.25-231.2 78.47c-67.62 56.24-118 141.7-118 243.6c0 17.15 6.467 33.36 17.43 45.45c11.02 12.18 26.54 18.57 43.32 18.57c23.01 0 45.92-9.76 60.1-23.95l86.63-86.63c-31.95 1.551-64.84-18.06-72.2-51.98c-2.455-11.23 8.35-20.73 18.25-15.86c63.78 31.42 122.9-2.324 148.8-41.21c17.91-26.85 22.84-59.56 14.61-96.53c-1.92-8.777 5.865-16.14 14.28-13.1c48.81 17.65 91.1 2.379 116.6-18.9C500.4 122.7 512 95.83 512 64C512 47.93 504.6 33.2 491.7 20.34z'/></svg>">
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 pb-20 sm:pb-0 min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="main.html" class="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity">
+                <div class="bg-brand-600 text-white p-2 rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-leaf text-lg"></i>
+                </div>
+                <span class="font-bold text-xl tracking-tight text-slate-900">SmartBite</span>
+            </a>
+            <div class="flex items-center gap-5 sm:gap-6">
+                <nav class="hidden sm:flex items-center gap-6 text-sm font-semibold">
+                    <a href="main.html" class="text-slate-500 hover:text-brand-600 transition-colors">Inicio</a>
+                    <a href="history.html" class="text-brand-600">Historial</a>
+                </nav>
+                <div class="h-5 w-px bg-slate-200 hidden sm:block"></div>
+                <button class="text-slate-500 hover:text-brand-600 transition-colors">
+                    <i class="fa-regular fa-bell text-xl"></i>
+                </button>
+                
+                <!-- Profile Dropdown -->
+                <div class="relative">
+                    <button id="profile-menu-btn" class="w-9 h-9 block rounded-full border-2 border-brand-200 bg-slate-200 overflow-hidden cursor-pointer hover:border-brand-500 hover:shadow-md transition-all focus:outline-none" onclick="toggleProfileMenu()">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80" alt="User Profile" class="w-full h-full object-cover">
+                    </button>
+
+                    <!-- Dropdown Layout -->
+                    <div id="profile-dropdown" class="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-float border border-slate-100 py-2 opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-200 z-50">
+                        <div class="px-4 py-3 border-b border-slate-100 mb-1 bg-slate-50/50">
+                            <p class="text-sm font-bold text-slate-800">Usuario de Prueba</p>
+                            <p class="text-xs text-slate-500 truncate">usuario@ejemplo.com</p>
+                        </div>
+                        <a href="profile.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors">
+                            <i class="fa-regular fa-user w-4 text-center"></i> Mi Perfil
+                        </a>
+                        <a href="biteplus.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-amber-600 hover:bg-amber-50 hover:text-amber-700 transition-colors flex justify-between group">
+                            <div class="flex items-center gap-3"><i class="fa-solid fa-crown w-4 text-center group-hover:scale-110 transition-transform"></i> Bite+</div>
+                            <span class="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Upgrade</span>
+                        </a>
+                        <div class="border-t border-slate-100 mt-1 my-1"></div>
+                        <a href="index.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
+                            <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i> Cerrar Sesión
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+        
+        <!-- Header & Breadcrumbs -->
+        <div class="mb-8">
+            <a href="profile.html#history" class="text-slate-500 hover:text-brand-600 text-sm font-semibold mb-4 inline-block transition-colors">
+                <i class="fa-solid fa-arrow-left mr-1"></i> Volver a Mi Perfil
+            </a>
+            <h1 class="text-3xl font-bold text-slate-900 flex items-center gap-3">
+                <i class="fa-solid fa-clock-rotate-left text-brand-600"></i>
+                Historial de Recetas
+            </h1>
+            <p class="text-slate-500 mt-2 text-lg">Explora todas las comidas que has planificado y preparado con SmartBite.</p>
+        </div>
+
+        <!-- Filters Strip -->
+        <div class="flex flex-wrap items-center gap-3 mb-8">
+            <button class="px-4 py-2 bg-slate-900 text-white font-semibold text-sm rounded-xl shadow-sm transition-colors">Todos (24)</button>
+            <button class="px-4 py-2 bg-white border border-slate-200 text-slate-600 font-semibold text-sm rounded-xl hover:bg-slate-50 transition-colors">Este mes</button>
+            <button class="px-4 py-2 bg-white border border-slate-200 text-slate-600 font-semibold text-sm rounded-xl hover:bg-slate-50 transition-colors">Favoritos</button>
+            
+            <div class="ml-auto relative flex-grow max-w-xs">
+                <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" placeholder="Buscar por ingrediente..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500 outline-none transition-all">
+            </div>
+        </div>
+
+        <!-- Recipes Grid Layout -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            
+            <!-- Card 1 -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative">
+                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors">
+                    <i class="fa-solid fa-heart"></i>
+                </button>
+                <div class="h-44 w-full overflow-hidden shrink-0">
+                    <img src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=400&q=80" alt="Pollo al Limón" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <span class="text-xs text-brand-600 font-bold mb-2 block uppercase tracking-wide">Ayer</span>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Pollo al Limón y Hierbas</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                        <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Fácil</span>
+                        <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 20m</span>
+                        <span title="Costo"><i class="fa-solid fa-basket-shopping"></i> $10.1k</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative">
+                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-red-500 hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-heart"></i>
+                </button>
+                <div class="h-44 w-full overflow-hidden shrink-0">
+                    <img src="https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=400&q=80" alt="Ensalada Quinoa" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <span class="text-xs text-brand-600 font-bold mb-2 block uppercase tracking-wide">Hace 3 días</span>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Ensalada de Quinoa Mediterránea</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                        <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Fácil</span>
+                        <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 10m</span>
+                        <span title="Costo"><i class="fa-solid fa-basket-shopping"></i> $6.5k</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative">
+                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors">
+                    <i class="fa-solid fa-heart"></i>
+                </button>
+                <div class="h-44 w-full overflow-hidden shrink-0 relative">
+                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span class="bg-white px-4 py-2 rounded-full font-bold text-sm text-slate-900 shadow-lg">Ver Receta</span>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?auto=format&fit=crop&w=400&q=80" alt="Pasta Pesto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide">12 de Octubre</span>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Spaghetti al Pesto Rápido</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                        <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Media</span>
+                        <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 25m</span>
+                        <span title="Costo"><i class="fa-solid fa-basket-shopping"></i> $8.3k</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative">
+                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors">
+                    <i class="fa-solid fa-heart"></i>
+                </button>
+                <div class="h-44 w-full overflow-hidden shrink-0">
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80" alt="Bowl Saludable" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide">05 de Octubre</span>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Bowl Saludable con Tofu y Aguacate</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                        <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Fácil</span>
+                        <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 15m</span>
+                        <span title="Costo"><i class="fa-solid fa-basket-shopping"></i> $12.0k</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative">
+                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-red-500 hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-heart"></i>
+                </button>
+                <div class="h-44 w-full overflow-hidden shrink-0">
+                    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80" alt="Ensalada Fresca" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide">28 de Septiembre</span>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Ensalada Fresca de Verano</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                        <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Fácil</span>
+                        <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 5m</span>
+                        <span title="Costo"><i class="fa-solid fa-basket-shopping"></i> $5.2k</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative opacity-80 filter grayscale-[20%] hover:grayscale-0 hover:opacity-100">
+                <div class="absolute top-3 left-3 z-10 bg-slate-900/80 backdrop-blur-sm text-white px-3 py-1 text-xs font-bold rounded-lg shadow-sm">
+                    Sin Precio Guardado
+                </div>
+                <div class="h-44 w-full overflow-hidden shrink-0">
+                    <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=400&q=80" alt="Pizza" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide">20 de Septiembre</span>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Pizza Casera de Champiñones</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                        <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Avanzado</span>
+                        <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 60m</span>
+                        <span title="Costo">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 7 -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative">
+                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors">
+                    <i class="fa-solid fa-heart"></i>
+                </button>
+                <div class="h-44 w-full overflow-hidden shrink-0">
+                    <img src="https://images.unsplash.com/photo-1564834724105-918b73d1b9e0?auto=format&fit=crop&w=400&q=80" alt="Salmón" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide">15 de Septiembre</span>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Salmón al Horno con Verduras</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                        <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Media</span>
+                        <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 30m</span>
+                        <span title="Costo"><i class="fa-solid fa-basket-shopping"></i> $18.4k</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 8 -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative">
+                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors">
+                    <i class="fa-solid fa-heart"></i>
+                </button>
+                <div class="h-44 w-full overflow-hidden shrink-0">
+                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=80" alt="Sopa Miso" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide">03 de Septiembre</span>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Ramen Expres de Pollo</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                        <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Media</span>
+                        <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 20m</span>
+                        <span title="Costo"><i class="fa-solid fa-basket-shopping"></i> $11.0k</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Load More -->
+        <div class="mt-12 text-center pb-8 border-b border-slate-200">
+            <button class="px-8 py-3 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl shadow-sm hover:shadow-md hover:bg-slate-50 transition-all focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                Cargar más recetas
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-100 mt-16 pt-10 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+            <div class="flex items-center gap-2 text-slate-900 font-bold text-lg">
+                <i class="fa-solid fa-leaf text-brand-600"></i> SmartBite <span class="text-slate-400 font-normal text-sm ml-2">© 2026</span>
+            </div>
+            <div class="flex gap-6 text-sm font-medium text-slate-500">
+                <a href="#" class="hover:text-brand-600 transition-colors">Términos</a>
+                <a href="#" class="hover:text-brand-600 transition-colors">Privacidad</a>
+                <a href="support.html" class="hover:text-brand-600 transition-colors">Ayuda</a>
+            </div>
+            <div class="flex gap-4 text-slate-400">
+                <a href="#" class="hover:text-brand-600 transition-colors"><i class="fa-brands fa-twitter text-lg"></i></a>
+                <a href="#" class="hover:text-brand-600 transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const profileDropdown = document.getElementById('profile-dropdown');
+        function toggleProfileMenu() {
+            profileDropdown.classList.toggle('opacity-0');
+            profileDropdown.classList.toggle('pointer-events-none');
+            profileDropdown.classList.toggle('-translate-y-2');
+        }
+        
+        document.addEventListener('click', (e) => {
+            const btn = document.getElementById('profile-menu-btn');
+            if (btn && !btn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                profileDropdown.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
+            }
+        });
+    </script>
+</body>
+</html>

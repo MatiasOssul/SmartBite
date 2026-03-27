@@ -452,6 +452,12 @@
         </div>
     </div>
 
+    <!-- Reusable Toast Notification (Hidden by default) -->
+    <div id="toast-notification" class="fixed bottom-6 right-6 z-[200] flex items-center gap-3 px-5 py-4 bg-slate-900 text-white font-medium rounded-xl shadow-float transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-brand-400 text-xl"></i>
+        <span id="toast-message">¡Operación exitosa!</span>
+    </div>
+
     <!-- Script para funcionalidad de los Modales -->
     <script>
         // --- Navbar Profile Dropdown ---
@@ -558,11 +564,5 @@
         createSaveHandler('save-profile-btn', '¡Tu perfil ha sido actualizado!');
         createSaveHandler('save-preferences-btn', '¡Tus preferencias han sido guardadas!');
     </script>
-
-    <!-- Reusable Toast Notification (Hidden by default) -->
-    <div id="toast-notification" class="fixed bottom-6 right-6 z-[200] flex items-center gap-3 px-5 py-4 bg-slate-900 text-white font-medium rounded-xl shadow-float transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-        <i class="fa-solid fa-circle-check text-brand-400 text-xl"></i>
-        <span id="toast-message">¡Operación exitosa!</span>
-    </div>
 </body>
 </html>

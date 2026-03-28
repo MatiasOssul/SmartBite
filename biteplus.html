@@ -70,9 +70,16 @@
                     <a href="history.html" class="text-slate-500 hover:text-brand-600 transition-colors">Historial</a>
                 </nav>
                 <div class="h-5 w-px bg-slate-200 hidden sm:block"></div>
-                <button class="text-slate-500 hover:text-brand-600 transition-colors">
-                    <i class="fa-regular fa-bell text-xl"></i>
-                </button>
+                
+                <!-- Notification Bell -->
+                <div class="relative flex items-center">
+                    <button class="text-slate-500 hover:text-brand-600 transition-colors focus:outline-none" onclick="toggleNotifications(this)">
+                        <i class="fa-regular fa-bell text-xl bell-icon"></i>
+                    </button>
+                    <div class="notif-popup absolute right-0 top-full mt-4 bg-slate-900 border border-slate-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-[100] flex items-center gap-2">
+                        <i class="fa-solid fa-bell text-brand-400"></i> <span class="notif-text">Notificaciones Activadas</span>
+                    </div>
+                </div>
                 
                 <!-- Profile Dropdown -->
                 <div class="relative">
@@ -99,9 +106,52 @@
                         </a>
                     </div>
                 </div>
+
+                <!-- Mobile Hamburger Button -->
+                <button class="flex sm:hidden items-center justify-center w-10 h-10 -mr-2 text-slate-700 hover:text-brand-600 hover:bg-slate-100 rounded-xl transition-all focus:outline-none" onclick="toggleMobileMenu()">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden sm:hidden bg-white border-b border-slate-100 absolute w-full left-0 top-16 shadow-lg z-40 pb-4 pt-2">
+            <div class="px-4 space-y-2">
+                <a href="main.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                    <i class="fa-solid fa-house mr-2 w-5"></i> Inicio
+                </a>
+                <a href="history.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                    <i class="fa-solid fa-clock-rotate-left mr-2 w-5"></i> Historial
+                </a>
             </div>
         </div>
     </nav>
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+        function toggleNotifications(btnElement) {
+            const container = btnElement.parentElement;
+            const icon = container.querySelector('.bell-icon');
+            const popup = container.querySelector('.notif-popup');
+            const text = container.querySelector('.notif-text');
+            const statusIcon = popup.querySelector('i');
+            
+            if (icon.classList.contains('fa-bell')) {
+                icon.className = 'fa-solid fa-bell-slash text-xl text-slate-400 hover:text-slate-600 transition-all bell-icon';
+                text.innerText = 'Notificaciones Desactivadas';
+                statusIcon.className = 'fa-solid fa-bell-slash text-slate-400';
+            } else {
+                icon.className = 'fa-regular fa-bell text-xl text-brand-600 hover:text-brand-700 transition-all bell-icon';
+                text.innerText = 'Notificaciones Activadas';
+                statusIcon.className = 'fa-solid fa-bell text-brand-400';
+            }
+            
+            popup.classList.remove('opacity-0');
+            if (container.notifTimeout) clearTimeout(container.notifTimeout);
+            container.notifTimeout = setTimeout(() => popup.classList.add('opacity-0'), 2500);
+        }
+    </script>
 
     <!-- Main Content -->
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 mb-24">

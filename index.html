@@ -192,8 +192,17 @@
             }
 
             if (isValid) {
-                // Submit success! Redirecting to index dashboard.
-                window.location.href = 'main.html';
+                // Determine which email to check
+                const targetEmail = isLogin ? document.getElementById('login-email').value : document.getElementById('reg-email').value;
+                
+                // Demo Interception for Empty States
+                if (targetEmail === 'vacio@smartbite.com') {
+                    localStorage.setItem('smartbite_session_state', 'empty');
+                    window.location.href = 'main-empty.html';
+                } else {
+                    localStorage.setItem('smartbite_session_state', 'populated');
+                    window.location.href = 'main.html';
+                }
             }
         }
 

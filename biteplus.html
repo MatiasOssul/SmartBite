@@ -261,5 +261,14 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('smartbite_session_state') === 'empty') {
+                document.querySelectorAll('a[href="main.html"]').forEach(el => el.href = 'main-empty.html');
+                document.querySelectorAll('a[href="history.html"]').forEach(el => el.href = 'history-empty.html');
+                document.querySelectorAll('a[href="profile.html"]').forEach(el => el.href = 'profile-empty.html');
+            }
+        });
+    </script>
 </body>
 </html>

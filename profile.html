@@ -185,8 +185,38 @@
                 </nav>
             </aside>
 
+            <!-- Skeleton Settings Content (Hidden after load) -->
+            <div id="skeleton-profile" class="col-span-1 lg:col-span-3 space-y-8 animate-pulse">
+                <!-- Skeleton Section 1 -->
+                <div class="bg-white rounded-3xl border border-slate-100 p-6 md:p-8">
+                    <div class="h-6 bg-slate-200 rounded w-1/4 mb-6"></div>
+                    <div class="flex items-center gap-6 mb-8">
+                        <div class="w-24 h-24 rounded-full bg-slate-200 shrink-0"></div>
+                        <div class="space-y-2 flex-grow">
+                            <div class="h-8 bg-slate-200 rounded w-32"></div>
+                            <div class="h-3 bg-slate-200 rounded w-48"></div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2"><div class="h-4 bg-slate-200 rounded w-1/3"></div><div class="h-10 bg-slate-200 rounded-xl w-full"></div></div>
+                        <div class="space-y-2"><div class="h-4 bg-slate-200 rounded w-1/3"></div><div class="h-10 bg-slate-200 rounded-xl w-full"></div></div>
+                    </div>
+                </div>
+                <!-- Skeleton Section 2 -->
+                <div class="bg-white rounded-3xl border border-slate-100 p-6 md:p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="h-6 bg-slate-200 rounded w-1/4"></div>
+                        <div class="h-5 bg-slate-200 rounded w-24"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="h-24 bg-slate-200 rounded-2xl w-full"></div>
+                        <div class="h-24 bg-slate-200 rounded-2xl w-full"></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Settings Content -->
-            <div class="col-span-1 lg:col-span-3 space-y-8">
+            <div id="real-profile" class="hidden fade-in col-span-1 lg:col-span-3 space-y-8">
                 
                 <!-- 1. General Info Box -->
                 <section id="general" class="bg-white rounded-3xl shadow-soft border border-slate-100 p-6 md:p-8">
@@ -613,6 +643,17 @@
         // Initialize reusable buttons
         createSaveHandler('save-profile-btn', '¡Tu perfil ha sido actualizado!');
         createSaveHandler('save-preferences-btn', '¡Tus preferencias han sido guardadas!');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const realProfile = document.getElementById('real-profile');
+            const skeletonProfile = document.getElementById('skeleton-profile');
+            if(realProfile && skeletonProfile) {
+                setTimeout(() => {
+                    skeletonProfile.classList.add('hidden');
+                    realProfile.classList.remove('hidden');
+                }, 1200);
+            }
+        });
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {

@@ -179,8 +179,68 @@
             </div>
         </div>
 
+        <!-- Skeleton Grid Layout (Hidden after load) -->
+        <div id="skeleton-history" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-pulse w-full">
+            <!-- Skeleton Card -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col w-full">
+                <div class="h-44 w-full bg-slate-200 shrink-0"></div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <div class="h-3 bg-slate-200 rounded text-brand-600 w-24 mb-3"></div>
+                    <div class="h-6 bg-slate-200 rounded w-full mb-2"></div>
+                    <div class="h-6 bg-slate-200 rounded w-5/6 mb-4"></div>
+                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50">
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-20"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Skeleton Card -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col hidden sm:flex w-full">
+                <div class="h-44 w-full bg-slate-200 shrink-0"></div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <div class="h-3 bg-slate-200 rounded text-brand-600 w-32 mb-3"></div>
+                    <div class="h-6 bg-slate-200 rounded w-11/12 mb-2"></div>
+                    <div class="h-6 bg-slate-200 rounded w-4/5 mb-4"></div>
+                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50">
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-20"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Skeleton Card -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col hidden lg:flex w-full">
+                <div class="h-44 w-full bg-slate-200 shrink-0"></div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <div class="h-3 bg-slate-200 rounded text-brand-600 w-28 mb-3"></div>
+                    <div class="h-6 bg-slate-200 rounded w-full mb-2"></div>
+                    <div class="h-6 bg-slate-200 rounded w-3/4 mb-4"></div>
+                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50">
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-20"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Skeleton Card -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col hidden xl:flex w-full">
+                <div class="h-44 w-full bg-slate-200 shrink-0"></div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <div class="h-3 bg-slate-200 rounded text-brand-600 w-24 mb-3"></div>
+                    <div class="h-6 bg-slate-200 rounded w-11/12 mb-2"></div>
+                    <div class="h-6 bg-slate-200 rounded w-5/6 mb-4"></div>
+                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50">
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-20"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Recipes Grid Layout -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div id="real-history" class="hidden grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             
             <!-- Card 1 -->
             <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative">
@@ -378,6 +438,19 @@
             const btn = document.getElementById('profile-menu-btn');
             if (btn && !btn.contains(e.target) && !profileDropdown.contains(e.target)) {
                 profileDropdown.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const realHistory = document.getElementById('real-history');
+            const skeletonHistory = document.getElementById('skeleton-history');
+            
+            if(realHistory && skeletonHistory) {
+                setTimeout(() => {
+                    skeletonHistory.classList.add('hidden');
+                    realHistory.classList.remove('hidden');
+                    realHistory.classList.add('fade-in');
+                }, 1500);
             }
         });
     </script>

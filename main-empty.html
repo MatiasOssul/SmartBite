@@ -169,6 +169,16 @@
             if (container.notifTimeout) clearTimeout(container.notifTimeout);
             container.notifTimeout = setTimeout(() => popup.classList.add('opacity-0'), 2500);
         }
+
+        function toggleFilter(btn) {
+            if (btn.classList.contains('bg-brand-50')) {
+                btn.classList.remove('bg-brand-50', 'text-brand-700', 'border-brand-200', 'shadow-sm', 'hover:bg-brand-100');
+                btn.classList.add('bg-white', 'text-slate-600', 'border-slate-200', 'hover:bg-slate-50');
+            } else {
+                btn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200', 'hover:bg-slate-50');
+                btn.classList.add('bg-brand-50', 'text-brand-700', 'border-brand-200', 'shadow-sm', 'hover:bg-brand-100');
+            }
+        }
     </script>
 
     <!-- Main Content -->
@@ -189,25 +199,74 @@
                     <!-- Quick Filters -->
                     <div class="flex flex-wrap items-center gap-2">
                         <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mr-1">Filtros</span>
-                        <button class="flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 text-brand-700 border border-brand-200 rounded-full text-sm font-medium hover:bg-brand-100 transition-colors shadow-sm">
+                        <button onclick="toggleFilter(this)" class="flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 text-brand-700 border border-brand-200 rounded-full text-sm font-medium hover:bg-brand-100 transition-colors shadow-sm">
                             <i class="fa-solid fa-wheat-awn-circle-exclamation text-xs"></i> Sin Gluten
                         </button>
-                        <button class="flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-50 transition-colors">
+                        <button onclick="toggleFilter(this)" class="flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-50 transition-colors">
                             <i class="fa-solid fa-seedling text-xs text-green-500"></i> Vegano
                         </button>
-                        <button class="flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-50 transition-colors">
+                        <button onclick="toggleFilter(this)" class="flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-50 transition-colors">
                             <i class="fa-solid fa-clock-fast text-xs text-orange-400"></i> &lt; 20 min
                         </button>
                     </div>
 
                     <!-- CTA Button -->
-                    <button class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-2.5 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg flex items-center gap-2 ml-auto">
+                    <button id="generate-recipe-btn" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-2.5 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg flex items-center gap-2 ml-auto">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
                         Planificar mi cena
                     </button>
                 </div>
             </div>
         </section>
+
+        <!-- Skeleton Loader (Hidden initially) -->
+        <div id="recipe-skeleton" class="hidden fade-in w-full animate-pulse">
+            <div class="h-8 bg-slate-200 rounded-lg w-64 mb-6"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
+                <!-- Skeleton Card 1 -->
+                <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden">
+                    <div class="h-48 w-full bg-slate-200"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="h-6 bg-slate-200 rounded-lg w-3/4"></div>
+                            <div class="h-6 bg-slate-200 rounded-lg w-16"></div>
+                        </div>
+                        <div class="space-y-2 mb-6">
+                            <div class="h-4 bg-slate-200 rounded w-full"></div>
+                            <div class="h-4 bg-slate-200 rounded w-5/6"></div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="h-4 bg-slate-200 rounded w-16"></div>
+                            <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Skeleton Card 2 -->
+                <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden">
+                    <div class="h-48 w-full bg-slate-200"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="h-6 bg-slate-200 rounded-lg w-2/3"></div>
+                            <div class="h-6 bg-slate-200 rounded-lg w-16"></div>
+                        </div>
+                        <div class="space-y-2 mb-6">
+                            <div class="h-4 bg-slate-200 rounded w-full"></div>
+                            <div class="h-4 bg-slate-200 rounded w-4/5"></div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="h-4 bg-slate-200 rounded w-16"></div>
+                            <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4 pb-8">
+                <span class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-500 rounded-full font-medium text-sm">
+                    <i class="fa-solid fa-microchip animate-spin text-brand-500"></i> Inteligencia Artificial procesando solicitud...
+                </span>
+            </div>
+        </div>
 
         <!-- Empty State View -->
         <div id="empty-state" class="fade-in py-16 flex flex-col items-center justify-center text-center mt-4">
@@ -254,6 +313,32 @@
                 profileDropdown.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
             }
         });
+
+        // Skeleton Loader Logic for Day 1
+        const generateBtn = document.getElementById('generate-recipe-btn');
+        const emptyStateView = document.getElementById('empty-state');
+        const skeletonView = document.getElementById('recipe-skeleton');
+
+        if(generateBtn) {
+            generateBtn.addEventListener('click', () => {
+                // Change button state
+                const originalText = generateBtn.innerHTML;
+                generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando...';
+                generateBtn.disabled = true;
+                generateBtn.classList.add('opacity-80', 'cursor-not-allowed');
+
+                // Switch views to Skeleton
+                emptyStateView.classList.add('hidden');
+                skeletonView.classList.remove('hidden');
+
+                // Simulate AI Generation time (3.5 seconds)
+                setTimeout(() => {
+                    // Option A Flow: Remove empty state flag and proceed to populated main.html
+                    localStorage.setItem('smartbite_session_state', 'active');
+                    window.location.href = 'main.html';
+                }, 3500);
+            });
+        }
 
         const suggestionsView = document.getElementById('recipe-suggestions');
         const detailsView = document.getElementById('recipe-details');

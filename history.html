@@ -19,6 +19,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -51,28 +52,34 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
+
+    <script>
+        if (localStorage.getItem('smartbite_theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
 </head>
-<body class="bg-slate-50 text-slate-800 pb-20 sm:pb-0 min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-800 pb-20 sm:pb-0 min-h-screen flex flex-col dark:bg-slate-800 dark:text-slate-100">
 
     <!-- Navbar -->
-    <nav class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
+    <nav class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm dark:bg-slate-900 dark:border-slate-800 dark:shadow-none">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="main.html" class="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity">
                 <div class="bg-brand-600 text-white p-2 rounded-lg flex items-center justify-center">
                     <i class="fa-solid fa-leaf text-lg"></i>
                 </div>
-                <span class="font-bold text-xl tracking-tight text-slate-900">SmartBite</span>
+                <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white">SmartBite</span>
             </a>
             <div class="flex items-center gap-5 sm:gap-6">
                 <nav class="hidden sm:flex items-center gap-6 text-sm font-semibold">
-                    <a href="main.html" class="text-slate-500 hover:text-brand-600 transition-colors">Inicio</a>
+                    <a href="main.html" class="text-slate-500 hover:text-brand-600 transition-colors dark:text-slate-400">Inicio</a>
                     <a href="history.html" class="text-brand-600">Historial</a>
                 </nav>
                 <div class="h-5 w-px bg-slate-200 hidden sm:block"></div>
                 
                 <!-- Notification Bell -->
                 <div class="relative flex items-center">
-                    <button class="text-slate-500 hover:text-brand-600 transition-colors focus:outline-none" onclick="toggleNotifications(this)">
+                    <button class="text-slate-500 hover:text-brand-600 transition-colors focus:outline-none dark:text-slate-400" onclick="toggleNotifications(this)">
                         <i class="fa-regular fa-bell text-xl bell-icon"></i>
                     </button>
                     <div class="notif-popup absolute right-0 top-full mt-4 bg-slate-900 border border-slate-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-[100] flex items-center gap-2">
@@ -87,19 +94,19 @@
                     </button>
 
                     <!-- Dropdown Layout -->
-                    <div id="profile-dropdown" class="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-float border border-slate-100 py-2 opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-200 z-50">
-                        <div class="px-4 py-3 border-b border-slate-100 mb-1 bg-slate-50/50">
-                            <p class="text-sm font-bold text-slate-800">Usuario de Prueba</p>
-                            <p class="text-xs text-slate-500 truncate">usuario@ejemplo.com</p>
+                    <div id="profile-dropdown" class="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-float border border-slate-100 py-2 opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-200 z-50 dark:bg-slate-900 dark:border-slate-800">
+                        <div class="px-4 py-3 border-b border-slate-100 mb-1 bg-slate-50/50 dark:border-slate-800">
+                            <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Usuario de Prueba</p>
+                            <p class="text-xs text-slate-500 truncate dark:text-slate-400">usuario@ejemplo.com</p>
                         </div>
-                        <a href="profile.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors">
+                        <a href="profile.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
                             <i class="fa-regular fa-user w-4 text-center"></i> Mi Perfil
                         </a>
                         <a href="biteplus.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-amber-600 hover:bg-amber-50 hover:text-amber-700 transition-colors flex justify-between group">
                             <div class="flex items-center gap-3"><i class="fa-solid fa-crown w-4 text-center group-hover:scale-110 transition-transform"></i> Bite+</div>
                             <span class="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Upgrade</span>
                         </a>
-                        <div class="border-t border-slate-100 mt-1 my-1"></div>
+                        <div class="border-t border-slate-100 mt-1 my-1 dark:border-slate-800"></div>
                         <a href="index.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
                             <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i> Cerrar Sesión
                         </a>
@@ -107,19 +114,19 @@
                 </div>
 
                 <!-- Mobile Hamburger Button -->
-                <button class="flex sm:hidden items-center justify-center w-10 h-10 -mr-2 text-slate-700 hover:text-brand-600 hover:bg-slate-100 rounded-xl transition-all focus:outline-none" onclick="toggleMobileMenu()">
+                <button class="flex sm:hidden items-center justify-center w-10 h-10 -mr-2 text-slate-700 hover:text-brand-600 hover:bg-slate-100 rounded-xl transition-all focus:outline-none dark:text-slate-200 dark:hover:bg-slate-700" onclick="toggleMobileMenu()">
                     <i class="fa-solid fa-bars text-2xl"></i>
                 </button>
             </div>
         </div>
 
         <!-- Mobile Menu Dropdown -->
-        <div id="mobile-menu" class="hidden sm:hidden bg-white border-b border-slate-100 absolute w-full left-0 top-16 shadow-lg z-40 pb-4 pt-2">
+        <div id="mobile-menu" class="hidden sm:hidden bg-white border-b border-slate-100 absolute w-full left-0 top-16 shadow-lg z-40 pb-4 pt-2 dark:bg-slate-900 dark:border-slate-800">
             <div class="px-4 space-y-2">
-                <a href="main.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                <a href="main.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
                     <i class="fa-solid fa-house mr-2 w-5"></i> Inicio
                 </a>
-                <a href="history.html" class="block px-4 py-3 rounded-xl text-base font-bold text-brand-700 bg-brand-50 transition-colors">
+                <a href="history.html" class="block px-4 py-3 rounded-xl text-base font-bold text-brand-700 bg-brand-50 transition-colors dark:bg-brand-900/30">
                     <i class="fa-solid fa-clock-rotate-left mr-2 w-5"></i> Historial
                 </a>
             </div>
@@ -157,38 +164,38 @@
         
         <!-- Header & Breadcrumbs -->
         <div class="mb-8">
-            <a href="profile.html#history" class="text-slate-500 hover:text-brand-600 text-sm font-semibold mb-4 inline-block transition-colors">
+            <a href="profile.html#history" class="text-slate-500 hover:text-brand-600 text-sm font-semibold mb-4 inline-block transition-colors dark:text-slate-400">
                 <i class="fa-solid fa-arrow-left mr-1"></i> Volver a Mi Perfil
             </a>
-            <h1 class="text-3xl font-bold text-slate-900 flex items-center gap-3">
+            <h1 class="text-3xl font-bold text-slate-900 flex items-center gap-3 dark:text-white">
                 <i class="fa-solid fa-clock-rotate-left text-brand-600"></i>
                 Historial de Recetas
             </h1>
-            <p class="text-slate-500 mt-2 text-lg">Explora todas las comidas que has planificado y preparado con SmartBite.</p>
+            <p class="text-slate-500 mt-2 text-lg dark:text-slate-400">Explora todas las comidas que has planificado y preparado con SmartBite.</p>
         </div>
 
         <!-- Filters Strip -->
         <div class="flex flex-wrap items-center gap-3 mb-8">
-            <button class="px-4 py-2 bg-slate-900 text-white font-semibold text-sm rounded-xl shadow-sm transition-colors">Todos (24)</button>
-            <button class="px-4 py-2 bg-white border border-slate-200 text-slate-600 font-semibold text-sm rounded-xl hover:bg-slate-50 transition-colors">Este mes</button>
-            <button class="px-4 py-2 bg-white border border-slate-200 text-slate-600 font-semibold text-sm rounded-xl hover:bg-slate-50 transition-colors">Favoritos</button>
+            <button class="px-4 py-2 bg-slate-900 text-white font-semibold text-sm rounded-xl shadow-sm transition-colors dark:shadow-none">Todos (24)</button>
+            <button class="px-4 py-2 bg-white border border-slate-200 text-slate-600 font-semibold text-sm rounded-xl hover:bg-slate-50 transition-colors dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Este mes</button>
+            <button class="px-4 py-2 bg-white border border-slate-200 text-slate-600 font-semibold text-sm rounded-xl hover:bg-slate-50 transition-colors dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Favoritos</button>
             
             <div class="ml-auto relative flex-grow max-w-xs">
-                <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" placeholder="Buscar por ingrediente..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500 outline-none transition-all">
+                <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"></i>
+                <input type="text" placeholder="Buscar por ingrediente..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500 outline-none transition-all dark:bg-slate-900 dark:border-slate-700">
             </div>
         </div>
 
         <!-- Skeleton Grid Layout (Hidden after load) -->
         <div id="skeleton-history" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-pulse w-full">
             <!-- Skeleton Card -->
-            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col w-full">
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col w-full dark:bg-slate-900 dark:border-slate-800">
                 <div class="h-44 w-full bg-slate-200 shrink-0"></div>
                 <div class="p-5 flex-grow flex flex-col">
                     <div class="h-3 bg-slate-200 rounded text-brand-600 w-24 mb-3"></div>
                     <div class="h-6 bg-slate-200 rounded w-full mb-2"></div>
                     <div class="h-6 bg-slate-200 rounded w-5/6 mb-4"></div>
-                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50">
+                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50 dark:border-slate-800">
                         <div class="h-4 bg-slate-200 rounded w-16"></div>
                         <div class="h-4 bg-slate-200 rounded w-16"></div>
                         <div class="h-4 bg-slate-200 rounded w-20"></div>
@@ -196,13 +203,13 @@
                 </div>
             </div>
             <!-- Skeleton Card -->
-            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col hidden sm:flex w-full">
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col hidden sm:flex w-full dark:bg-slate-900 dark:border-slate-800">
                 <div class="h-44 w-full bg-slate-200 shrink-0"></div>
                 <div class="p-5 flex-grow flex flex-col">
                     <div class="h-3 bg-slate-200 rounded text-brand-600 w-32 mb-3"></div>
                     <div class="h-6 bg-slate-200 rounded w-11/12 mb-2"></div>
                     <div class="h-6 bg-slate-200 rounded w-4/5 mb-4"></div>
-                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50">
+                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50 dark:border-slate-800">
                         <div class="h-4 bg-slate-200 rounded w-16"></div>
                         <div class="h-4 bg-slate-200 rounded w-16"></div>
                         <div class="h-4 bg-slate-200 rounded w-20"></div>
@@ -210,13 +217,13 @@
                 </div>
             </div>
             <!-- Skeleton Card -->
-            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col hidden lg:flex w-full">
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col hidden lg:flex w-full dark:bg-slate-900 dark:border-slate-800">
                 <div class="h-44 w-full bg-slate-200 shrink-0"></div>
                 <div class="p-5 flex-grow flex flex-col">
                     <div class="h-3 bg-slate-200 rounded text-brand-600 w-28 mb-3"></div>
                     <div class="h-6 bg-slate-200 rounded w-full mb-2"></div>
                     <div class="h-6 bg-slate-200 rounded w-3/4 mb-4"></div>
-                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50">
+                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50 dark:border-slate-800">
                         <div class="h-4 bg-slate-200 rounded w-16"></div>
                         <div class="h-4 bg-slate-200 rounded w-16"></div>
                         <div class="h-4 bg-slate-200 rounded w-20"></div>
@@ -224,13 +231,13 @@
                 </div>
             </div>
             <!-- Skeleton Card -->
-            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col hidden xl:flex w-full">
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col hidden xl:flex w-full dark:bg-slate-900 dark:border-slate-800">
                 <div class="h-44 w-full bg-slate-200 shrink-0"></div>
                 <div class="p-5 flex-grow flex flex-col">
                     <div class="h-3 bg-slate-200 rounded text-brand-600 w-24 mb-3"></div>
                     <div class="h-6 bg-slate-200 rounded w-11/12 mb-2"></div>
                     <div class="h-6 bg-slate-200 rounded w-5/6 mb-4"></div>
-                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50">
+                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50 dark:border-slate-800">
                         <div class="h-4 bg-slate-200 rounded w-16"></div>
                         <div class="h-4 bg-slate-200 rounded w-16"></div>
                         <div class="h-4 bg-slate-200 rounded w-20"></div>
@@ -243,8 +250,8 @@
         <div id="real-history" class="hidden grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             
             <!-- Card 1 -->
-            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative">
-                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors">
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative dark:bg-slate-900 dark:border-slate-800">
+                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors dark:shadow-none">
                     <i class="fa-solid fa-heart"></i>
                 </button>
                 <div class="h-44 w-full overflow-hidden shrink-0">
@@ -252,8 +259,8 @@
                 </div>
                 <div class="p-5 flex-grow flex flex-col">
                     <span class="text-xs text-brand-600 font-bold mb-2 block uppercase tracking-wide">Ayer</span>
-                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Pollo al Limón y Hierbas</h3>
-                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight dark:text-slate-100">Pollo al Limón y Hierbas</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50 dark:text-slate-400 dark:border-slate-800">
                         <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Fácil</span>
                         <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 20m</span>
                         <span title="Costo"><i class="fa-solid fa-basket-shopping"></i> $10.1k</span>
@@ -262,8 +269,8 @@
             </div>
 
             <!-- Card 2 -->
-            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative">
-                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-red-500 hover:scale-110 transition-transform">
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative dark:bg-slate-900 dark:border-slate-800">
+                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-red-500 hover:scale-110 transition-transform dark:shadow-none">
                     <i class="fa-solid fa-heart"></i>
                 </button>
                 <div class="h-44 w-full overflow-hidden shrink-0">
@@ -271,8 +278,8 @@
                 </div>
                 <div class="p-5 flex-grow flex flex-col">
                     <span class="text-xs text-brand-600 font-bold mb-2 block uppercase tracking-wide">Hace 3 días</span>
-                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Ensalada de Quinoa Mediterránea</h3>
-                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight dark:text-slate-100">Ensalada de Quinoa Mediterránea</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50 dark:text-slate-400 dark:border-slate-800">
                         <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Fácil</span>
                         <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 10m</span>
                         <span title="Costo"><i class="fa-solid fa-basket-shopping"></i> $6.5k</span>
@@ -281,20 +288,20 @@
             </div>
 
             <!-- Card 3 -->
-            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative">
-                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors">
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative dark:bg-slate-900 dark:border-slate-800">
+                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors dark:shadow-none">
                     <i class="fa-solid fa-heart"></i>
                 </button>
                 <div class="h-44 w-full overflow-hidden shrink-0 relative">
                     <div class="absolute inset-0 bg-black/40 flex items-center justify-center z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span class="bg-white px-4 py-2 rounded-full font-bold text-sm text-slate-900 shadow-lg">Ver Receta</span>
+                        <span class="bg-white px-4 py-2 rounded-full font-bold text-sm text-slate-900 shadow-lg dark:bg-slate-900 dark:text-white">Ver Receta</span>
                     </div>
                     <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?auto=format&fit=crop&w=400&q=80" alt="Pasta Pesto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 </div>
                 <div class="p-5 flex-grow flex flex-col">
-                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide">12 de Octubre</span>
-                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Spaghetti al Pesto Rápido</h3>
-                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide dark:text-slate-500">12 de Octubre</span>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight dark:text-slate-100">Spaghetti al Pesto Rápido</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50 dark:text-slate-400 dark:border-slate-800">
                         <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Media</span>
                         <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 25m</span>
                         <span title="Costo"><i class="fa-solid fa-basket-shopping"></i> $8.3k</span>
@@ -303,17 +310,17 @@
             </div>
 
             <!-- Card 4 -->
-            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative">
-                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors">
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative dark:bg-slate-900 dark:border-slate-800">
+                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors dark:shadow-none">
                     <i class="fa-solid fa-heart"></i>
                 </button>
                 <div class="h-44 w-full overflow-hidden shrink-0">
                     <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80" alt="Bowl Saludable" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 </div>
                 <div class="p-5 flex-grow flex flex-col">
-                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide">05 de Octubre</span>
-                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Bowl Saludable con Tofu y Aguacate</h3>
-                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide dark:text-slate-500">05 de Octubre</span>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight dark:text-slate-100">Bowl Saludable con Tofu y Aguacate</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50 dark:text-slate-400 dark:border-slate-800">
                         <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Fácil</span>
                         <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 15m</span>
                         <span title="Costo"><i class="fa-solid fa-basket-shopping"></i> $12.0k</span>
@@ -322,17 +329,17 @@
             </div>
 
             <!-- Card 5 -->
-            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative">
-                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-red-500 hover:scale-110 transition-transform">
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative dark:bg-slate-900 dark:border-slate-800">
+                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-red-500 hover:scale-110 transition-transform dark:shadow-none">
                     <i class="fa-solid fa-heart"></i>
                 </button>
                 <div class="h-44 w-full overflow-hidden shrink-0">
                     <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80" alt="Ensalada Fresca" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 </div>
                 <div class="p-5 flex-grow flex flex-col">
-                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide">28 de Septiembre</span>
-                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Ensalada Fresca de Verano</h3>
-                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide dark:text-slate-500">28 de Septiembre</span>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight dark:text-slate-100">Ensalada Fresca de Verano</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50 dark:text-slate-400 dark:border-slate-800">
                         <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Fácil</span>
                         <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 5m</span>
                         <span title="Costo"><i class="fa-solid fa-basket-shopping"></i> $5.2k</span>
@@ -341,17 +348,17 @@
             </div>
 
             <!-- Card 6 -->
-            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative opacity-80 filter grayscale-[20%] hover:grayscale-0 hover:opacity-100">
-                <div class="absolute top-3 left-3 z-10 bg-slate-900/80 backdrop-blur-sm text-white px-3 py-1 text-xs font-bold rounded-lg shadow-sm">
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative opacity-80 filter grayscale-[20%] hover:grayscale-0 hover:opacity-100 dark:bg-slate-900 dark:border-slate-800">
+                <div class="absolute top-3 left-3 z-10 bg-slate-900/80 backdrop-blur-sm text-white px-3 py-1 text-xs font-bold rounded-lg shadow-sm dark:shadow-none">
                     Sin Precio Guardado
                 </div>
                 <div class="h-44 w-full overflow-hidden shrink-0">
                     <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=400&q=80" alt="Pizza" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 </div>
                 <div class="p-5 flex-grow flex flex-col">
-                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide">20 de Septiembre</span>
-                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Pizza Casera de Champiñones</h3>
-                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide dark:text-slate-500">20 de Septiembre</span>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight dark:text-slate-100">Pizza Casera de Champiñones</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50 dark:text-slate-400 dark:border-slate-800">
                         <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Avanzado</span>
                         <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 60m</span>
                         <span title="Costo">-</span>
@@ -360,17 +367,17 @@
             </div>
 
             <!-- Card 7 -->
-            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative">
-                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors">
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative dark:bg-slate-900 dark:border-slate-800">
+                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors dark:shadow-none">
                     <i class="fa-solid fa-heart"></i>
                 </button>
                 <div class="h-44 w-full overflow-hidden shrink-0">
                     <img src="https://images.unsplash.com/photo-1564834724105-918b73d1b9e0?auto=format&fit=crop&w=400&q=80" alt="Salmón" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 </div>
                 <div class="p-5 flex-grow flex flex-col">
-                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide">15 de Septiembre</span>
-                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Salmón al Horno con Verduras</h3>
-                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide dark:text-slate-500">15 de Septiembre</span>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight dark:text-slate-100">Salmón al Horno con Verduras</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50 dark:text-slate-400 dark:border-slate-800">
                         <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Media</span>
                         <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 30m</span>
                         <span title="Costo"><i class="fa-solid fa-basket-shopping"></i> $18.4k</span>
@@ -379,17 +386,17 @@
             </div>
 
             <!-- Card 8 -->
-            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative">
-                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors">
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative dark:bg-slate-900 dark:border-slate-800">
+                <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm text-slate-300 hover:text-red-500 transition-colors dark:shadow-none">
                     <i class="fa-solid fa-heart"></i>
                 </button>
                 <div class="h-44 w-full overflow-hidden shrink-0">
                     <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=80" alt="Sopa Miso" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 </div>
                 <div class="p-5 flex-grow flex flex-col">
-                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide">03 de Septiembre</span>
-                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight">Ramen Expres de Pollo</h3>
-                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50">
+                    <span class="text-xs text-slate-400 font-bold mb-2 block uppercase tracking-wide dark:text-slate-500">03 de Septiembre</span>
+                    <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight dark:text-slate-100">Ramen Expres de Pollo</h3>
+                    <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50 dark:text-slate-400 dark:border-slate-800">
                         <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> Media</span>
                         <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> 20m</span>
                         <span title="Costo"><i class="fa-solid fa-basket-shopping"></i> $11.0k</span>
@@ -400,8 +407,8 @@
         </div>
 
         <!-- Load More -->
-        <div class="mt-12 text-center pb-8 border-b border-slate-200">
-            <button class="px-8 py-3 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl shadow-sm hover:shadow-md hover:bg-slate-50 transition-all focus:ring-2 focus:ring-brand-500 focus:outline-none">
+        <div class="mt-12 text-center pb-8 border-b border-slate-200 dark:border-slate-700">
+            <button class="px-8 py-3 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl shadow-sm hover:shadow-md hover:bg-slate-50 transition-all focus:ring-2 focus:ring-brand-500 focus:outline-none dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200 dark:shadow-none dark:hover:bg-slate-800">
                 Cargar más recetas
             </button>
         </div>
@@ -409,17 +416,17 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-slate-100 mt-16 pt-10 pb-8">
+    <footer class="bg-white border-t border-slate-100 mt-16 pt-10 pb-8 dark:bg-slate-900 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-            <div class="flex items-center gap-2 text-slate-900 font-bold text-lg">
-                <i class="fa-solid fa-leaf text-brand-600"></i> SmartBite <span class="text-slate-400 font-normal text-sm ml-2">© 2026</span>
+            <div class="flex items-center gap-2 text-slate-900 font-bold text-lg dark:text-white">
+                <i class="fa-solid fa-leaf text-brand-600"></i> SmartBite <span class="text-slate-400 font-normal text-sm ml-2 dark:text-slate-500">© 2026</span>
             </div>
-            <div class="flex gap-6 text-sm font-medium text-slate-500">
+            <div class="flex gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
                 <a href="#" class="hover:text-brand-600 transition-colors">Términos</a>
                 <a href="#" class="hover:text-brand-600 transition-colors">Privacidad</a>
                 <a href="support.html" class="hover:text-brand-600 transition-colors">Ayuda</a>
             </div>
-            <div class="flex gap-4 text-slate-400">
+            <div class="flex gap-4 text-slate-400 dark:text-slate-500">
                 <a href="#" class="hover:text-brand-600 transition-colors"><i class="fa-brands fa-twitter text-lg"></i></a>
                 <a href="#" class="hover:text-brand-600 transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
             </div>

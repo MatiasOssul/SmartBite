@@ -19,6 +19,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -52,28 +53,34 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
+
+    <script>
+        if (localStorage.getItem('smartbite_theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col dark:bg-slate-800 dark:text-slate-100">
 
     <!-- Navbar -->
-    <nav class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
+    <nav class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm dark:bg-slate-900 dark:border-slate-800 dark:shadow-none">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="main.html" class="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity">
                 <div class="bg-brand-600 text-white p-2 rounded-lg flex items-center justify-center">
                     <i class="fa-solid fa-leaf text-lg"></i>
                 </div>
-                <span class="font-bold text-xl tracking-tight text-slate-900">SmartBite</span>
+                <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white">SmartBite</span>
             </a>
             <div class="flex items-center gap-5 sm:gap-6">
                 <nav class="hidden sm:flex items-center gap-6 text-sm font-semibold">
-                    <a href="main.html" class="text-slate-500 hover:text-brand-600 transition-colors">Inicio</a>
-                    <a href="history.html" class="text-slate-500 hover:text-brand-600 transition-colors">Historial</a>
+                    <a href="main.html" class="text-slate-500 hover:text-brand-600 transition-colors dark:text-slate-400">Inicio</a>
+                    <a href="history.html" class="text-slate-500 hover:text-brand-600 transition-colors dark:text-slate-400">Historial</a>
                 </nav>
                 <div class="h-5 w-px bg-slate-200 hidden sm:block"></div>
                 
                 <!-- Notification Bell -->
                 <div class="relative flex items-center">
-                    <button class="text-slate-500 hover:text-brand-600 transition-colors focus:outline-none" onclick="toggleNotifications(this)">
+                    <button class="text-slate-500 hover:text-brand-600 transition-colors focus:outline-none dark:text-slate-400" onclick="toggleNotifications(this)">
                         <i class="fa-regular fa-bell text-xl bell-icon"></i>
                     </button>
                     <div class="notif-popup absolute right-0 top-full mt-4 bg-slate-900 border border-slate-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-[100] flex items-center gap-2">
@@ -88,19 +95,19 @@
                     </button>
 
                     <!-- Dropdown Layout -->
-                    <div id="profile-dropdown" class="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-float border border-slate-100 py-2 opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-200 z-50">
-                        <div class="px-4 py-3 border-b border-slate-100 mb-1 bg-slate-50/50">
-                            <p class="text-sm font-bold text-slate-800">Usuario de Prueba</p>
-                            <p class="text-xs text-slate-500 truncate">usuario@ejemplo.com</p>
+                    <div id="profile-dropdown" class="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-float border border-slate-100 py-2 opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-200 z-50 dark:bg-slate-900 dark:border-slate-800">
+                        <div class="px-4 py-3 border-b border-slate-100 mb-1 bg-slate-50/50 dark:border-slate-800">
+                            <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Usuario de Prueba</p>
+                            <p class="text-xs text-slate-500 truncate dark:text-slate-400">usuario@ejemplo.com</p>
                         </div>
-                        <a href="profile.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors">
+                        <a href="profile.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
                             <i class="fa-regular fa-user w-4 text-center"></i> Mi Perfil
                         </a>
                         <a href="biteplus.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-amber-600 hover:bg-amber-50 hover:text-amber-700 transition-colors flex justify-between group bg-amber-50/30">
                             <div class="flex items-center gap-3"><i class="fa-solid fa-crown w-4 text-center group-hover:scale-110 transition-transform"></i> Bite+</div>
                             <span class="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Upgrade</span>
                         </a>
-                        <div class="border-t border-slate-100 mt-1 my-1"></div>
+                        <div class="border-t border-slate-100 mt-1 my-1 dark:border-slate-800"></div>
                         <a href="index.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
                             <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i> Cerrar Sesión
                         </a>
@@ -108,19 +115,19 @@
                 </div>
 
                 <!-- Mobile Hamburger Button -->
-                <button class="flex sm:hidden items-center justify-center w-10 h-10 -mr-2 text-slate-700 hover:text-brand-600 hover:bg-slate-100 rounded-xl transition-all focus:outline-none" onclick="toggleMobileMenu()">
+                <button class="flex sm:hidden items-center justify-center w-10 h-10 -mr-2 text-slate-700 hover:text-brand-600 hover:bg-slate-100 rounded-xl transition-all focus:outline-none dark:text-slate-200 dark:hover:bg-slate-700" onclick="toggleMobileMenu()">
                     <i class="fa-solid fa-bars text-2xl"></i>
                 </button>
             </div>
         </div>
 
         <!-- Mobile Menu Dropdown -->
-        <div id="mobile-menu" class="hidden sm:hidden bg-white border-b border-slate-100 absolute w-full left-0 top-16 shadow-lg z-40 pb-4 pt-2">
+        <div id="mobile-menu" class="hidden sm:hidden bg-white border-b border-slate-100 absolute w-full left-0 top-16 shadow-lg z-40 pb-4 pt-2 dark:bg-slate-900 dark:border-slate-800">
             <div class="px-4 space-y-2">
-                <a href="main.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                <a href="main.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
                     <i class="fa-solid fa-house mr-2 w-5"></i> Inicio
                 </a>
-                <a href="history.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                <a href="history.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
                     <i class="fa-solid fa-clock-rotate-left mr-2 w-5"></i> Historial
                 </a>
             </div>
@@ -159,11 +166,11 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-28 text-left">
             <div>
                 <span class="text-brand-600 font-bold uppercase tracking-wider text-sm mb-4 block flex items-center gap-2"><i class="fa-solid fa-sparkles"></i> Sobre SmartBite</span>
-                <h1 class="text-4xl md:text-5xl lg:text-5xl font-black text-slate-900 mb-6 leading-tight">Tu chef privado, nutricionista y personal shopper.</h1>
-                <p class="text-lg text-slate-600 leading-relaxed mb-6">
-                    La forma convencional de planificar comidas y comprar provisiones toma tiempo y energía. Nuestra Inteligencia Artificial está entrenada para entender todo el contexto: <strong class="text-slate-900">qué tienes en tu despensa, cuál es tu presupuesto ideal y tus alergias exactas</strong>. 
+                <h1 class="text-4xl md:text-5xl lg:text-5xl font-black text-slate-900 mb-6 leading-tight dark:text-white">Tu chef privado, nutricionista y personal shopper.</h1>
+                <p class="text-lg text-slate-600 leading-relaxed mb-6 dark:text-slate-300">
+                    La forma convencional de planificar comidas y comprar provisiones toma tiempo y energía. Nuestra Inteligencia Artificial está entrenada para entender todo el contexto: <strong class="text-slate-900 dark:text-white">qué tienes en tu despensa, cuál es tu presupuesto ideal y tus alergias exactas</strong>. 
                 </p>
-                <p class="text-lg text-slate-600 leading-relaxed max-w-lg">
+                <p class="text-lg text-slate-600 leading-relaxed max-w-lg dark:text-slate-300">
                     SmartBite genera recetas hiper-precisas con listas de compras unificadas listas para añadir al carrito en tu supermercado de preferencia en menos de un minuto.  
                 </p>
             </div>
@@ -172,38 +179,38 @@
                 <div class="absolute inset-0 bg-gradient-to-tr from-brand-200 to-amber-200 rounded-[3rem] transform translate-x-4 translate-y-4 -z-10"></div>
                 <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=80" alt="Experiencia de cocina premium" class="w-full h-[450px] object-cover rounded-[3rem] shadow-2xl">
                 <!-- Floating badge overlay -->
-                <div class="absolute -bottom-6 -left-4 sm:-left-8 bg-white p-5 rounded-3xl shadow-float flex items-center gap-4 border border-slate-100 z-10 transition-transform hover:-translate-y-1">
-                    <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center text-xl shadow-inner border border-amber-100">
+                <div class="absolute -bottom-6 -left-4 sm:-left-8 bg-white p-5 rounded-3xl shadow-float flex items-center gap-4 border border-slate-100 z-10 transition-transform hover:-translate-y-1 dark:bg-slate-900 dark:border-slate-800">
+                    <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center text-xl shadow-inner border border-amber-100 dark:shadow-none">
                         <i class="fa-solid fa-crown"></i>
                     </div>
                     <div>
-                        <p class="font-bold text-slate-900 text-sm">Experiencia Premium</p>
-                        <p class="text-xs text-slate-500 font-medium">Eleva tus comidas diarias</p>
+                        <p class="font-bold text-slate-900 text-sm dark:text-white">Experiencia Premium</p>
+                        <p class="text-xs text-slate-500 font-medium dark:text-slate-400">Eleva tus comidas diarias</p>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="text-center mb-12">
-            <h2 class="text-3xl font-black text-slate-900 mb-4">Elige tu plan</h2>
-            <p class="text-slate-600 text-lg">Desbloquea el 100% del potencial de tu cocina y supermercado.</p>
+            <h2 class="text-3xl font-black text-slate-900 mb-4 dark:text-white">Elige tu plan</h2>
+            <p class="text-slate-600 text-lg dark:text-slate-300">Desbloquea el 100% del potencial de tu cocina y supermercado.</p>
         </div>
 
         <!-- Pricing Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left items-stretch">
             <!-- Free Tier -->
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 flex flex-col h-full hover:shadow-md transition-shadow">
-                <h3 class="text-2xl font-bold text-slate-900 mb-2">Básico</h3>
-                <p class="text-slate-500 text-sm mb-6">Para organizar tus cenas en momentos de poco tiempo.</p>
-                <div class="mb-6"><span class="text-4xl font-black text-slate-900">Gratis</span></div>
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 flex flex-col h-full hover:shadow-md transition-shadow dark:bg-slate-900 dark:shadow-none dark:border-slate-700">
+                <h3 class="text-2xl font-bold text-slate-900 mb-2 dark:text-white">Básico</h3>
+                <p class="text-slate-500 text-sm mb-6 dark:text-slate-400">Para organizar tus cenas en momentos de poco tiempo.</p>
+                <div class="mb-6"><span class="text-4xl font-black text-slate-900 dark:text-white">Gratis</span></div>
                 
                 <ul class="space-y-4 mb-10 flex-grow">
-                    <li class="flex items-start gap-3"><i class="fa-solid fa-check text-brand-500 mt-1"></i> <span class="text-slate-600">Hasta 15 recetas mensuales.</span></li>
-                    <li class="flex items-start gap-3"><i class="fa-solid fa-check text-brand-500 mt-1"></i> <span class="text-slate-600">Filtros estándar (Sin Gluten, Vegano, Keto).</span></li>
-                    <li class="flex items-start gap-3"><i class="fa-solid fa-check text-brand-500 mt-1"></i> <span class="text-slate-600">Exportación simple de listas de compras.</span></li>
-                    <li class="flex items-start gap-3 text-slate-400"><i class="fa-solid fa-xmark mt-1"></i> <span>Sin cálculo de macronutrientes.</span></li>
+                    <li class="flex items-start gap-3"><i class="fa-solid fa-check text-brand-500 mt-1"></i> <span class="text-slate-600 dark:text-slate-300">Hasta 15 recetas mensuales.</span></li>
+                    <li class="flex items-start gap-3"><i class="fa-solid fa-check text-brand-500 mt-1"></i> <span class="text-slate-600 dark:text-slate-300">Filtros estándar (Sin Gluten, Vegano, Keto).</span></li>
+                    <li class="flex items-start gap-3"><i class="fa-solid fa-check text-brand-500 mt-1"></i> <span class="text-slate-600 dark:text-slate-300">Exportación simple de listas de compras.</span></li>
+                    <li class="flex items-start gap-3 text-slate-400 dark:text-slate-500"><i class="fa-solid fa-xmark mt-1"></i> <span>Sin cálculo de macronutrientes.</span></li>
                 </ul>
-                <button class="w-full py-3.5 rounded-xl font-bold border-2 border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors mt-auto">Es tu plan actual</button>
+                <button class="w-full py-3.5 rounded-xl font-bold border-2 border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors mt-auto dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Es tu plan actual</button>
             </div>
 
             <!-- Bite+ Tier -->
@@ -214,8 +221,8 @@
                 </div>
                 
                 <h3 class="text-2xl font-bold text-white mb-2 flex items-center gap-2"><i class="fa-solid fa-crown text-amber-500"></i> Bite+</h3>
-                <p class="text-slate-400 text-sm mb-6">El asistente culinario y nutricional sin límites.</p>
-                <div class="mb-6"><span class="text-4xl font-black text-white">$4.990</span><span class="text-slate-400">/mes</span></div>
+                <p class="text-slate-400 text-sm mb-6 dark:text-slate-500">El asistente culinario y nutricional sin límites.</p>
+                <div class="mb-6"><span class="text-4xl font-black text-white">$4.990</span><span class="text-slate-400 dark:text-slate-500">/mes</span></div>
                 
                 <ul class="space-y-4 mb-10 flex-grow">
                     <li class="flex items-start gap-3"><i class="fa-solid fa-check text-amber-500 mt-1"></i> <span class="text-slate-300"><strong class="text-white">Generación ilimitada</strong> de menús.</span></li>
@@ -223,23 +230,23 @@
                     <li class="flex items-start gap-3"><i class="fa-solid fa-check text-amber-500 mt-1"></i> <span class="text-slate-300">Integración nativa <strong class="text-white">1-clic con Lider, Jumbo y Santa Isabel</strong>.</span></li>
                     <li class="flex items-start gap-3"><i class="fa-solid fa-check text-amber-500 mt-1"></i> <span class="text-slate-300">Desglose nutricional de Macros (Calorías, Proteínas, Grasas).</span></li>
                 </ul>
-                <button class="w-full py-3.5 rounded-xl font-bold text-slate-900 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 transition-all shadow-lg hover:shadow-amber-500/25 mt-auto">Hacer Upgrade a PRO</button>
+                <button class="w-full py-3.5 rounded-xl font-bold text-slate-900 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 transition-all shadow-lg hover:shadow-amber-500/25 mt-auto dark:text-white">Hacer Upgrade a PRO</button>
             </div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-slate-100 py-8 mt-auto">
+    <footer class="bg-white border-t border-slate-100 py-8 mt-auto dark:bg-slate-900 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-            <div class="flex items-center gap-2 text-slate-900 font-bold text-lg">
-                <i class="fa-solid fa-leaf text-brand-600"></i> SmartBite <span class="text-slate-400 font-normal text-sm ml-2">© 2026</span>
+            <div class="flex items-center gap-2 text-slate-900 font-bold text-lg dark:text-white">
+                <i class="fa-solid fa-leaf text-brand-600"></i> SmartBite <span class="text-slate-400 font-normal text-sm ml-2 dark:text-slate-500">© 2026</span>
             </div>
-            <div class="flex gap-6 text-sm font-medium text-slate-500">
+            <div class="flex gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
                 <a href="#" class="hover:text-brand-600 transition-colors">Términos</a>
                 <a href="#" class="hover:text-brand-600 transition-colors">Privacidad</a>
                 <a href="support.html" class="hover:text-brand-600 transition-colors">Ayuda</a>
             </div>
-            <div class="flex gap-4 text-slate-400">
+            <div class="flex gap-4 text-slate-400 dark:text-slate-500">
                 <a href="#" class="hover:text-brand-600 transition-colors"><i class="fa-brands fa-twitter text-lg"></i></a>
                 <a href="#" class="hover:text-brand-600 transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
             </div>

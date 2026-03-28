@@ -19,6 +19,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -70,28 +71,34 @@
             animation: fadeIn 0.4s ease-out forwards;
         }
     </style>
+
+    <script>
+        if (localStorage.getItem('smartbite_theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
 </head>
-<body class="bg-slate-50 text-slate-800 relative pb-20 sm:pb-0 h-full flex flex-col">
+<body class="bg-slate-50 text-slate-800 relative pb-20 sm:pb-0 h-full flex flex-col dark:bg-slate-800 dark:text-slate-100">
 
     <!-- Global Success Toast -->
-    <nav class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
+    <nav class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm dark:bg-slate-900 dark:border-slate-800 dark:shadow-none">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="main.html" class="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity">
                 <div class="bg-brand-600 text-white p-2 rounded-lg flex items-center justify-center">
                     <i class="fa-solid fa-leaf text-lg"></i>
                 </div>
-                <span class="font-bold text-xl tracking-tight text-slate-900">SmartBite</span>
+                <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white">SmartBite</span>
             </a>
             <div class="flex items-center gap-5 sm:gap-6">
                 <nav class="hidden sm:flex items-center gap-6 text-sm font-semibold">
                     <a href="main.html" class="text-brand-600">Inicio</a>
-                    <a href="history.html" class="text-slate-500 hover:text-brand-600 transition-colors">Historial</a>
+                    <a href="history.html" class="text-slate-500 hover:text-brand-600 transition-colors dark:text-slate-400">Historial</a>
                 </nav>
                 <div class="h-5 w-px bg-slate-200 hidden sm:block"></div>
                 
                 <!-- Notification Bell -->
                 <div class="relative flex items-center">
-                    <button class="text-slate-500 hover:text-brand-600 transition-colors focus:outline-none" onclick="toggleNotifications(this)">
+                    <button class="text-slate-500 hover:text-brand-600 transition-colors focus:outline-none dark:text-slate-400" onclick="toggleNotifications(this)">
                         <i class="fa-regular fa-bell text-xl bell-icon"></i>
                     </button>
                     <div class="notif-popup absolute right-0 top-full mt-4 bg-slate-900 border border-slate-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-[100] flex items-center gap-2">
@@ -106,19 +113,19 @@
                     </button>
 
                     <!-- Dropdown Layout -->
-                    <div id="profile-dropdown" class="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-float border border-slate-100 py-2 opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-200 z-50">
-                        <div class="px-4 py-3 border-b border-slate-100 mb-1 bg-slate-50/50">
-                            <p class="text-sm font-bold text-slate-800">Usuario de Prueba</p>
-                            <p class="text-xs text-slate-500 truncate">usuario@ejemplo.com</p>
+                    <div id="profile-dropdown" class="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-float border border-slate-100 py-2 opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-200 z-50 dark:bg-slate-900 dark:border-slate-800">
+                        <div class="px-4 py-3 border-b border-slate-100 mb-1 bg-slate-50/50 dark:border-slate-800">
+                            <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Usuario de Prueba</p>
+                            <p class="text-xs text-slate-500 truncate dark:text-slate-400">usuario@ejemplo.com</p>
                         </div>
-                        <a href="profile.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors">
+                        <a href="profile.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
                             <i class="fa-regular fa-user w-4 text-center"></i> Mi Perfil
                         </a>
                         <a href="biteplus.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-amber-600 hover:bg-amber-50 hover:text-amber-700 transition-colors flex justify-between group">
                             <div class="flex items-center gap-3"><i class="fa-solid fa-crown w-4 text-center group-hover:scale-110 transition-transform"></i> Bite+</div>
                             <span class="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Upgrade</span>
                         </a>
-                        <div class="border-t border-slate-100 mt-1 my-1"></div>
+                        <div class="border-t border-slate-100 mt-1 my-1 dark:border-slate-800"></div>
                         <a href="index.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
                             <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i> Cerrar Sesión
                         </a>
@@ -126,19 +133,19 @@
                 </div>
 
                 <!-- Mobile Hamburger Button -->
-                <button class="flex sm:hidden items-center justify-center w-10 h-10 -mr-2 text-slate-700 hover:text-brand-600 hover:bg-slate-100 rounded-xl transition-all focus:outline-none" onclick="toggleMobileMenu()">
+                <button class="flex sm:hidden items-center justify-center w-10 h-10 -mr-2 text-slate-700 hover:text-brand-600 hover:bg-slate-100 rounded-xl transition-all focus:outline-none dark:text-slate-200 dark:hover:bg-slate-700" onclick="toggleMobileMenu()">
                     <i class="fa-solid fa-bars text-2xl"></i>
                 </button>
             </div>
         </div>
 
         <!-- Mobile Menu Dropdown -->
-        <div id="mobile-menu" class="hidden sm:hidden bg-white border-b border-slate-100 absolute w-full left-0 top-16 shadow-lg z-40 pb-4 pt-2">
+        <div id="mobile-menu" class="hidden sm:hidden bg-white border-b border-slate-100 absolute w-full left-0 top-16 shadow-lg z-40 pb-4 pt-2 dark:bg-slate-900 dark:border-slate-800">
             <div class="px-4 space-y-2">
-                <a href="main.html" class="block px-4 py-3 rounded-xl text-base font-bold text-brand-700 bg-brand-50 transition-colors">
+                <a href="main.html" class="block px-4 py-3 rounded-xl text-base font-bold text-brand-700 bg-brand-50 transition-colors dark:bg-brand-900/30">
                     <i class="fa-solid fa-house mr-2 w-5"></i> Inicio
                 </a>
-                <a href="history.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                <a href="history.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
                     <i class="fa-solid fa-clock-rotate-left mr-2 w-5"></i> Historial
                 </a>
             </div>
@@ -186,32 +193,32 @@
 
         <!-- Hero & Input Section -->
         <section class="max-w-3xl mx-auto text-center mb-10 text-balance fade-in">
-            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">¿Qué cocinamos hoy?</h1>
-            <p class="text-slate-500 mb-8">Cuéntame qué tienes en el refri, tu presupuesto o tus ganas. Yo hago el resto.</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4 dark:text-white">¿Qué cocinamos hoy?</h1>
+            <p class="text-slate-500 mb-8 dark:text-slate-400">Cuéntame qué tienes en el refri, tu presupuesto o tus ganas. Yo hago el resto.</p>
             
-            <div class="bg-white p-2 rounded-2xl shadow-soft border border-slate-100 relative group transition-all duration-300 focus-within:ring-2 focus-within:ring-brand-500 focus-within:border-brand-500">
+            <div class="bg-white p-2 rounded-2xl shadow-soft border border-slate-100 relative group transition-all duration-300 focus-within:ring-2 focus-within:ring-brand-500 focus-within:border-brand-500 dark:bg-slate-900 dark:shadow-none dark:border-slate-800">
                 <textarea 
-                    class="w-full h-32 p-4 text-slate-700 bg-transparent resize-none outline-none placeholder:text-slate-400 text-lg leading-relaxed" 
+                    class="w-full h-32 p-4 text-slate-700 bg-transparent resize-none outline-none placeholder:text-slate-400 text-lg leading-relaxed dark:text-slate-200" 
                     placeholder='Ej: "Tengo 3 pechugas de pollo, poco tiempo y mi presupuesto es de $15.000. Somos 3 personas y uno es celíaco."'
                 >Tengo 3 pechugas de pollo, poco tiempo y mi presupuesto es de $15.000. Somos 3 personas y uno es celíaco.</textarea>
                 
-                <div class="flex flex-wrap items-center justify-between p-2 border-t border-slate-50 mt-2 gap-4">
+                <div class="flex flex-wrap items-center justify-between p-2 border-t border-slate-50 mt-2 gap-4 dark:border-slate-800">
                     <!-- Quick Filters -->
                     <div class="flex flex-wrap items-center gap-2">
-                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mr-1">Filtros</span>
-                        <button onclick="toggleFilter(this)" class="flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 text-brand-700 border border-brand-200 rounded-full text-sm font-medium hover:bg-brand-100 transition-colors shadow-sm">
+                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mr-1 dark:text-slate-500">Filtros</span>
+                        <button onclick="toggleFilter(this)" class="flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 text-brand-700 border border-brand-200 rounded-full text-sm font-medium hover:bg-brand-100 transition-colors shadow-sm dark:bg-brand-900/30 dark:hover:bg-brand-900/50 dark:shadow-none">
                             <i class="fa-solid fa-wheat-awn-circle-exclamation text-xs"></i> Sin Gluten
                         </button>
-                        <button onclick="toggleFilter(this)" class="flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-50 transition-colors">
+                        <button onclick="toggleFilter(this)" class="flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-50 transition-colors dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 dark:hover:bg-slate-800">
                             <i class="fa-solid fa-seedling text-xs text-green-500"></i> Vegano
                         </button>
-                        <button onclick="toggleFilter(this)" class="flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-50 transition-colors">
+                        <button onclick="toggleFilter(this)" class="flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-50 transition-colors dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 dark:hover:bg-slate-800">
                             <i class="fa-solid fa-clock-fast text-xs text-orange-400"></i> &lt; 20 min
                         </button>
                     </div>
 
                     <!-- CTA Button -->
-                    <button id="generate-recipe-btn" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-2.5 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg flex items-center gap-2 ml-auto">
+                    <button id="generate-recipe-btn" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-2.5 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg flex items-center gap-2 ml-auto dark:shadow-lg">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
                         Planificar mi cena
                     </button>
@@ -224,7 +231,7 @@
             <div class="h-8 bg-slate-200 rounded-lg w-64 mb-6"></div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
                 <!-- Skeleton Card 1 -->
-                <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden">
+                <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden dark:bg-slate-900 dark:border-slate-700">
                     <div class="h-48 w-full bg-slate-200"></div>
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-4">
@@ -242,7 +249,7 @@
                     </div>
                 </div>
                 <!-- Skeleton Card 2 -->
-                <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden">
+                <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden dark:bg-slate-900 dark:border-slate-700">
                     <div class="h-48 w-full bg-slate-200"></div>
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-4">
@@ -262,7 +269,7 @@
             </div>
             
             <div class="text-center mt-4 pb-8">
-                <span class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-500 rounded-full font-medium text-sm">
+                <span class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-500 rounded-full font-medium text-sm dark:bg-slate-800 dark:text-slate-400">
                     <i class="fa-solid fa-microchip animate-spin text-brand-500"></i> Inteligencia Artificial procesando solicitud...
                 </span>
             </div>
@@ -272,13 +279,13 @@
         
         <!-- Suggestions Area (Master View) -->
         <div id="recipe-suggestions" class="fade-in">
-            <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3 dark:text-white">
                 <i class="fa-solid fa-wand-magic-sparkles text-brand-500"></i> Opciones generadas para ti
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
                 <!-- Option 1 -->
-                <div class="bg-white rounded-3xl shadow-soft border-2 border-brand-500 cursor-pointer overflow-hidden transition-all group hover:-translate-y-1 relative" onclick="showRecipeDetails()">
-                    <div class="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full z-10 shadow-sm flex items-center gap-1">
+                <div class="bg-white rounded-3xl shadow-soft border-2 border-brand-500 cursor-pointer overflow-hidden transition-all group hover:-translate-y-1 relative dark:bg-slate-900 dark:shadow-none" onclick="showRecipeDetails()">
+                    <div class="absolute top-4 right-4 bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full z-10 shadow-sm flex items-center gap-1 dark:shadow-none">
                         <i class="fa-solid fa-medal"></i> Match 100%
                     </div>
                     <div class="h-48 w-full overflow-hidden shrink-0">
@@ -286,13 +293,13 @@
                     </div>
                     <div class="p-6">
                         <div class="flex items-center justify-between mb-2">
-                            <h3 class="font-bold text-xl text-slate-900">Pollo al Limón y Hierbas</h3>
-                            <span class="text-brand-600 font-bold text-lg border border-brand-200 bg-brand-50 px-2 py-0.5 rounded-lg">$10.180</span>
+                            <h3 class="font-bold text-xl text-slate-900 dark:text-white">Pollo al Limón y Hierbas</h3>
+                            <span class="text-brand-600 font-bold text-lg border border-brand-200 bg-brand-50 px-2 py-0.5 rounded-lg dark:bg-brand-900/30">$10.180</span>
                         </div>
-                        <p class="text-sm text-slate-500 line-clamp-2 mb-6">Deliciosa opción libre de gluten con quinoa nutritiva. Se ajusta perfectamente a tu presupuesto de $15.000.</p>
-                        <div class="flex items-center gap-4 text-xs font-semibold text-slate-600">
-                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-fire-burner text-slate-400"></i> Fácil</span>
-                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock text-slate-400"></i> 20m</span>
+                        <p class="text-sm text-slate-500 line-clamp-2 mb-6 dark:text-slate-400">Deliciosa opción libre de gluten con quinoa nutritiva. Se ajusta perfectamente a tu presupuesto de $15.000.</p>
+                        <div class="flex items-center gap-4 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-fire-burner text-slate-400 dark:text-slate-500"></i> Fácil</span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock text-slate-400 dark:text-slate-500"></i> 20m</span>
                             <div class="ml-auto flex items-center gap-1 text-brand-600 group-hover:translate-x-1 transition-transform">
                                 Ver Detalles <i class="fa-solid fa-arrow-right"></i>
                             </div>
@@ -301,8 +308,8 @@
                 </div>
 
                 <!-- Option 2 -->
-                <div class="bg-white rounded-3xl shadow-sm hover:shadow-soft border border-slate-200 cursor-pointer overflow-hidden transition-all group hover:-translate-y-1 hover:border-brand-300 relative" onclick="showRecipeDetails()">
-                    <div class="absolute top-4 right-4 bg-slate-800 text-white text-xs font-bold px-3 py-1 rounded-full z-10 shadow-sm flex items-center gap-1">
+                <div class="bg-white rounded-3xl shadow-sm hover:shadow-soft border border-slate-200 cursor-pointer overflow-hidden transition-all group hover:-translate-y-1 hover:border-brand-300 relative dark:bg-slate-900 dark:shadow-none dark:border-slate-700" onclick="showRecipeDetails()">
+                    <div class="absolute top-4 right-4 bg-slate-800 text-white text-xs font-bold px-3 py-1 rounded-full z-10 shadow-sm flex items-center gap-1 dark:shadow-none">
                         <i class="fa-solid fa-star"></i> Match 85%
                     </div>
                     <div class="h-48 w-full overflow-hidden shrink-0">
@@ -310,13 +317,13 @@
                     </div>
                     <div class="p-6">
                         <div class="flex items-center justify-between mb-2">
-                            <h3 class="font-bold text-xl text-slate-900">Bowl Saludable de Tofu</h3>
-                            <span class="text-slate-800 font-bold text-lg border border-slate-200 bg-slate-50 px-2 py-0.5 rounded-lg">$12.500</span>
+                            <h3 class="font-bold text-xl text-slate-900 dark:text-white">Bowl Saludable de Tofu</h3>
+                            <span class="text-slate-800 font-bold text-lg border border-slate-200 bg-slate-50 px-2 py-0.5 rounded-lg dark:text-slate-100 dark:border-slate-700 dark:bg-slate-800">$12.500</span>
                         </div>
-                        <p class="text-sm text-slate-500 line-clamp-2 mb-6">Una alternativa fresca, rápida y vegana. Ideal si buscas algo más ligero pero igualmente saciante.</p>
-                        <div class="flex items-center gap-4 text-xs font-semibold text-slate-600">
-                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-fire-burner text-slate-400"></i> Media</span>
-                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock text-slate-400"></i> 15m</span>
+                        <p class="text-sm text-slate-500 line-clamp-2 mb-6 dark:text-slate-400">Una alternativa fresca, rápida y vegana. Ideal si buscas algo más ligero pero igualmente saciante.</p>
+                        <div class="flex items-center gap-4 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-fire-burner text-slate-400 dark:text-slate-500"></i> Media</span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock text-slate-400 dark:text-slate-500"></i> 15m</span>
                             <div class="ml-auto flex items-center gap-1 text-brand-600 group-hover:translate-x-1 transition-transform">
                                 Ver Detalles <i class="fa-solid fa-arrow-right"></i>
                             </div>
@@ -328,7 +335,7 @@
 
         <!-- Detailed View (Hidden initially) -->
         <div id="recipe-details" class="hidden fade-in">
-            <button onclick="hideRecipeDetails()" class="px-5 py-2.5 bg-white border-2 border-slate-200 text-slate-700 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50 rounded-xl font-bold mb-6 flex items-center gap-2 transition-all shadow-sm">
+            <button onclick="hideRecipeDetails()" class="px-5 py-2.5 bg-white border-2 border-slate-200 text-slate-700 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50 rounded-xl font-bold mb-6 flex items-center gap-2 transition-all shadow-sm dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200 dark:shadow-none">
                 <i class="fa-solid fa-arrow-left"></i> Volver a Opciones
             </button>
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -337,19 +344,19 @@
             <div class="lg:col-span-7 space-y-6">
                 
                 <!-- Recipe Card -->
-                <article class="bg-white rounded-3xl shadow-soft border border-slate-100 overflow-hidden">
+                <article class="bg-white rounded-3xl shadow-soft border border-slate-100 overflow-hidden dark:bg-slate-900 dark:shadow-none dark:border-slate-800">
                     <!-- Cover Image -->
                     <div class="h-64 sm:h-80 w-full relative">
                         <img src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=1200&q=80" alt="Pollo a las finas hierbas con Quinoa" class="w-full h-full object-cover">
                         <!-- Badge Floating on image -->
-                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-sm font-semibold text-brand-700 text-sm flex items-center gap-2">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-sm font-semibold text-brand-700 text-sm flex items-center gap-2 dark:shadow-none">
                             <i class="fa-solid fa-medal text-brand-500"></i> Match Perfecto (100%)
                         </div>
                     </div>
 
                     <div class="p-6 md:p-8">
                         <!-- Tags & Meta -->
-                        <div class="flex flex-wrap items-center gap-4 mb-4 text-sm text-slate-500">
+                        <div class="flex flex-wrap items-center gap-4 mb-4 text-sm text-slate-500 dark:text-slate-400">
                             <span class="flex items-center gap-1.5"><i class="fa-regular fa-clock"></i> 20 Minutos</span>
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-fire-burner"></i> Fácil</span>
                             <span class="flex items-center gap-1.5"><i class="fa-solid fa-user-group"></i> 3 Porciones</span>
@@ -359,42 +366,42 @@
                         </div>
 
                         <!-- Title -->
-                        <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mb-2">Pollo al Limón y Hierbas con Quinoa</h2>
-                        <p class="text-slate-600 mb-8 leading-relaxed">Una receta rápida, deliciosa y 100% libre de gluten. Las pechugas de pollo quedan jugosas gracias al toque cítrico y se acompañan perfecto con quinoa nutritiva.</p>
+                        <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mb-2 dark:text-white">Pollo al Limón y Hierbas con Quinoa</h2>
+                        <p class="text-slate-600 mb-8 leading-relaxed dark:text-slate-300">Una receta rápida, deliciosa y 100% libre de gluten. Las pechugas de pollo quedan jugosas gracias al toque cítrico y se acompañan perfecto con quinoa nutritiva.</p>
 
                         <!-- Instructions -->
-                        <h3 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-2 mb-4">Instrucciones Paso a Paso</h3>
+                        <h3 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-2 mb-4 dark:text-white dark:border-slate-800">Instrucciones Paso a Paso</h3>
                         <div class="space-y-6">
                             <!-- Step 1 -->
                             <div class="flex gap-4">
                                 <div class="flex-shrink-0 w-8 h-8 bg-brand-100 text-brand-700 rounded-full flex items-center justify-center font-bold font-mono">1</div>
                                 <div>
-                                    <h4 class="font-semibold text-slate-800 mb-1">Prepara la Quinoa</h4>
-                                    <p class="text-slate-600 text-sm leading-relaxed">Enjuaga la quinoa bajo agua fría. Llévala a hervir en una olla pequeña con 2 tazas de agua y sal. Reduce el fuego, tapa y cocina por 15 minutos.</p>
+                                    <h4 class="font-semibold text-slate-800 mb-1 dark:text-slate-100">Prepara la Quinoa</h4>
+                                    <p class="text-slate-600 text-sm leading-relaxed dark:text-slate-300">Enjuaga la quinoa bajo agua fría. Llévala a hervir en una olla pequeña con 2 tazas de agua y sal. Reduce el fuego, tapa y cocina por 15 minutos.</p>
                                 </div>
                             </div>
                             <!-- Step 2 -->
                             <div class="flex gap-4">
                                 <div class="flex-shrink-0 w-8 h-8 bg-brand-100 text-brand-700 rounded-full flex items-center justify-center font-bold font-mono">2</div>
                                 <div>
-                                    <h4 class="font-semibold text-slate-800 mb-1">Sazona el Pollo</h4>
-                                    <p class="text-slate-600 text-sm leading-relaxed">Corta las pechugas en mitades si son muy gruesas. Sazona con sal, pimienta, el jugo de medio limón y la mitad del cilantro fresco picado.</p>
+                                    <h4 class="font-semibold text-slate-800 mb-1 dark:text-slate-100">Sazona el Pollo</h4>
+                                    <p class="text-slate-600 text-sm leading-relaxed dark:text-slate-300">Corta las pechugas en mitades si son muy gruesas. Sazona con sal, pimienta, el jugo de medio limón y la mitad del cilantro fresco picado.</p>
                                 </div>
                             </div>
                             <!-- Step 3 -->
                             <div class="flex gap-4">
                                 <div class="flex-shrink-0 w-8 h-8 bg-brand-100 text-brand-700 rounded-full flex items-center justify-center font-bold font-mono">3</div>
                                 <div>
-                                    <h4 class="font-semibold text-slate-800 mb-1">A la sartén</h4>
-                                    <p class="text-slate-600 text-sm leading-relaxed">Calienta un chorrito de aceite de oliva en una sartén grande a fuego medio-alto. Sella el pollo entre 5-7 minutos por lado hasta que esté dorado y cocido por dentro.</p>
+                                    <h4 class="font-semibold text-slate-800 mb-1 dark:text-slate-100">A la sartén</h4>
+                                    <p class="text-slate-600 text-sm leading-relaxed dark:text-slate-300">Calienta un chorrito de aceite de oliva en una sartén grande a fuego medio-alto. Sella el pollo entre 5-7 minutos por lado hasta que esté dorado y cocido por dentro.</p>
                                 </div>
                             </div>
                             <!-- Step 4 -->
                             <div class="flex gap-4">
                                 <div class="flex-shrink-0 w-8 h-8 bg-brand-100 text-brand-700 rounded-full flex items-center justify-center font-bold font-mono">4</div>
                                 <div>
-                                    <h4 class="font-semibold text-slate-800 mb-1">Sirve y disfruta</h4>
-                                    <p class="text-slate-600 text-sm leading-relaxed">Sirve el pollo sobre una cama de quinoa, exprime el resto del limón por encima y decora con cilantro extra. ¡Listo en menos de 20 minutos!</p>
+                                    <h4 class="font-semibold text-slate-800 mb-1 dark:text-slate-100">Sirve y disfruta</h4>
+                                    <p class="text-slate-600 text-sm leading-relaxed dark:text-slate-300">Sirve el pollo sobre una cama de quinoa, exprime el resto del limón por encima y decora con cilantro extra. ¡Listo en menos de 20 minutos!</p>
                                 </div>
                             </div>
                         </div>
@@ -404,13 +411,13 @@
 
             <!-- RIGHT COLUMN: Shopping List & Costs -->
             <div class="lg:col-span-5 relative mt-8 lg:mt-0">
-                <div class="bg-white rounded-3xl shadow-soft border border-slate-100 p-6 lg:sticky lg:top-24">
+                <div class="bg-white rounded-3xl shadow-soft border border-slate-100 p-6 lg:sticky lg:top-24 dark:bg-slate-900 dark:shadow-none dark:border-slate-800">
                     
                     <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2 dark:text-white">
                             <i class="fa-solid fa-basket-shopping text-brand-500"></i> Tu Lista de Compras
                         </h3>
-                        <span class="bg-slate-100 text-slate-500 text-xs font-bold px-2.5 py-1 rounded-md border border-slate-200">
+                        <span class="bg-slate-100 text-slate-500 text-xs font-bold px-2.5 py-1 rounded-md border border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700">
                             Supermercado: <strong class="text-blue-700"><i class="fa-solid fa-store"></i> Líder</strong>
                         </span>
                     </div>
@@ -419,83 +426,83 @@
                     <div class="space-y-4 max-h-[400px] overflow-y-auto pr-2">
                         
                         <!-- Item 1 -->
-                        <div class="flex items-center gap-4 p-3 rounded-xl border border-slate-100 bg-slate-50 hover:border-brand-300 transition-colors group cursor-pointer">
+                        <div class="flex items-center gap-4 p-3 rounded-xl border border-slate-100 bg-slate-50 hover:border-brand-300 transition-colors group cursor-pointer dark:border-slate-800 dark:bg-slate-800">
                             <input type="checkbox" checked class="w-5 h-5 text-brand-600 border-gray-300 rounded focus:ring-brand-500 accent-brand-600 cursor-pointer">
-                            <div class="w-12 h-12 bg-white rounded-lg border border-slate-200 overflow-hidden flex-shrink-0">
+                            <div class="w-12 h-12 bg-white rounded-lg border border-slate-200 overflow-hidden flex-shrink-0 dark:bg-slate-900 dark:border-slate-700">
                                 <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=150&q=80" alt="Pollo" class="w-full h-full object-cover">
                             </div>
                             <div class="flex-grow">
-                                <h4 class="text-sm font-semibold text-slate-800 leading-tight">Pechuga Deshuesada</h4>
-                                <p class="text-xs text-slate-500">SuperPollo • Bandeja 700g</p>
+                                <h4 class="text-sm font-semibold text-slate-800 leading-tight dark:text-slate-100">Pechuga Deshuesada</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">SuperPollo • Bandeja 700g</p>
                             </div>
                             <div class="text-right">
-                                <span class="block text-sm font-bold text-slate-900">$5.990</span>
+                                <span class="block text-sm font-bold text-slate-900 dark:text-white">$5.990</span>
                             </div>
                         </div>
 
                         <!-- Item 2 -->
-                        <div class="flex items-center gap-4 p-3 rounded-xl border border-slate-100 hover:bg-slate-50 hover:border-brand-300 transition-colors group cursor-pointer">
+                        <div class="flex items-center gap-4 p-3 rounded-xl border border-slate-100 hover:bg-slate-50 hover:border-brand-300 transition-colors group cursor-pointer dark:border-slate-800 dark:hover:bg-slate-800">
                             <input type="checkbox" checked class="w-5 h-5 text-brand-600 border-gray-300 rounded focus:ring-brand-500 accent-brand-600 cursor-pointer">
-                            <div class="w-12 h-12 bg-white rounded-lg border border-slate-200 overflow-hidden flex-shrink-0 p-1">
+                            <div class="w-12 h-12 bg-white rounded-lg border border-slate-200 overflow-hidden flex-shrink-0 p-1 dark:bg-slate-900 dark:border-slate-700">
                                 <img src="https://images.unsplash.com/photo-1515543237350-b3eea1ec8082?auto=format&fit=crop&w=150&q=80" alt="Quinoa" class="w-full h-full object-cover">
                             </div>
                             <div class="flex-grow">
-                                <h4 class="text-sm font-semibold text-slate-800 leading-tight">Quinoa Blanca G.S</h4>
-                                <p class="text-xs text-slate-500">Tucapel • Bolsa 400g</p>
+                                <h4 class="text-sm font-semibold text-slate-800 leading-tight dark:text-slate-100">Quinoa Blanca G.S</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Tucapel • Bolsa 400g</p>
                             </div>
                             <div class="text-right">
-                                <span class="block text-sm font-bold text-slate-900">$2.350</span>
+                                <span class="block text-sm font-bold text-slate-900 dark:text-white">$2.350</span>
                             </div>
                         </div>
 
                         <!-- Item 3 -->
-                        <div class="flex items-center gap-4 p-3 rounded-xl border border-slate-100 hover:bg-slate-50 hover:border-brand-300 transition-colors group cursor-pointer">
+                        <div class="flex items-center gap-4 p-3 rounded-xl border border-slate-100 hover:bg-slate-50 hover:border-brand-300 transition-colors group cursor-pointer dark:border-slate-800 dark:hover:bg-slate-800">
                             <input type="checkbox" checked class="w-5 h-5 text-brand-600 border-gray-300 rounded focus:ring-brand-500 accent-brand-600 cursor-pointer">
-                            <div class="w-12 h-12 bg-white rounded-lg border border-slate-200 overflow-hidden flex-shrink-0 p-0.5">
+                            <div class="w-12 h-12 bg-white rounded-lg border border-slate-200 overflow-hidden flex-shrink-0 p-0.5 dark:bg-slate-900 dark:border-slate-700">
                                 <img src="https://images.unsplash.com/photo-1568569350062-ebfa3cb195df?auto=format&fit=crop&w=150&q=80" alt="Limón" class="w-full h-full object-cover">
                             </div>
                             <div class="flex-grow">
-                                <h4 class="text-sm font-semibold text-slate-800 leading-tight">Limón Fresco Malla</h4>
-                                <p class="text-xs text-slate-500">Líder P.C. • 1 Kg</p>
+                                <h4 class="text-sm font-semibold text-slate-800 leading-tight dark:text-slate-100">Limón Fresco Malla</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Líder P.C. • 1 Kg</p>
                             </div>
                             <div class="text-right">
-                                <span class="block text-sm font-bold text-slate-900">$1.190</span>
+                                <span class="block text-sm font-bold text-slate-900 dark:text-white">$1.190</span>
                             </div>
                         </div>
 
                         <!-- Item 4 -->
-                        <div class="flex items-center gap-4 p-3 rounded-xl border border-slate-100 hover:bg-slate-50 hover:border-brand-300 transition-colors group cursor-pointer">
+                        <div class="flex items-center gap-4 p-3 rounded-xl border border-slate-100 hover:bg-slate-50 hover:border-brand-300 transition-colors group cursor-pointer dark:border-slate-800 dark:hover:bg-slate-800">
                             <input type="checkbox" checked class="w-5 h-5 text-brand-600 border-gray-300 rounded focus:ring-brand-500 accent-brand-600 cursor-pointer">
-                            <div class="w-12 h-12 bg-white rounded-lg border border-slate-200 overflow-hidden flex-shrink-0 p-1">
+                            <div class="w-12 h-12 bg-white rounded-lg border border-slate-200 overflow-hidden flex-shrink-0 p-1 dark:bg-slate-900 dark:border-slate-700">
                                 <img src="https://images.unsplash.com/photo-1466637574441-749b8f19452f?auto=format&fit=crop&w=150&q=80" alt="Cilantro" class="w-full h-full object-cover">
                             </div>
                             <div class="flex-grow">
-                                <h4 class="text-sm font-semibold text-slate-800 leading-tight">Cilantro Fresco</h4>
-                                <p class="text-xs text-slate-500">Líder • 1 Atado</p>
+                                <h4 class="text-sm font-semibold text-slate-800 leading-tight dark:text-slate-100">Cilantro Fresco</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Líder • 1 Atado</p>
                             </div>
                             <div class="text-right">
-                                <span class="block text-sm font-bold text-slate-900">$650</span>
+                                <span class="block text-sm font-bold text-slate-900 dark:text-white">$650</span>
                             </div>
                         </div>
                         
                         <!-- Item Placeholder (Already owned) -->
-                        <div class="flex items-center gap-4 p-3 rounded-xl border border-dashed border-slate-200 bg-slate-50/50 opacity-70">
+                        <div class="flex items-center gap-4 p-3 rounded-xl border border-dashed border-slate-200 bg-slate-50/50 opacity-70 dark:border-slate-700">
                             <input type="checkbox" class="w-5 h-5 border-gray-300 rounded" disabled>
                             <div class="flex-grow pl-2">
-                                <h4 class="text-sm italic text-slate-600">Aceite de oliva, Sal y Pimienta</h4>
-                                <p class="text-xs text-slate-400">Asumimos que los tienes en casa</p>
+                                <h4 class="text-sm italic text-slate-600 dark:text-slate-300">Aceite de oliva, Sal y Pimienta</h4>
+                                <p class="text-xs text-slate-400 dark:text-slate-500">Asumimos que los tienes en casa</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Cost Summary Widget -->
-                    <div class="mt-6 pt-6 border-t border-slate-100">
+                    <div class="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800">
                         <div class="flex justify-between items-end mb-2">
-                            <span class="text-slate-500 font-medium">Presupuesto inicial</span>
-                            <span class="text-slate-700">$15.000</span>
+                            <span class="text-slate-500 font-medium dark:text-slate-400">Presupuesto inicial</span>
+                            <span class="text-slate-700 dark:text-slate-200">$15.000</span>
                         </div>
                         <div class="flex justify-between items-end mb-6">
-                            <span class="text-lg font-bold text-slate-900">Total del Carrito</span>
+                            <span class="text-lg font-bold text-slate-900 dark:text-white">Total del Carrito</span>
                             <div class="text-right">
                                 <span class="block text-3xl font-black text-brand-600 leading-none">$10.180</span>
                                 <span class="text-xs font-semibold text-green-600 px-2 py-0.5 bg-green-50 rounded mt-1 inline-block">¡Ahorraste $4.820!</span>
@@ -505,7 +512,7 @@
                         <a href="https://www.lider.cl/cart" target="_blank" rel="noopener noreferrer" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3.5 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-float">
                             <i class="fa-solid fa-cart-shopping"></i> Comprar todo en Líder
                         </a>
-                        <p class="text-center text-xs text-slate-400 mt-4 flex items-center justify-center gap-1">
+                        <p class="text-center text-xs text-slate-400 mt-4 flex items-center justify-center gap-1 dark:text-slate-500">
                             <i class="fa-solid fa-lock text-[10px]"></i> Serás redirigido al carro oficial de supermercado.
                         </p>
                     </div>
@@ -519,17 +526,17 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-slate-100 mt-16 pt-10 pb-8">
+    <footer class="bg-white border-t border-slate-100 mt-16 pt-10 pb-8 dark:bg-slate-900 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-            <div class="flex items-center gap-2 text-slate-900 font-bold text-lg">
-                <i class="fa-solid fa-leaf text-brand-600"></i> SmartBite <span class="text-slate-400 font-normal text-sm ml-2">© 2026</span>
+            <div class="flex items-center gap-2 text-slate-900 font-bold text-lg dark:text-white">
+                <i class="fa-solid fa-leaf text-brand-600"></i> SmartBite <span class="text-slate-400 font-normal text-sm ml-2 dark:text-slate-500">© 2026</span>
             </div>
-            <div class="flex gap-6 text-sm font-medium text-slate-500">
+            <div class="flex gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
                 <a href="#" class="hover:text-brand-600 transition-colors">Términos</a>
                 <a href="#" class="hover:text-brand-600 transition-colors">Privacidad</a>
                 <a href="support.html" class="hover:text-brand-600 transition-colors">Ayuda</a>
             </div>
-            <div class="flex gap-4 text-slate-400">
+            <div class="flex gap-4 text-slate-400 dark:text-slate-500">
                 <a href="#" class="hover:text-brand-600 transition-colors"><i class="fa-brands fa-twitter text-lg"></i></a>
                 <a href="#" class="hover:text-brand-600 transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
             </div>

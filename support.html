@@ -14,6 +14,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
@@ -23,28 +24,34 @@
             }
         }
     </script>
+
+    <script>
+        if (localStorage.getItem('smartbite_theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col dark:bg-slate-800 dark:text-slate-100">
 
     <!-- Navbar -->
-    <nav class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
+    <nav class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm dark:bg-slate-900 dark:border-slate-800 dark:shadow-none">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="main.html" class="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity">
                 <div class="bg-brand-600 text-white p-2 rounded-lg flex items-center justify-center">
                     <i class="fa-solid fa-leaf text-lg"></i>
                 </div>
-                <span class="font-bold text-xl tracking-tight text-slate-900">SmartBite</span>
+                <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white">SmartBite</span>
             </a>
             <div class="flex items-center gap-5 sm:gap-6">
                 <nav class="hidden sm:flex items-center gap-6 text-sm font-semibold">
-                    <a href="main.html" class="text-slate-500 hover:text-brand-600 transition-colors">Inicio</a>
-                    <a href="history.html" class="text-slate-500 hover:text-brand-600 transition-colors">Historial</a>
+                    <a href="main.html" class="text-slate-500 hover:text-brand-600 transition-colors dark:text-slate-400">Inicio</a>
+                    <a href="history.html" class="text-slate-500 hover:text-brand-600 transition-colors dark:text-slate-400">Historial</a>
                 </nav>
                 <div class="h-5 w-px bg-slate-200 hidden sm:block"></div>
                 
                 <!-- Notification Bell -->
                 <div class="relative flex items-center">
-                    <button class="text-slate-500 hover:text-brand-600 transition-colors focus:outline-none" onclick="toggleNotifications(this)">
+                    <button class="text-slate-500 hover:text-brand-600 transition-colors focus:outline-none dark:text-slate-400" onclick="toggleNotifications(this)">
                         <i class="fa-regular fa-bell text-xl bell-icon"></i>
                     </button>
                     <div class="notif-popup absolute right-0 top-full mt-4 bg-slate-900 border border-slate-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-[100] flex items-center gap-2">
@@ -58,19 +65,19 @@
                         <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80" alt="User Profile" class="w-full h-full object-cover">
                     </button>
 
-                    <div id="profile-dropdown" class="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-float border border-slate-100 py-2 opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-200 z-50">
-                        <div class="px-4 py-3 border-b border-slate-100 mb-1 bg-slate-50/50">
-                            <p class="text-sm font-bold text-slate-800">Usuario de Prueba</p>
-                            <p class="text-xs text-slate-500 truncate">usuario@ejemplo.com</p>
+                    <div id="profile-dropdown" class="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-float border border-slate-100 py-2 opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-200 z-50 dark:bg-slate-900 dark:border-slate-800">
+                        <div class="px-4 py-3 border-b border-slate-100 mb-1 bg-slate-50/50 dark:border-slate-800">
+                            <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Usuario de Prueba</p>
+                            <p class="text-xs text-slate-500 truncate dark:text-slate-400">usuario@ejemplo.com</p>
                         </div>
-                        <a href="profile.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors">
+                        <a href="profile.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
                             <i class="fa-regular fa-user w-4 text-center"></i> Mi Perfil
                         </a>
                         <a href="biteplus.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-amber-600 hover:bg-amber-50 hover:text-amber-700 transition-colors flex justify-between group">
                             <div class="flex items-center gap-3"><i class="fa-solid fa-crown w-4 text-center group-hover:scale-110 transition-transform"></i> Bite+</div>
                             <span class="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Upgrade</span>
                         </a>
-                        <div class="border-t border-slate-100 mt-1 my-1"></div>
+                        <div class="border-t border-slate-100 mt-1 my-1 dark:border-slate-800"></div>
                         <a href="index.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
                             <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i> Cerrar Sesión
                         </a>
@@ -78,19 +85,19 @@
                 </div>
 
                 <!-- Mobile Hamburger Button -->
-                <button class="flex sm:hidden items-center justify-center w-10 h-10 -mr-2 text-slate-700 hover:text-brand-600 hover:bg-slate-100 rounded-xl transition-all focus:outline-none" onclick="toggleMobileMenu()">
+                <button class="flex sm:hidden items-center justify-center w-10 h-10 -mr-2 text-slate-700 hover:text-brand-600 hover:bg-slate-100 rounded-xl transition-all focus:outline-none dark:text-slate-200 dark:hover:bg-slate-700" onclick="toggleMobileMenu()">
                     <i class="fa-solid fa-bars text-2xl"></i>
                 </button>
             </div>
         </div>
 
         <!-- Mobile Menu Dropdown -->
-        <div id="mobile-menu" class="hidden sm:hidden bg-white border-b border-slate-100 absolute w-full left-0 top-16 shadow-lg z-40 pb-4 pt-2">
+        <div id="mobile-menu" class="hidden sm:hidden bg-white border-b border-slate-100 absolute w-full left-0 top-16 shadow-lg z-40 pb-4 pt-2 dark:bg-slate-900 dark:border-slate-800">
             <div class="px-4 space-y-2">
-                <a href="main.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                <a href="main.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
                     <i class="fa-solid fa-house mr-2 w-5"></i> Inicio
                 </a>
-                <a href="history.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors">
+                <a href="history.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
                     <i class="fa-solid fa-clock-rotate-left mr-2 w-5"></i> Historial
                 </a>
             </div>
@@ -125,36 +132,36 @@
 
     <!-- Main Content -->
     <main class="flex-grow max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-20 w-full">
-        <button onclick="window.history.back()" class="text-slate-500 hover:text-brand-600 text-sm font-semibold mb-8 flex items-center gap-2 transition-colors">
+        <button onclick="window.history.back()" class="text-slate-500 hover:text-brand-600 text-sm font-semibold mb-8 flex items-center gap-2 transition-colors dark:text-slate-400">
             <i class="fa-solid fa-arrow-left"></i> Volver atrás
         </button>
 
         <!-- Header -->
         <div class="mb-10 text-center sm:text-left">
-            <h1 class="text-4xl font-black text-slate-900 mb-3">¿En qué te podemos ayudar?</h1>
-            <p class="text-lg text-slate-600">Nuestro equipo de soporte está 100% comprometido. Cuéntanos tu problema o duda en detalle y te responderemos en menos de 2 horas.</p>
+            <h1 class="text-4xl font-black text-slate-900 mb-3 dark:text-white">¿En qué te podemos ayudar?</h1>
+            <p class="text-lg text-slate-600 dark:text-slate-300">Nuestro equipo de soporte está 100% comprometido. Cuéntanos tu problema o duda en detalle y te responderemos en menos de 2 horas.</p>
         </div>
 
         <!-- Form Card relative wrapper -->
-        <div class="bg-white rounded-3xl shadow-soft border border-slate-200 p-6 sm:p-10 relative overflow-hidden">
+        <div class="bg-white rounded-3xl shadow-soft border border-slate-200 p-6 sm:p-10 relative overflow-hidden dark:bg-slate-900 dark:shadow-none dark:border-slate-700">
             
             <!-- Success Overlay (Hidden initially) -->
             <div id="success-message" class="hidden absolute inset-0 bg-white/95 backdrop-blur-sm z-20 flex-col items-center justify-center text-center p-8">
-                <div class="w-20 h-20 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center text-4xl mb-6 shadow-sm border-[4px] border-white">
+                <div class="w-20 h-20 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center text-4xl mb-6 shadow-sm border-[4px] border-white dark:shadow-none">
                     <i class="fa-solid fa-check"></i>
                 </div>
-                <h3 class="text-3xl font-black text-slate-900 mb-3">¡Mensaje Enviado!</h3>
-                <p class="text-slate-600 max-w-sm mb-8">Hemos recibido tu solicitud de soporte. Uno de nuestros agentes se contactará contigo pronto al correo registrado en tu cuenta.</p>
-                <button type="button" onclick="window.location.href='main.html'" class="px-8 py-3.5 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition-all shadow-md">Ir al Inicio</button>
+                <h3 class="text-3xl font-black text-slate-900 mb-3 dark:text-white">¡Mensaje Enviado!</h3>
+                <p class="text-slate-600 max-w-sm mb-8 dark:text-slate-300">Hemos recibido tu solicitud de soporte. Uno de nuestros agentes se contactará contigo pronto al correo registrado en tu cuenta.</p>
+                <button type="button" onclick="window.location.href='main.html'" class="px-8 py-3.5 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition-all shadow-md dark:shadow-lg">Ir al Inicio</button>
             </div>
 
             <!-- Actual Form -->
             <form id="help-form" class="space-y-6" onsubmit="handleSupportSubmit(event)">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Motivo de contacto</label>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2 dark:text-slate-200">Motivo de contacto</label>
                         <div class="relative">
-                            <select class="w-full pl-4 pr-10 py-3.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all appearance-none cursor-pointer">
+                            <select class="w-full pl-4 pr-10 py-3.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all appearance-none cursor-pointer dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
                                 <option>Problema Técnico / Bugs</option>
                                 <option>Suscripción a Bite+ / Facturación</option>
                                 <option>Mis Recetas / Historial</option>
@@ -162,43 +169,43 @@
                                 <option>Feedback y Sugerencias</option>
                                 <option>Otro Motivo</option>
                             </select>
-                            <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xs"></i>
+                            <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xs dark:text-slate-500"></i>
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-2">Plataforma</label>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2 dark:text-slate-200">Plataforma</label>
                         <div class="relative">
-                            <select class="w-full pl-4 pr-10 py-3.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all appearance-none cursor-pointer">
+                            <select class="w-full pl-4 pr-10 py-3.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all appearance-none cursor-pointer dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
                                 <option>Aplicación Web</option>
                                 <option>App Móvil (iOS/Android)</option>
                                 <option>No aplica</option>
                             </select>
-                            <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xs"></i>
+                            <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xs dark:text-slate-500"></i>
                         </div>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Asunto Principal</label>
-                    <input type="text" placeholder="Ej: No me permite agregar la lista a mi carrito" required class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2 dark:text-slate-200">Asunto Principal</label>
+                    <input type="text" placeholder="Ej: No me permite agregar la lista a mi carrito" required class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Detalles Adicionales</label>
-                    <textarea rows="5" placeholder="Explica detalladamente qué sucedió, qué esperabas que sucediera o cualquier duda que tengas. Cuanta más información nos des, más rápido podremos ayudarte." required class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all resize-none"></textarea>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2 dark:text-slate-200">Detalles Adicionales</label>
+                    <textarea rows="5" placeholder="Explica detalladamente qué sucedió, qué esperabas que sucediera o cualquier duda que tengas. Cuanta más información nos des, más rápido podremos ayudarte." required class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all resize-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"></textarea>
                 </div>
                 
                 <!-- Upload Box -->
-                <div class="w-full border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:border-brand-400 hover:bg-brand-50 transition-colors cursor-pointer group">
-                    <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3 text-slate-500 group-hover:text-brand-600 transition-colors">
+                <div class="w-full border-2 border-dashed border-slate-200 rounded-xl p-6 text-center hover:border-brand-400 hover:bg-brand-50 transition-colors cursor-pointer group dark:border-slate-700">
+                    <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3 text-slate-500 group-hover:text-brand-600 transition-colors dark:bg-slate-800 dark:text-slate-400">
                         <i class="fa-solid fa-image"></i>
                     </div>
                     <p class="text-sm font-bold text-brand-600 group-hover:text-brand-700 transition-colors mb-1">Click para subir capturas (Opcional)</p>
-                    <p class="text-xs text-slate-500">PNG, JPG o PDF. (Max 5MB)</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">PNG, JPG o PDF. (Max 5MB)</p>
                 </div>
                 
                 <div class="pt-4 flex sm:justify-end">
-                    <button type="submit" id="submit-btn" class="w-full sm:w-auto px-10 py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                    <button type="submit" id="submit-btn" class="w-full sm:w-auto px-10 py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 dark:shadow-lg">
                         Enviar Consulta <i class="fa-regular fa-paper-plane"></i>
                     </button>
                 </div>
@@ -207,17 +214,17 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-slate-100 mt-auto py-8">
+    <footer class="bg-white border-t border-slate-100 mt-auto py-8 dark:bg-slate-900 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-            <div class="flex items-center gap-2 text-slate-900 font-bold text-lg">
-                <i class="fa-solid fa-leaf text-brand-600"></i> SmartBite <span class="text-slate-400 font-normal text-sm ml-2">© 2026</span>
+            <div class="flex items-center gap-2 text-slate-900 font-bold text-lg dark:text-white">
+                <i class="fa-solid fa-leaf text-brand-600"></i> SmartBite <span class="text-slate-400 font-normal text-sm ml-2 dark:text-slate-500">© 2026</span>
             </div>
-            <div class="flex gap-6 text-sm font-medium text-slate-500">
+            <div class="flex gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
                 <a href="#" class="hover:text-brand-600 transition-colors">Términos</a>
                 <a href="#" class="hover:text-brand-600 transition-colors">Privacidad</a>
                 <a href="support.html" class="hover:text-brand-600 transition-colors">Ayuda</a>
             </div>
-            <div class="flex gap-4 text-slate-400">
+            <div class="flex gap-4 text-slate-400 dark:text-slate-500">
                 <a href="#" class="hover:text-brand-600 transition-colors"><i class="fa-brands fa-twitter text-lg"></i></a>
                 <a href="#" class="hover:text-brand-600 transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
             </div>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartBite - UI Kit & Design System</title>
+    
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS (CDN for Mockup) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        // Anti-FOUC para Modo Oscuro
+        if (localStorage.getItem('smartbite_theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    
+    <style>
+        .color-box {
+            @apply flex flex-col items-center justify-center h-24 rounded-xl shadow-sm text-xs font-semibold p-2 w-full transition-transform hover:scale-105;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans min-h-screen transition-colors duration-300 selection:bg-brand-500 selection:text-white pb-20">
+
+    <!-- Navbar Minimalista -->
+    <nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-100 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-2 text-2xl font-bold text-slate-900 dark:text-white">
+                    <i class="fa-solid fa-leaf text-brand-500"></i> SmartBite <span class="text-xs tracking-wider bg-brand-100 text-brand-700 px-2 py-0.5 rounded-full dark:bg-brand-900/30 dark:text-brand-300 ml-2 align-middle">UI KIT</span>
+                </div>
+                <!-- Controls -->
+                <div class="flex items-center gap-4">
+                    <a href="index.html" class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors">Volver al inicio</a>
+                    
+                    <!-- Dark Mode Toggle -->
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="dark-mode-toggle" class="sr-only peer">
+                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-300 dark:peer-focus:ring-brand-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-brand-600"></div>
+                        <i class="fa-solid fa-moon ml-2 text-slate-400 text-sm"></i>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-16 text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4">Guía de Estilos de Diseño</h1>
+        <p class="text-lg text-slate-500 dark:text-slate-400 text-balance max-w-2xl mx-auto">Conoce los fundamentos visuales de SmartBite. Colores, tipografías y componentes básicos listos para que el equipo de desarrollo los convierta en código sólido.</p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24">
+
+        <!-- COLOR PALETTE SECTION -->
+        <section id="colors">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-3 mb-8">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-palette text-brand-500"></i> Paleta de Colores
+                </h2>
+                <p class="text-sm text-slate-500 mt-1 dark:text-slate-400">Tokens de color para toda la aplicación. Se estructuran en una escala del 50 al 900.</p>
+            </div>
+
+            <!-- Brand Color -->
+            <div class="mb-10">
+                <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">Primario (Brand Green)</h3>
+                <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-10 gap-3">
+                    <div class="color-box bg-brand-50 text-brand-800 border border-slate-100 dark:border-transparent"><span>50</span><span class="font-normal opacity-70">#f0fdf4</span></div>
+                    <div class="color-box bg-brand-100 text-brand-800"><span>100</span><span class="font-normal opacity-70">#dcfce7</span></div>
+                    <div class="color-box bg-brand-200 text-brand-800"><span>200</span><span class="font-normal opacity-70">#bbf7d0</span></div>
+                    <div class="color-box bg-brand-300 text-brand-900"><span>300</span><span class="font-normal opacity-70">#86efac</span></div>
+                    <div class="color-box bg-brand-400 text-brand-900"><span>400</span><span class="font-normal opacity-70">#4ade80</span></div>
+                    <div class="color-box bg-brand-500 text-white shadow-brand-500/30 shadow-md transform scale-105 border-2 border-slate-900 dark:border-white"><span>500 (Base)</span><span class="font-normal opacity-90">#22c55e</span></div>
+                    <div class="color-box bg-brand-600 text-white"><span>600 (Hover)</span><span class="font-normal opacity-80">#16a34a</span></div>
+                    <div class="color-box bg-brand-700 text-white"><span>700</span><span class="font-normal opacity-80">#15803d</span></div>
+                    <div class="color-box bg-brand-800 text-white"><span>800</span><span class="font-normal opacity-80">#166534</span></div>
+                    <div class="color-box bg-brand-900 text-white"><span>900</span><span class="font-normal opacity-80">#14532d</span></div>
+                </div>
+            </div>
+
+            <!-- Slate Neutral -->
+            <div>
+                <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">Neutrales y Texto (Slate)</h3>
+                <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-10 gap-3">
+                    <div class="color-box bg-slate-50 text-slate-800 border border-slate-200 dark:border-transparent"><span>50 (Fondo L)</span></div>
+                    <div class="color-box bg-slate-100 text-slate-800 border border-slate-200 dark:border-transparent"><span>100 (Borde L)</span></div>
+                    <div class="color-box bg-slate-200 text-slate-800"><span>200</span></div>
+                    <div class="color-box bg-slate-300 text-slate-800"><span>300</span></div>
+                    <div class="color-box bg-slate-400 text-white text-shadow"><span>400 (Iconos)</span></div>
+                    <div class="color-box bg-slate-500 text-white"><span>500 (Text 2)</span></div>
+                    <div class="color-box bg-slate-600 text-white"><span>600</span></div>
+                    <div class="color-box bg-slate-700 text-white"><span>700</span></div>
+                    <div class="color-box bg-slate-800 text-white border-2 border-white"><span>800 (Fondo D)</span></div>
+                    <div class="color-box bg-slate-900 text-white border-2 border-white"><span>900 (Main D)</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TYPOGRAPHY SECTION -->
+        <section id="typography">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-3 mb-8">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-font text-brand-500"></i> Tipografía (Familia Outfit)
+                </h2>
+                <p class="text-sm text-slate-500 mt-1 dark:text-slate-400">Escala tipográfica diseñada para alta legibilidad en interfaces modernas.</p>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-100 dark:border-slate-700 shadow-soft dark:shadow-none grid md:grid-cols-2 gap-12">
+                
+                <div class="space-y-8">
+                    <div>
+                        <span class="text-xs text-brand-500 font-bold uppercase tracking-widest mb-1 block">H1 - Título Principal</span>
+                        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white">El plato perfecto.</h1>
+                        <span class="text-xs text-slate-400 font-mono mt-2 block">.text-4xl .md:text-5xl .font-extrabold</span>
+                    </div>
+                    
+                    <div>
+                        <span class="text-xs text-brand-500 font-bold uppercase tracking-widest mb-1 block">H2 - Encabezado Sección</span>
+                        <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">Generar Menú Semanal</h2>
+                        <span class="text-xs text-slate-400 font-mono mt-2 block">.text-2xl .md:text-3xl .font-bold</span>
+                    </div>
+
+                    <div>
+                        <span class="text-xs text-brand-500 font-bold uppercase tracking-widest mb-1 block">H3 - Título de Tarjeta</span>
+                        <h3 class="text-lg md:text-xl font-bold text-slate-900 dark:text-white">Pollo Asado con Limón</h3>
+                        <span class="text-xs text-slate-400 font-mono mt-2 block">.text-lg .md:text-xl .font-bold</span>
+                    </div>
+                </div>
+
+                <div class="space-y-8">
+                    <div>
+                        <span class="text-xs text-brand-500 font-bold uppercase tracking-widest mb-1 block">Body Text (Regular)</span>
+                        <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Aquí vemos un párrafo normal. Los textos de bloque largo mantienen un interlineado relajado para facilitar la lectura. La familia <span class="font-semibold text-slate-900 dark:text-white">Outfit</span> otorga un carácter geométrico y amigable.
+                        </p>
+                        <span class="text-xs text-slate-400 font-mono mt-2 block">.text-base .text-slate-600 .leading-relaxed</span>
+                    </div>
+
+                    <div>
+                        <span class="text-xs text-brand-500 font-bold uppercase tracking-widest mb-1 block">Small Text / Microcopy</span>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Guardado hace 2 horas.</p>
+                        <span class="text-xs text-slate-400 font-mono mt-2 block">.text-sm .text-slate-500</span>
+                    </div>
+                    
+                    <div>
+                        <span class="text-xs text-brand-500 font-bold uppercase tracking-widest mb-1 block">Etiquetas (Labels/Badges)</span>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Dificultad Media</span>
+                        <span class="text-xs text-slate-400 font-mono mt-2 block">.text-xs .font-bold .uppercase .tracking-widest</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- BUTTONS SECTION -->
+        <section id="buttons">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-3 mb-8">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-hand-pointer text-brand-500"></i> Botones y Botones de Acción (CTAs)
+                </h2>
+                <p class="text-sm text-slate-500 mt-1 dark:text-slate-400">Elementos interactivos principales utilizados para navegar y confirmar acciones.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Primary Action -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-100 dark:border-slate-700 shadow-soft dark:shadow-none">
+                    <h3 class="font-bold text-slate-800 dark:text-white mb-6 uppercase tracking-wider text-sm">Primario (Primary)</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-slate-500">Predeterminado</span>
+                            <button class="bg-brand-600 text-white px-5 py-2.5 rounded-xl font-semibold shadow-md inline-flex items-center gap-2">
+                                Continuar
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-slate-500">Hover State</span>
+                            <button class="bg-brand-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg inline-flex items-center gap-2 transform -translate-y-0.5">
+                                Continuar
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-slate-500">Cargando (Loading)</span>
+                            <button class="bg-brand-600 text-white px-5 py-2.5 rounded-xl font-semibold opacity-80 cursor-wait inline-flex items-center gap-2">
+                                <i class="fa-solid fa-spinner fa-spin"></i> Guardando...
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-slate-500">Inactivo (Disabled)</span>
+                            <button class="bg-slate-300 dark:bg-slate-700 text-slate-500 dark:text-slate-400 px-5 py-2.5 rounded-xl font-semibold cursor-not-allowed inline-flex items-center gap-2">
+                                Continuar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secondary Action -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-100 dark:border-slate-700 shadow-soft dark:shadow-none">
+                    <h3 class="font-bold text-slate-800 dark:text-white mb-6 uppercase tracking-wider text-sm">Secundario (Outlined/Soft)</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-slate-500">Fondo Suave</span>
+                            <button class="bg-brand-50 text-brand-700 px-5 py-2.5 rounded-xl font-semibold dark:bg-brand-900/30 dark:text-brand-300">
+                                Editar Perfil
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-slate-500">Hover Soft</span>
+                            <button class="bg-brand-100 text-brand-800 px-5 py-2.5 rounded-xl font-semibold dark:bg-brand-900/50 dark:text-brand-200">
+                                Editar Perfil
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-slate-500">Contorno Neutral</span>
+                            <button class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 px-5 py-2.5 rounded-xl font-semibold shadow-sm">
+                                Cancelar
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-slate-500">Contorno Hover</span>
+                            <button class="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Icon/Action Buttons -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-100 dark:border-slate-700 shadow-soft dark:shadow-none">
+                    <h3 class="font-bold text-slate-800 dark:text-white mb-6 uppercase tracking-wider text-sm">Botones de Icono y Filtros</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4">
+                            <button class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </button>
+                            <span class="text-sm text-slate-500">Navegación Circular</span>
+                        </div>
+                        
+                        <div class="flex items-center gap-4">
+                            <button class="flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 text-brand-700 border border-brand-200 rounded-full text-sm font-medium dark:bg-brand-900/30 dark:border-brand-800 dark:text-brand-300 shadow-sm">
+                                <i class="fa-solid fa-seedling text-xs text-brand-500"></i> Vegano
+                            </button>
+                            <span class="text-sm text-slate-500">Filtro Activo</span>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <button class="flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-medium dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                                <i class="fa-solid fa-wheat-awn text-xs text-orange-400"></i> Sin Gluten
+                            </button>
+                            <span class="text-sm text-slate-500">Filtro Inactivo</span>
+                        </div>
+                        
+                        <div class="flex items-center gap-4">
+                             <div class="w-11 h-6 bg-brand-600 rounded-full relative shadow-inner cursor-pointer opacity-100">
+                                <div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm"></div>
+                            </div>
+                            <span class="text-sm text-slate-500">Toggle Switch ON</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- INPUTS & FORMS -->
+        <section id="inputs">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-3 mb-8">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-keyboard text-brand-500"></i> Entradas y Formularios
+                </h2>
+                <p class="text-sm text-slate-500 mt-1 dark:text-slate-400">Campos de ingreso de datos para el usuario final.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Text Inputs -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-100 dark:border-slate-700 shadow-soft dark:shadow-none space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">Input Estándar</label>
+                        <input type="text" placeholder="Correo electrónico" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 text-slate-800 dark:text-slate-100 outline-none transition-all placeholder:text-slate-400">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">Input Focus (Activo)</label>
+                        <input type="text" value="matias@smartbite.app" class="w-full px-4 py-3 rounded-xl border border-brand-500 ring-2 ring-brand-500/20 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 outline-none transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">Input Error</label>
+                        <input type="text" value="usuario@@gmail..com" class="w-full px-4 py-3 rounded-xl border border-red-500 ring-2 ring-red-500/20 bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 outline-none transition-all">
+                        <span class="text-xs text-red-500 mt-1.5 block flex items-center gap-1"><i class="fa-solid fa-circle-exclamation"></i> Formato de correo inválido</span>
+                    </div>
+                </div>
+
+                <!-- Textareas & Complex inputs -->
+                <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-100 dark:border-slate-700 shadow-soft dark:shadow-none space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">Main Prompt Box (Dashboard)</label>
+                        <div class="bg-white dark:bg-slate-900 p-2 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 ring-2 ring-brand-500/20 border-brand-400">
+                            <textarea 
+                                class="w-full h-24 p-4 text-slate-700 dark:text-slate-100 bg-transparent resize-none outline-none placeholder:text-slate-400 text-lg leading-relaxed" 
+                                placeholder="Escribe aquí..."
+                            >Ej: "Tengo 3 pechugas de pollo..."</textarea>
+                             <div class="flex items-center justify-between p-2 border-t border-slate-100 mt-2 gap-4 dark:border-slate-800">
+                                <span class="text-xs text-slate-400 font-semibold uppercase">Filtros</span>
+                                <button class="bg-brand-600 text-white px-4 py-1.5 rounded-lg text-sm font-semibold">Generar</button>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMPONENTS & STATES -->
+        <section id="components" class="pb-24">
+            <div class="border-b border-slate-200 dark:border-slate-800 pb-3 mb-8">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-brand-500"></i> Ejemplos de Componentes
+                </h2>
+                <p class="text-sm text-slate-500 mt-1 dark:text-slate-400">Tarjetas ensambladas y estados de Inteligencia Artificial.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-bold text-slate-800 dark:text-white mb-4 uppercase tracking-wider text-sm">Recipe Card (Default)</h3>
+                    <!-- Card Real -->
+                    <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-soft dark:shadow-none overflow-hidden hover:shadow-lg transition-all transform hover:-translate-y-1 group">
+                        <div class="relative h-48 w-full">
+                            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80" alt="Plato" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Ensalada de Quinoa Real</h3>
+                            <p class="text-slate-500 dark:text-slate-400 mb-4 line-clamp-2">Una receta sencilla ideal para almuerzos rápidos y saludables.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="font-bold text-slate-800 dark:text-white mb-4 uppercase tracking-wider text-sm">Skeleton Loader (AI Loading)</h3>
+                    <!-- Skeleton Card -->
+                    <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-soft dark:shadow-none overflow-hidden animate-pulse">
+                        <div class="h-48 w-full bg-slate-200 dark:bg-slate-700"></div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-4 gap-4">
+                                <div class="h-6 bg-slate-200 dark:bg-slate-700 rounded-lg w-full"></div>
+                                <div class="h-6 bg-slate-200 dark:bg-slate-700 rounded-lg w-24 shrink-0"></div>
+                            </div>
+                            <div class="space-y-2 mb-6">
+                                <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full"></div>
+                                <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-4/5"></div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="h-8 bg-slate-200 dark:bg-slate-700 rounded-full w-20"></div>
+                                <div class="h-8 bg-slate-200 dark:bg-slate-700 rounded-full w-20"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Dark Mode Logic
+        const toggle = document.getElementById('dark-mode-toggle');
+        if (document.documentElement.classList.contains('dark')) {
+            toggle.checked = true;
+        }
+
+        toggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('smartbite_theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('smartbite_theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>

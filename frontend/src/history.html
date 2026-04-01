@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Recetas | SmartBite</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- FOUC prevention: must run before paint -->
+    <script>if (localStorage.getItem('smartbite_theme') === 'dark') document.documentElement.classList.add('dark');</script>
+
+    <script type="module" src="/js/pages/history.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 pb-20 sm:pb-0 min-h-screen flex flex-col dark:bg-slate-800 dark:text-slate-100">
+
+    <!-- Navbar (injected by navbar.js) -->
+    <div id="navbar-mount"></div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+        
+        <!-- Header & Breadcrumbs -->
+        <div class="mb-8">
+            <a href="profile.html#history" class="text-slate-500 hover:text-brand-600 text-sm font-semibold mb-4 inline-block transition-colors dark:text-slate-400">
+                <i class="fa-solid fa-arrow-left mr-1"></i> Volver a Mi Perfil
+            </a>
+            <h1 class="text-3xl font-bold text-slate-900 flex items-center gap-3 dark:text-white">
+                <i class="fa-solid fa-clock-rotate-left text-brand-600"></i>
+                Historial de Recetas
+            </h1>
+            <p class="text-slate-500 mt-2 text-lg dark:text-slate-400">Explora todas las comidas que has planificado y preparado con SmartBite.</p>
+        </div>
+
+        <!-- Filters Strip -->
+        <div class="flex flex-wrap items-center gap-3 mb-8">
+            <button class="px-4 py-2 bg-slate-900 text-white font-semibold text-sm rounded-xl shadow-sm transition-colors dark:shadow-none">Todos (24)</button>
+            <button class="px-4 py-2 bg-white border border-slate-200 text-slate-600 font-semibold text-sm rounded-xl hover:bg-slate-50 transition-colors dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Este mes</button>
+            <button class="px-4 py-2 bg-white border border-slate-200 text-slate-600 font-semibold text-sm rounded-xl hover:bg-slate-50 transition-colors dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Favoritos</button>
+            
+            <div class="ml-auto relative flex-grow max-w-xs">
+                <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"></i>
+                <input type="text" placeholder="Buscar por ingrediente..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500 outline-none transition-all dark:bg-slate-900 dark:border-slate-700">
+            </div>
+        </div>
+
+        <!-- Skeleton Grid Layout (Hidden after load) -->
+        <div id="skeleton-history" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-pulse w-full">
+            <!-- Skeleton Card -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col w-full dark:bg-slate-900 dark:border-slate-800">
+                <div class="h-44 w-full bg-slate-200 shrink-0"></div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <div class="h-3 bg-slate-200 rounded text-brand-600 w-24 mb-3"></div>
+                    <div class="h-6 bg-slate-200 rounded w-full mb-2"></div>
+                    <div class="h-6 bg-slate-200 rounded w-5/6 mb-4"></div>
+                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50 dark:border-slate-800">
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-20"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Skeleton Card -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col hidden sm:flex w-full dark:bg-slate-900 dark:border-slate-800">
+                <div class="h-44 w-full bg-slate-200 shrink-0"></div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <div class="h-3 bg-slate-200 rounded text-brand-600 w-32 mb-3"></div>
+                    <div class="h-6 bg-slate-200 rounded w-11/12 mb-2"></div>
+                    <div class="h-6 bg-slate-200 rounded w-4/5 mb-4"></div>
+                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50 dark:border-slate-800">
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-20"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Skeleton Card -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col hidden lg:flex w-full dark:bg-slate-900 dark:border-slate-800">
+                <div class="h-44 w-full bg-slate-200 shrink-0"></div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <div class="h-3 bg-slate-200 rounded text-brand-600 w-28 mb-3"></div>
+                    <div class="h-6 bg-slate-200 rounded w-full mb-2"></div>
+                    <div class="h-6 bg-slate-200 rounded w-3/4 mb-4"></div>
+                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50 dark:border-slate-800">
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-20"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Skeleton Card -->
+            <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden min-h-[340px] flex flex-col hidden xl:flex w-full dark:bg-slate-900 dark:border-slate-800">
+                <div class="h-44 w-full bg-slate-200 shrink-0"></div>
+                <div class="p-5 flex-grow flex flex-col">
+                    <div class="h-3 bg-slate-200 rounded text-brand-600 w-24 mb-3"></div>
+                    <div class="h-6 bg-slate-200 rounded w-11/12 mb-2"></div>
+                    <div class="h-6 bg-slate-200 rounded w-5/6 mb-4"></div>
+                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-slate-50 dark:border-slate-800">
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-16"></div>
+                        <div class="h-4 bg-slate-200 rounded w-20"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State (shown for new users — hidden by history.js for returning users) -->
+        <div id="history-empty-state" class="hidden w-full bg-white border text-center border-slate-100 rounded-3xl p-12 mt-8 shadow-sm flex flex-col items-center justify-center dark:bg-slate-900 dark:border-slate-800 dark:shadow-none">
+            <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6 border border-slate-100 ring-4 ring-slate-50/50 text-slate-300 dark:bg-slate-800 dark:border-slate-800">
+                <i class="fa-solid fa-box-open text-5xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-2 dark:text-white">Aún no hay recetas aquí</h3>
+            <p class="text-slate-500 max-w-sm mx-auto mb-8 dark:text-slate-400">Cuando generes tu primer menú y decidas cocinar algo, aparecerá mágicamente en este historial para siempre.</p>
+            <a href="/main.html" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition-all shadow-md shadow-brand-500/20 dark:shadow-lg">
+                Planear mi primera receta
+            </a>
+        </div>
+
+        <!-- Recipes Grid Layout -->
+        <div id="real-history" class="hidden grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Populated dynamically by history.js -->
+        </div>
+
+        <!-- Load More -->
+        <div class="mt-12 text-center pb-8 border-b border-slate-200 dark:border-slate-700">
+            <button class="px-8 py-3 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl shadow-sm hover:shadow-md hover:bg-slate-50 transition-all focus:ring-2 focus:ring-brand-500 focus:outline-none dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200 dark:shadow-none dark:hover:bg-slate-800">
+                Cargar más recetas
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-100 mt-16 pt-10 pb-8 dark:bg-slate-900 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+            <div class="flex items-center gap-2 text-slate-900 font-bold text-lg dark:text-white">
+                <i class="fa-solid fa-leaf text-brand-600"></i> SmartBite <span class="text-slate-400 font-normal text-sm ml-2 dark:text-slate-500">© 2026</span>
+            </div>
+            <div class="flex gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
+                <a href="#" class="hover:text-brand-600 transition-colors">Términos</a>
+                <a href="#" class="hover:text-brand-600 transition-colors">Privacidad</a>
+                <a href="support.html" class="hover:text-brand-600 transition-colors">Ayuda</a>
+            </div>
+            <div class="flex gap-4 text-slate-400 dark:text-slate-500">
+                <a href="#" class="hover:text-brand-600 transition-colors"><i class="fa-brands fa-twitter text-lg"></i></a>
+                <a href="#" class="hover:text-brand-600 transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

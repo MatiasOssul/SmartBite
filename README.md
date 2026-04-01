@@ -1,63 +1,57 @@
-# SmartBite - Prototipo Interactivo (Mockup) 🥗🤖
+# SmartBite — Proyecto Monorepo
 
-Bienvenido al repositorio del prototipo inicial de **SmartBite**, el asistente inteligente diseñado para planificar cenas y aprovechar los ingredientes del refrigerador con el poder de la Inteligencia Artificial.
+Este repositorio contiene la arquitectura completa (Frontend y Backend) de **SmartBite**, el asistente inteligente que planifica comidas y sugiere recetas potenciado por IA.
 
-Este proyecto ha sido construido como un **Mockup Interactivo de Alta Fidelidad (High-Fidelity Mockup)**. Su objetivo es actuar como una guía viva y funcional para el equipo de desarrollo, demostrando las interacciones de UI/UX, animaciones, paletas de colores y flujos de usuarios sin necesidad de un backend real.
-
----
-
-## 🛠️ Tecnologías Utilizadas
-
-Para mantener el proyecto extremadamente ligero y fácil de compartir sin necesidad de configurar entornos de compilación (como Node o npm), se utilizaron tecnologías nativas y CDNs:
-
-*   **HTML5 & CSS3:** Estructuración semántica pura.
-*   **Tailwind CSS (CDN):** Framework de utilidad CSS para diseño rápido, responsivo y mantenible. Toda la configuración de temas y colores está embebida en los `<head>` de los archivos.
-*   **Vanilla JavaScript (ES6):** Lógica de interacción (modales, menús, esqueletos de carga) y simulaciones de "fetch" de IA.
-*   **Google Fonts:** Utilizando la familia tipográfica **Outfit** para una apariencia moderna y de alta legibilidad.
-*   **FontAwesome (CDN):** Sistema de íconos vectoriales escalables.
+El proyecto está diseñado bajo un formato de **Monorepo** para facilitar el desarrollo, sincronizar los contratos de las APIs (JSON schemas) y agilizar la iteración de un solo desarrollador/equipo pequeño.
 
 ---
 
-## 📂 Estructura del Proyecto
+## 📂 Architetura del Proyecto
 
-El prototipo está compuesto por las siguientes vistas, muchas divididas en **"Estado Vacío" (Nuevo Usuario)** y **"Estado Lleno" (Usuario Recurrente)**:
+El repositorio se divide en dos grandes servicios independientes:
 
-| Archivo | Descripción |
-| :--- | :--- |
-| `index.html` | Pantalla de inicio de sesión (*Login*). Punto de entrada principal que inicializa el estado del mockup y el control del *Dark Mode*. |
-| `main.html` | *Dashboard* principal (Usuario recurrente) donde se gatilla el prompt generador de recetas de la IA. |
-| `main-empty.html` | *Dashboard* (Nuevo usuario) con onboarding vacío. Simula la primera generación de receta. |
-| `history.html` | Historial de recetas planeadas (Estado lleno con tarjetas de comida). |
-| `history-empty.html`| Historial de recetas vacío (Placeholder visual interactivo). |
-| `profile.html` | Panel de control, seguridad de contraseña y exclusiones alimenticias. |
-| `profile-empty.html`| Panel de perfil idéntico, pero con el historial de la tab base vacío. |
-| `support.html` | Centro de Ayuda ficticio (FAQ y soporte técnico). |
-| `biteplus.html` | *Landing page* simulada para la suscripción Premium (SmartBite+). |
-| **`ui-kit.html`** | 🎨 **¡Importante para Devs!** Diccionario de Diseño centralizado. Expone todos los componentes, botones, inputs y colores (*Design System*). |
+- **`/frontend/`**: Aplicación Multi-Página (MPA) servida con **Vite**. 
+  - *Tecnologías:* Vanilla JavaScript (ES Modules), Tailwind CSS, HTML5 estricto.
+  - *Estado:* Totalmente modularizado, con gestión de estados globales (`store.js`) y listo para producción.
+  
+- **`/backend/`**: API RESTful robusta y rápida (En construcción).
+  - *Tecnologías:* **Python**, **FastAPI**, **Pydantic**.
+  - *Función:* Servir los modelos de la base de datos, autenticar usuarios y comunicarse con servicios de IA para generar recetas.
 
 ---
 
-## ✨ Características Especiales Simuladas (Para Desarrolladores)
+## 🚀 Guía Rápida de Inicio (Desarrollo Local)
 
-Este Mockup no es solo visual, incluye lógicas estructurales que los programadores deberán replicar conectando a la API real:
+Debido al formato Monorepo, necesitarás abrir **dos terminales separadas** para correr la aplicación completa en desarrollo.
 
-1.  **Modo Oscuro Integral (Dark Mode 🌙):** 
-    Implementado a través de todo el sitio usando la configuración `darkMode: 'class'` de Tailwind. El botón alternador se esconde en el **Perfil > Preferencias de Apariencia**.
-    *   *Nota Anti-FOUC:* Se ha incluido un pequeño bloque dentro del `<head>` de cada archivo que lee el `localStorage` antes de pintar la pantalla para evitar "flashes blancos".
-2.  **Estados de Carga (Skeleton Loaders ⏳):** 
-    En lugar de "spinners" aburridos, se programaron simulaciones de generación por IA. 
-    *   Ejemplo: En `main.html`, al pedir una receta, aparece un esqueleto de carga de tarjeta por **3.5 segundos** antes de mostrar la respuesta imaginaria. El historial y perfil también simulan demoras de red al cargar (`DOMContentLoaded`).
-3.  **Persistencia Simulada de "Sesión Vacía" (`localStorage`):** 
-    Al hacer clic en "Ingresar" en `index.html` sin usar credenciales se entra en "Modo Recurrente". Si se ingresa como `vacio@smartbite.com`, el sistema almacena `localStorage.setItem('smartbite_session_state', 'empty')` y todo el *routing* redirigirá forzosamente a las vistas `-empty.html`.
+### 1. Levantar el Backend (FastAPI)
+Abre tu primera terminal y ubícate en la raíz del repositorio:
+```bash
+cd backend
+python -m venv .venv
+.\.venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+```
+*La API estará disponible en `http://127.0.0.1:8000` y la documentación interactiva (Swagger) en `http://127.0.0.1:8000/docs`.*
+
+### 2. Levantar el Frontend (Vite)
+Abre una segunda terminal y ubícate en la raíz del repositorio:
+```bash
+cd frontend
+
+# 1. Instalar dependencias (solo la primera vez)
+npm install
+
+# 2. Iniciar el servidor en el puerto 5173
+npm run dev
+```
+*Tu aplicación se abrirá en `http://localhost:5173`.*
 
 ---
 
-## 🚀 Cómo ejecutar
+## 🔌 Cómo se conectan
 
-No requiere instalación de librerías ni base de datos local. 
-Simplemente **abre `index.html`** en cualquier navegador moderno (Chrome, Edge, Firefox, Safari) y comienza la experiencia haciendo clic en los botones.
+Para evitar problemas de CORS intermedios durante el desarrollo local, el **Frontend (Vite)** actúa como un Proxy Inverso. 
 
-> 💡 **Consejo:** Empieza siempre la experiencia recargando en `index.html` para asegurarte de que las variables de simulación de cuenta se reinicien adecuadamente.
-
----
-*Hecho con cuidado para los equipos de Desarrollo UI/UX.*
+Cualquier petición que el frontend haga hacia la ruta `/api/*` (ej: `fetch('/api/health')`), Vite la interceptará y la redirigirá invisiblemente a tu servidor FastAPI localizado en `http://127.0.0.1:8000/api/*`. **Por esta razón, en tu código JS siempre debes hacer llamadas con rutas relativas (`/api/...`).**

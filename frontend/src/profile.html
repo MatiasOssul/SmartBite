@@ -4,163 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Perfil | SmartBite</title>
-    <!-- Favicon SVG -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='128' fill='%2316a34a'/><path fill='white' transform='translate(96,96) scale(0.625)' d='M384 320c-14.12 0-25.91 10.37-27.76 24.32C344.2 437.5 241.6 512 124.6 512C81.98 512 43.14 496 11.4 472.3c-11.02-8.3-25.2 .5-25.2 14.1C-13.8 501.9 .8245 512 16 512H80c44.18 0 80-35.82 80-80c0-11-2.188-21.43-5.836-31.23c-1.393-3.791-.5391-8.113 2.195-11.05C161.4 384.3 169.4 384 176 384h208c17.67 0 32-14.33 32-32S401.7 320 384 320zM491.7 20.34C480.9 9.531 465.1 3.203 448 3.203c-74.9 0-163.6 22.25-231.2 78.47c-67.62 56.24-118 141.7-118 243.6c0 17.15 6.467 33.36 17.43 45.45c11.02 12.18 26.54 18.57 43.32 18.57c23.01 0 45.92-9.76 60.1-23.95l86.63-86.63c-31.95 1.551-64.84-18.06-72.2-51.98c-2.455-11.23 8.35-20.73 18.25-15.86c63.78 31.42 122.9-2.324 148.8-41.21c17.91-26.85 22.84-59.56 14.61-96.53c-1.92-8.777 5.865-16.14 14.28-13.1c48.81 17.65 91.1 2.379 116.6-18.9C500.4 122.7 512 95.83 512 64C512 47.93 504.6 33.2 491.7 20.34z'/></svg>">
-    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            200: '#bbf7d0',
-                            300: '#86efac',
-                            400: '#4ade80',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
-                        }
-                    },
-                    boxShadow: {
-                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
-        /* Smooth scrolling for anchor links */
-        html { scroll-behavior: smooth; scroll-padding-top: 100px; }
-    </style>
+    <!-- FOUC prevention: must run before paint -->
+    <script>if (localStorage.getItem('smartbite_theme') === 'dark') document.documentElement.classList.add('dark');</script>
 
-    <script>
-        if (localStorage.getItem('smartbite_theme') === 'dark') {
-            document.documentElement.classList.add('dark');
-        }
-    </script>
+    <script type="module" src="/js/pages/profile.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 pb-20 sm:pb-0 min-h-screen flex flex-col dark:bg-slate-800 dark:text-slate-100">
 
-    <!-- Navbar -->
-    <nav class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm dark:bg-slate-900 dark:border-slate-800 dark:shadow-none">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <a href="main.html" class="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity">
-                <div class="bg-brand-600 text-white p-2 rounded-lg flex items-center justify-center">
-                    <i class="fa-solid fa-leaf text-lg"></i>
-                </div>
-                <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white">SmartBite</span>
-            </a>
-            <div class="flex items-center gap-5 sm:gap-6">
-                <nav class="hidden sm:flex items-center gap-6 text-sm font-semibold">
-                    <a href="main.html" class="text-slate-500 hover:text-brand-600 transition-colors dark:text-slate-400">Inicio</a>
-                    <a href="history.html" class="text-slate-500 hover:text-brand-600 transition-colors dark:text-slate-400">Historial</a>
-                </nav>
-                <div class="h-5 w-px bg-slate-200 hidden sm:block"></div>
-                
-                <!-- Notification Bell -->
-                <div class="relative flex items-center">
-                    <button class="text-slate-500 hover:text-brand-600 transition-colors focus:outline-none dark:text-slate-400" onclick="toggleNotifications(this)">
-                        <i class="fa-regular fa-bell text-xl bell-icon"></i>
-                    </button>
-                    <div class="notif-popup absolute right-0 top-full mt-4 bg-slate-900 border border-slate-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-[100] flex items-center gap-2">
-                        <i class="fa-solid fa-bell text-brand-400"></i> <span class="notif-text">Notificaciones Activadas</span>
-                    </div>
-                </div>
-                
-                <!-- Profile Dropdown -->
-                <div class="relative">
-                    <button id="profile-menu-btn" class="w-9 h-9 block rounded-full border-2 border-brand-200 bg-slate-200 overflow-hidden cursor-pointer hover:border-brand-500 hover:shadow-md transition-all focus:outline-none ring-2 ring-brand-500" onclick="toggleProfileMenu()">
-                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80" alt="User Profile" class="w-full h-full object-cover">
-                    </button>
-
-                    <!-- Dropdown Layout -->
-                    <div id="profile-dropdown" class="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-float border border-slate-100 py-2 opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-200 z-50 dark:bg-slate-900 dark:border-slate-800">
-                        <div class="px-4 py-3 border-b border-slate-100 mb-1 bg-slate-50/50 dark:border-slate-800">
-                            <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Usuario de Prueba</p>
-                            <p class="text-xs text-slate-500 truncate dark:text-slate-400">usuario@ejemplo.com</p>
-                        </div>
-                        <a href="profile.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
-                            <i class="fa-regular fa-user w-4 text-center"></i> Mi Perfil
-                        </a>
-                        <a href="biteplus.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-amber-600 hover:bg-amber-50 hover:text-amber-700 transition-colors flex justify-between group">
-                            <div class="flex items-center gap-3"><i class="fa-solid fa-crown w-4 text-center group-hover:scale-110 transition-transform"></i> Bite+</div>
-                            <span class="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Upgrade</span>
-                        </a>
-                        <div class="border-t border-slate-100 mt-1 my-1 dark:border-slate-800"></div>
-                        <a href="index.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
-                            <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i> Cerrar Sesión
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Mobile Hamburger Button -->
-                <button class="flex sm:hidden items-center justify-center w-10 h-10 -mr-2 text-slate-700 hover:text-brand-600 hover:bg-slate-100 rounded-xl transition-all focus:outline-none dark:text-slate-200 dark:hover:bg-slate-700" onclick="toggleMobileMenu()">
-                    <i class="fa-solid fa-bars text-2xl"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Mobile Menu Dropdown -->
-        <div id="mobile-menu" class="hidden sm:hidden bg-white border-b border-slate-100 absolute w-full left-0 top-16 shadow-lg z-40 pb-4 pt-2 dark:bg-slate-900 dark:border-slate-800">
-            <div class="px-4 space-y-2">
-                <a href="main.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
-                    <i class="fa-solid fa-house mr-2 w-5"></i> Inicio
-                </a>
-                <a href="history.html" class="block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
-                    <i class="fa-solid fa-clock-rotate-left mr-2 w-5"></i> Historial
-                </a>
-            </div>
-        </div>
-    </nav>
-    <script>
-        function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        }
-        function toggleNotifications(btnElement) {
-            const container = btnElement.parentElement;
-            const icon = container.querySelector('.bell-icon');
-            const popup = container.querySelector('.notif-popup');
-            const text = container.querySelector('.notif-text');
-            const statusIcon = popup.querySelector('i');
-            
-            if (icon.classList.contains('fa-bell')) {
-                icon.className = 'fa-solid fa-bell-slash text-xl text-slate-400 hover:text-slate-600 transition-all bell-icon';
-                text.innerText = 'Notificaciones Desactivadas';
-                statusIcon.className = 'fa-solid fa-bell-slash text-slate-400';
-            } else {
-                icon.className = 'fa-regular fa-bell text-xl text-brand-600 hover:text-brand-700 transition-all bell-icon';
-                text.innerText = 'Notificaciones Activadas';
-                statusIcon.className = 'fa-solid fa-bell text-brand-400';
-            }
-            
-            popup.classList.remove('opacity-0');
-            if (container.notifTimeout) clearTimeout(container.notifTimeout);
-            container.notifTimeout = setTimeout(() => popup.classList.add('opacity-0'), 2500);
-        }
-    </script>
+    <!-- Navbar (injected by navbar.js) -->
+    <div id="navbar-mount"></div>
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-8 pt-4 pb-24 lg:pt-8 w-full">
@@ -245,11 +107,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-1 dark:text-slate-200">Nombre Completo</label>
-                            <input type="text" value="Usuario de Prueba" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
+                            <input type="text" id="profile-name-input" value="" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-1 dark:text-slate-200">Correo Electrónico</label>
-                            <input type="email" value="usuario@ejemplo.com" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400" readonly>
+                            <input type="email" id="profile-email-input" value="" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400" readonly>
                             <p class="text-xs text-brand-600 mt-1 font-medium"><i class="fa-solid fa-circle-check"></i> Email verificado</p>
                         </div>
                     </div>
@@ -267,44 +129,8 @@
                         </button>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Card Item -->
-                        <div class="border border-brand-200 bg-brand-50/50 p-4 rounded-2xl flex items-start justify-between relative overflow-hidden group">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-8 bg-white rounded border border-slate-200 flex items-center justify-center p-1 dark:bg-slate-900 dark:border-slate-700">
-                                    <i class="fa-brands fa-cc-visa text-2xl text-blue-800"></i>
-                                </div>
-                                <div>
-                                    <p class="font-semibold text-slate-800 dark:text-slate-100">Visa terminada en 4242</p>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400">Expira 12/28</p>
-                                </div>
-                            </div>
-                            <span class="bg-brand-100 text-brand-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">Predeterminada</span>
-                            
-                            <!-- Actions on hover -->
-                            <div class="absolute right-4 bottom-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button class="text-slate-400 hover:text-red-500 transition-colors dark:text-slate-500"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        </div>
-
-                        <!-- Card Item -->
-                        <div class="border border-slate-200 bg-white p-4 rounded-2xl flex items-start justify-between relative overflow-hidden group hover:border-slate-300 transition-colors dark:border-slate-700 dark:bg-slate-900">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-8 bg-white rounded border border-slate-200 flex items-center justify-center p-1 dark:bg-slate-900 dark:border-slate-700">
-                                    <i class="fa-brands fa-cc-mastercard text-2xl text-orange-500"></i>
-                                </div>
-                                <div>
-                                    <p class="font-semibold text-slate-800 dark:text-slate-100">Mastercard en 8192</p>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400">Expira 08/25</p>
-                                </div>
-                            </div>
-                            
-                            <!-- Actions on hover -->
-                            <div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-3">
-                                <button class="text-xs font-semibold text-slate-600 hover:text-brand-600 dark:text-slate-300">Hacer predeterminada</button>
-                                <button class="text-slate-400 hover:text-red-500 transition-colors dark:text-slate-500"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        </div>
+                    <div id="payment-methods-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Cards injected by JS -->
                     </div>
                 </section>
 
@@ -342,28 +168,28 @@
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         <!-- Active toggles -->
                         <label class="cursor-pointer">
-                            <input type="checkbox" class="peer sr-only" checked>
+                            <input type="checkbox" id="pref-gluten_free" class="peer sr-only">
                             <div class="border border-slate-200 bg-white text-slate-600 p-4 rounded-2xl text-center peer-checked:border-brand-500 peer-checked:bg-brand-50 peer-checked:text-brand-700 transition-all dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:peer-checked:bg-brand-900/40">
                                 <i class="fa-solid fa-wheat-awn-circle-exclamation text-2xl mb-2 block text-brand-500"></i>
                                 <span class="font-semibold text-sm">Sin Gluten</span>
                             </div>
                         </label>
                         <label class="cursor-pointer">
-                            <input type="checkbox" class="peer sr-only">
+                            <input type="checkbox" id="pref-vegetarian" class="peer sr-only">
                             <div class="border border-slate-200 bg-white text-slate-500 p-4 rounded-2xl text-center peer-checked:border-brand-500 peer-checked:bg-brand-50 peer-checked:text-brand-700 transition-all hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:peer-checked:bg-brand-900/40 dark:hover:bg-slate-800">
                                 <i class="fa-solid fa-leaf text-2xl mb-2 block"></i>
                                 <span class="font-semibold text-sm">Vegetariano</span>
                             </div>
                         </label>
                         <label class="cursor-pointer">
-                            <input type="checkbox" class="peer sr-only" checked>
+                            <input type="checkbox" id="pref-vegan" class="peer sr-only">
                             <div class="border border-slate-200 bg-white text-slate-600 p-4 rounded-2xl text-center peer-checked:border-brand-500 peer-checked:bg-brand-50 peer-checked:text-brand-700 transition-all dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:peer-checked:bg-brand-900/40">
                                 <i class="fa-solid fa-seedling text-2xl mb-2 block text-brand-500"></i>
                                 <span class="font-semibold text-sm">Vegano</span>
                             </div>
                         </label>
                         <label class="cursor-pointer">
-                            <input type="checkbox" class="peer sr-only">
+                            <input type="checkbox" id="pref-keto" class="peer sr-only">
                             <div class="border border-slate-200 bg-white text-slate-500 p-4 rounded-2xl text-center peer-checked:border-brand-500 peer-checked:bg-brand-50 peer-checked:text-brand-700 transition-all hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:peer-checked:bg-brand-900/40 dark:hover:bg-slate-800">
                                 <i class="fa-solid fa-drumstick-bite text-2xl mb-2 block"></i>
                                 <span class="font-semibold text-sm">Keto</span>
@@ -373,7 +199,7 @@
 
                     <div class="mt-8">
                         <label class="block text-sm font-semibold text-slate-700 mb-2 dark:text-slate-200">Alergias o exclusiones personalizadas (separadas por comas)</label>
-                        <input type="text" placeholder="Ej: Maní, Mariscos, Cilantro" value="Lactosa, Maní" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
+                        <input type="text" id="pref-allergens" placeholder="Ej: Maní, Mariscos, Cilantro" value="" class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
                     </div>
 
                     <div class="mt-8 border-t border-slate-100 dark:border-slate-800 pt-6">
@@ -399,39 +225,22 @@
                 <section id="history" class="bg-white rounded-3xl shadow-soft border border-slate-100 p-6 md:p-8 dark:bg-slate-900 dark:shadow-none dark:border-slate-800">
                     <div class="flex items-center justify-between mb-6 border-b border-slate-100 pb-4 dark:border-slate-800">
                         <h2 class="text-xl font-bold text-slate-900 dark:text-white">Historial de Recetas</h2>
-                        <a href="history.html" class="text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors">Ver todas <i class="fa-solid fa-arrow-right ml-1"></i></a>
+                        <a href="/history.html" class="text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors">Ver todas <i class="fa-solid fa-arrow-right ml-1"></i></a>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <!-- Recipe card 1 -->
-                        <div class="border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-md transition-shadow dark:border-slate-800">
-                            <div class="h-32 w-full overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=400&q=80" alt="Pollo al Limón" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            </div>
-                            <div class="p-4 bg-white dark:bg-slate-900">
-                                <span class="text-xs text-slate-400 font-semibold mb-1 block dark:text-slate-500">Ayer</span>
-                                <h3 class="font-bold text-slate-800 line-clamp-1 dark:text-slate-100">Pollo al Limón y Hierbas</h3>
-                                <div class="flex items-center gap-3 mt-2 text-xs text-slate-500 dark:text-slate-400">
-                                    <span><i class="fa-solid fa-clock"></i> 20m</span>
-                                    <span><i class="fa-solid fa-basket-shopping text-brand-500"></i> $10.180</span>
-                                </div>
-                            </div>
+                    <!-- Empty state (shown for new users, hidden by profile.js) -->
+                    <div id="history-empty" class="hidden border-2 border-dashed border-slate-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center dark:border-slate-700">
+                        <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center text-slate-300 mb-4 dark:bg-slate-800">
+                            <i class="fa-solid fa-box-open text-2xl"></i>
                         </div>
+                        <p class="text-slate-800 font-semibold mb-1 dark:text-slate-100">Aún no hay recetas</p>
+                        <p class="text-sm text-slate-500 max-w-xs mx-auto dark:text-slate-400">Tus recetas completadas aparecerán aquí.</p>
+                        <a href="/main.html" class="mt-4 text-brand-600 font-semibold text-sm hover:underline">Planear receta nueva</a>
+                    </div>
 
-                        <!-- Recipe card 2 -->
-                        <div class="border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-md transition-shadow dark:border-slate-800">
-                            <div class="h-32 w-full overflow-hidden">
-                                <img src="https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=400&q=80" alt="Ensalada Quinoa" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            </div>
-                            <div class="p-4 bg-white dark:bg-slate-900">
-                                <span class="text-xs text-slate-400 font-semibold mb-1 block dark:text-slate-500">Hace 3 días</span>
-                                <h3 class="font-bold text-slate-800 line-clamp-1 dark:text-slate-100">Ensalada de Quinoa Mediterránea</h3>
-                                <div class="flex items-center gap-3 mt-2 text-xs text-slate-500 dark:text-slate-400">
-                                    <span><i class="fa-solid fa-clock"></i> 10m</span>
-                                    <span><i class="fa-solid fa-basket-shopping text-brand-500"></i> $6.500</span>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Populated state (shown for returning users, hidden by profile.js) -->
+                    <div id="history-populated" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <!-- Injected via profile.js/history.js render -->
                     </div>
                 </section>
 
@@ -559,152 +368,5 @@
         <span id="toast-message">¡Operación exitosa!</span>
     </div>
 
-    <!-- Script para funcionalidad de los Modales -->
-    <script>
-        // --- Navbar Profile Dropdown ---
-        const profileDropdown = document.getElementById('profile-dropdown');
-        function toggleProfileMenu() {
-            profileDropdown.classList.toggle('opacity-0');
-            profileDropdown.classList.toggle('pointer-events-none');
-            profileDropdown.classList.toggle('-translate-y-2');
-        }
-        
-        document.addEventListener('click', (e) => {
-            const btn = document.getElementById('profile-menu-btn');
-            if (btn && !btn.contains(e.target) && !profileDropdown.contains(e.target)) {
-                profileDropdown.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
-            }
-        });
-
-        // --- Add Card Modal ---
-        const cardModal = document.getElementById('add-card-modal');
-        const cardContent = document.getElementById('modal-content');
-        const addCardBtn = document.getElementById('add-card-btn');
-        const closeCardBtn = document.getElementById('close-modal-btn');
-        const cancelCardBtn = document.getElementById('cancel-modal-btn');
-        const cardBackdrop = document.getElementById('modal-backdrop');
-
-        function openCardModal() {
-            cardModal.classList.remove('opacity-0', 'pointer-events-none');
-            cardContent.classList.remove('scale-95');
-            cardContent.classList.add('scale-100');
-        }
-
-        function closeCardModal() {
-            cardModal.classList.add('opacity-0', 'pointer-events-none');
-            cardContent.classList.remove('scale-100');
-            cardContent.classList.add('scale-95');
-        }
-
-        addCardBtn.addEventListener('click', openCardModal);
-        closeCardBtn.addEventListener('click', closeCardModal);
-        cancelCardBtn.addEventListener('click', closeCardModal);
-        cardBackdrop.addEventListener('click', closeCardModal);
-
-        // --- Password Modal ---
-        const pwdModal = document.getElementById('pwd-modal');
-        const pwdContent = document.getElementById('pwd-content');
-        const pwdBtn = document.getElementById('change-pwd-btn');
-        const closePwdBtn = document.getElementById('close-pwd-btn');
-        const cancelPwdBtn = document.getElementById('cancel-pwd-btn');
-        const pwdBackdrop = document.getElementById('pwd-backdrop');
-
-        function openPwdModal() {
-            pwdModal.classList.remove('opacity-0', 'pointer-events-none');
-            pwdContent.classList.remove('scale-95');
-            pwdContent.classList.add('scale-100');
-        }
-
-        function closePwdModal() {
-            pwdModal.classList.add('opacity-0', 'pointer-events-none');
-            pwdContent.classList.remove('scale-100');
-            pwdContent.classList.add('scale-95');
-        }
-
-        pwdBtn.addEventListener('click', openPwdModal);
-        closePwdBtn.addEventListener('click', closePwdModal);
-        cancelPwdBtn.addEventListener('click', closePwdModal);
-        pwdBackdrop.addEventListener('click', closePwdModal);
-
-        // --- Toast Notification Component ---
-        const toast = document.getElementById('toast-notification');
-        const toastMessage = document.getElementById('toast-message');
-        let toastTimeout;
-
-        function showToast(message) {
-            toastMessage.innerText = message;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        }
-
-        function createSaveHandler(buttonId, successMessage) {
-            const btn = document.getElementById(buttonId);
-            if (!btn) return;
-
-            btn.addEventListener('click', () => {
-                const originalText = btn.innerText;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Guardando...';
-                btn.classList.add('opacity-80', 'cursor-not-allowed');
-                btn.disabled = true;
-
-                // Simular tiempo de carga
-                setTimeout(() => {
-                    btn.innerText = originalText;
-                    btn.disabled = false;
-                    btn.classList.remove('opacity-80', 'cursor-not-allowed');
-                    showToast(successMessage);
-                }, 800);
-            });
-        }
-
-        // Initialize reusable buttons
-        createSaveHandler('save-profile-btn', '¡Tu perfil ha sido actualizado!');
-        createSaveHandler('save-preferences-btn', '¡Tus preferencias han sido guardadas!');
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const realProfile = document.getElementById('real-profile');
-            const skeletonProfile = document.getElementById('skeleton-profile');
-            if(realProfile && skeletonProfile) {
-                setTimeout(() => {
-                    skeletonProfile.classList.add('hidden');
-                    realProfile.classList.remove('hidden');
-                }, 1200);
-            }
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('smartbite_session_state') === 'empty') {
-                document.querySelectorAll('a[href="main.html"]').forEach(el => el.href = 'main-empty.html');
-                document.querySelectorAll('a[href="history.html"]').forEach(el => el.href = 'history-empty.html');
-                document.querySelectorAll('a[href="profile.html"]').forEach(el => el.href = 'profile-empty.html');
-            }
-        });
-    </script>
-    <script>
-        // Dark Mode Logic Implementation
-        document.addEventListener('DOMContentLoaded', () => {
-            const themeToggleBtn = document.getElementById('dark-mode-toggle');
-            
-            // Set toggle state based on html class
-            if (document.documentElement.classList.contains('dark')) {
-                themeToggleBtn.checked = true;
-            }
-
-            themeToggleBtn.addEventListener('change', function() {
-                if (this.checked) {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('smartbite_theme', 'dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('smartbite_theme', 'light');
-                }
-            });
-        });
-    </script>
 </body>
 </html>

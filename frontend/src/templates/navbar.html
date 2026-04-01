@@ -1,0 +1,80 @@
+<nav class="bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm dark:bg-slate-900 dark:border-slate-800 dark:shadow-none">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <a href="/main.html" class="flex items-center gap-2 cursor-pointer hover:opacity-90 transition-opacity">
+            <div class="bg-brand-600 text-white p-2 rounded-lg flex items-center justify-center">
+                <i class="fa-solid fa-leaf text-lg"></i>
+            </div>
+            <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white">SmartBite</span>
+        </a>
+        <div class="flex items-center gap-5 sm:gap-6">
+            <nav class="hidden sm:flex items-center gap-6 text-sm font-semibold">
+                <a href="/main.html" data-page="main" class="nav-link text-slate-500 hover:text-brand-600 transition-colors dark:text-slate-400">Inicio</a>
+                <a href="/history.html" data-page="history" class="nav-link text-slate-500 hover:text-brand-600 transition-colors dark:text-slate-400">Historial</a>
+            </nav>
+            <div class="h-5 w-px bg-slate-200 hidden sm:block dark:bg-slate-700"></div>
+
+            <!-- Cart button with badge -->
+            <div class="relative flex items-center">
+                <button id="cart-btn" title="Lista de ingredientes"
+                    class="text-slate-500 hover:text-brand-600 transition-colors focus:outline-none dark:text-slate-400">
+                    <i class="fa-solid fa-bag-shopping text-xl"></i>
+                </button>
+                <span id="cart-badge"
+                    class="hidden absolute -top-1.5 -right-1.5 min-w-[1.1rem] h-[1.1rem] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-0.5 pointer-events-none">
+                    0
+                </span>
+            </div>
+
+            <!-- Notification Bell -->
+            <div class="relative flex items-center">
+                <button id="notifications-btn" class="text-slate-500 hover:text-brand-600 transition-colors focus:outline-none dark:text-slate-400">
+                    <i class="fa-regular fa-bell text-xl bell-icon"></i>
+                </button>
+                <div class="notif-popup absolute right-0 top-full mt-4 bg-slate-900 border border-slate-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-xl opacity-0 pointer-events-none transition-opacity duration-300 whitespace-nowrap z-[100] flex items-center gap-2">
+                    <i class="fa-solid fa-bell text-brand-400"></i> <span class="notif-text">Notificaciones Activadas</span>
+                </div>
+            </div>
+
+            <!-- Profile Dropdown -->
+            <div class="relative">
+                <button id="profile-menu-btn" class="w-9 h-9 block rounded-full border-2 border-brand-200 bg-slate-200 overflow-hidden cursor-pointer hover:border-brand-500 hover:shadow-md transition-all focus:outline-none">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80" alt="User Profile" class="w-full h-full object-cover">
+                </button>
+                <div id="profile-dropdown" class="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-float border border-slate-100 py-2 opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-200 z-50 dark:bg-slate-900 dark:border-slate-800">
+                    <div class="px-4 py-3 border-b border-slate-100 mb-1 bg-slate-50/50 dark:border-slate-800">
+                        <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Usuario de Prueba</p>
+                        <p class="text-xs text-slate-500 truncate dark:text-slate-400">usuario@ejemplo.com</p>
+                    </div>
+                    <a href="/profile.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
+                        <i class="fa-regular fa-user w-4 text-center"></i> Mi Perfil
+                    </a>
+                    <a href="/biteplus.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-bold text-amber-600 hover:bg-amber-50 hover:text-amber-700 transition-colors flex justify-between group">
+                        <div class="flex items-center gap-3"><i class="fa-solid fa-crown w-4 text-center group-hover:scale-110 transition-transform"></i> Bite+</div>
+                        <span class="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Upgrade</span>
+                    </a>
+                    <div class="border-t border-slate-100 mt-1 my-1 dark:border-slate-800"></div>
+                    <a href="/index.html" id="logout-link" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
+                        <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i> Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mobile Hamburger Button -->
+            <button id="mobile-menu-btn" class="flex sm:hidden items-center justify-center w-10 h-10 -mr-2 text-slate-700 hover:text-brand-600 hover:bg-slate-100 rounded-xl transition-all focus:outline-none dark:text-slate-200 dark:hover:bg-slate-700">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden sm:hidden bg-white border-b border-slate-100 absolute w-full left-0 top-16 shadow-lg z-40 pb-4 pt-2 dark:bg-slate-900 dark:border-slate-800">
+        <div class="px-4 space-y-2">
+            <a href="/main.html" data-page="main" class="mobile-nav-link block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
+                <i class="fa-solid fa-house mr-2 w-5"></i> Inicio
+            </a>
+            <a href="/history.html" data-page="history" class="mobile-nav-link block px-4 py-3 rounded-xl text-base font-bold text-slate-600 hover:bg-slate-50 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
+                <i class="fa-solid fa-clock-rotate-left mr-2 w-5"></i> Historial
+            </a>
+        </div>
+    </div>
+</nav>

@@ -120,7 +120,11 @@ document.addEventListener('DOMContentLoaded', () => {
     setButtonLoading(generateBtn, false);
 
     if (error) {
-      showToast(error.message ?? 'Error al generar receta', 'error');
+      const isTransient = error.status === 502 || error.status === 503 || error.status === 0;
+      const msg = isTransient
+        ? 'Ocurrió un error inesperado con el servicio de IA. Intenta de nuevo en unos segundos.'
+        : (error.message ?? 'Error al generar receta');
+      showToast(msg, 'error');
       emptyState?.classList.remove('hidden');
       return;
     }

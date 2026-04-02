@@ -23,7 +23,7 @@ export default defineConfig({
         profile: resolve(__dirname, 'src/profile.html'),
         biteplus: resolve(__dirname, 'src/biteplus.html'),
         support: resolve(__dirname, 'src/support.html'),
-        uikit: resolve(__dirname, 'src/ui-kit.html'),
+        // ui-kit excluido del build de producción
       },
     },
   },

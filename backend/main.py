@@ -14,9 +14,14 @@ from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 from starlette.middleware.base import BaseHTTPMiddleware
 
+import logging
+
 from core.database import Base, engine
 from models import recipe_model, user_model  # noqa: F401 — registra modelos en Base.metadata (incluye DailyUsageDB)
 from routers import auth, profile, recipes, support
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("smartbite")
 
 # ---------------------------------------------------------------------------
 # Rate limiter (global — routers añaden límites por endpoint)
@@ -49,7 +54,8 @@ app.add_middleware(SecurityHeadersMiddleware)
 # ---------------------------------------------------------------------------
 # CORS
 # ---------------------------------------------------------------------------
-_FRONTEND_URL = os.getenv("FRONTEND_URL", "")  # Set in Render: https://smartbite-frontend.onrender.com
+_FRONTEND_URL = os.getenv("FRONTEND_URL", "").strip()
+logger.info("CORS allow_origins — FRONTEND_URL: %r", _FRONTEND_URL or "(not set)")
 
 app.add_middleware(
     CORSMiddleware,
@@ -83,6 +89,7 @@ app.mount("/api/static", StaticFiles(directory=_STATIC_DIR), name="static")
 @app.on_event("startup")
 def create_tables() -> None:
     Base.metadata.create_all(bind=engine)
+    logger.info("Database tables verified/created")
 
 
 @app.get("/api/health")

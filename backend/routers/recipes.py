@@ -1,8 +1,15 @@
+import uuid
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import Response
+from sqlalchemy.orm import Session
 
+from core.database import get_db
+from core.deps import get_current_user
+from core.llm import generate_recipes_from_llm
+from models.recipe_model import RecipeDB
+from models.user_model import UserDB
 from schemas.recipe_schemas import (
     Difficulty,
     GenerateRecipeRequest,
@@ -17,119 +24,218 @@ from schemas.recipe_schemas import (
 
 router = APIRouter(prefix="/api/recipes", tags=["Recipes"])
 
-# Traducción fiel de MOCK_RECIPES del frontend JS
-_MOCK_RECIPES: list[Recipe] = [
-    Recipe(
-        id="rec_01jdemo0000000000000000001",
-        title="Pollo al Limón y Hierbas con Quinoa",
-        description="Pechuga de pollo marinada en limón y hierbas frescas, acompañada de quinoa cocida al caldo. Una opción alta en proteínas, libre de gluten y lista en menos de 30 minutos.",
-        image_url="https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=800&q=80",
-        prep_time_minutes=20,
-        difficulty=Difficulty.easy,
-        cost_clp=10180,
-        match_score=100,
-        tags=["Sin Gluten"],
-        ingredients=[
-            Ingredient(id="ing_001", name="Pechuga de pollo",  amount=300, unit=IngredientUnit.g),
-            Ingredient(id="ing_002", name="Quinoa",             amount=150, unit=IngredientUnit.g),
-            Ingredient(id="ing_003", name="Jugo de limón",      amount=45,  unit=IngredientUnit.ml),
-            Ingredient(id="ing_004", name="Ajo",                amount=2,   unit=IngredientUnit.units),
-            Ingredient(id="ing_005", name="Aceite de oliva",    amount=2,   unit=IngredientUnit.tbsp),
-            Ingredient(id="ing_006", name="Orégano seco",       amount=1,   unit=IngredientUnit.tsp),
-        ],
-        instructions=[
-            "Marina el pollo con jugo de limón, ajo picado, orégano y aceite de oliva durante 10 minutos.",
-            "Cocina la quinoa en 300 ml de caldo de verduras a fuego medio durante 15 minutos hasta que absorba el líquido.",
-            "Sella el pollo en una sartén caliente con un chorrito de aceite, 5 minutos por cada lado hasta dorar.",
-            "Baja el fuego, tapa y cocina 3 minutos más hasta que esté cocido por dentro.",
-            "Sirve el pollo sobre la quinoa y decora con rodajas de limón y perejil fresco.",
-        ],
-        nutritional_info=NutritionalInfo(calories_kcal=420, protein_g=48, carbs_g=32, fat_g=10, fiber_g=4),
-        is_favorite=False,
-        created_at=datetime(2026, 3, 28, 14, 22, 0, tzinfo=timezone.utc),
-    ),
-    Recipe(
-        id="rec_01jdemo0000000000000000002",
-        title="Bowl Saludable de Tofu y Verduras",
-        description="Bowl vegano con tofu firme salteado, arroz integral y verduras de temporada. Rico en proteínas vegetales y fibra, ideal para una alimentación sostenible.",
-        image_url="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80",
-        prep_time_minutes=15,
-        difficulty=Difficulty.easy,
-        cost_clp=12500,
-        match_score=85,
-        tags=["Vegano"],
-        ingredients=[
-            Ingredient(id="ing_007", name="Tofu firme",                       amount=200, unit=IngredientUnit.g),
-            Ingredient(id="ing_008", name="Arroz integral",                   amount=120, unit=IngredientUnit.g),
-            Ingredient(id="ing_009", name="Brócoli",                          amount=150, unit=IngredientUnit.g),
-            Ingredient(id="ing_010", name="Zanahoria",                        amount=1,   unit=IngredientUnit.units),
-            Ingredient(id="ing_011", name="Salsa de soya reducida en sodio",  amount=2,   unit=IngredientUnit.tbsp),
-            Ingredient(id="ing_012", name="Aceite de sésamo",                 amount=1,   unit=IngredientUnit.tsp),
-        ],
-        instructions=[
-            "Cocina el arroz integral según las instrucciones del envase (aprox. 35 minutos).",
-            "Corta el tofu en cubos de 2 cm y presiónalo con papel absorbente para eliminar el exceso de agua.",
-            "Saltea el tofu en aceite de sésamo a fuego alto hasta dorar por todos los lados, unos 6 minutos.",
-            "Agrega el brócoli en floretes y la zanahoria en juliana; saltea 3 minutos más.",
-            "Incorpora la salsa de soya, mezcla bien y sirve sobre el arroz integral.",
-        ],
-        nutritional_info=NutritionalInfo(calories_kcal=380, protein_g=22, carbs_g=48, fat_g=9, fiber_g=7),
-        is_favorite=False,
-        created_at=datetime(2026, 3, 29, 9, 5, 0, tzinfo=timezone.utc),
-    ),
-    Recipe(
-        id="rec_01jdemo0000000000000000003",
-        title="Salmón al Horno con Espárragos",
-        description="Filete de salmón al horno con espárragos frescos, limón y eneldo. Alto en omega-3 y listo en 25 minutos. Perfecto para una cena ligera y nutritiva.",
-        image_url="https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=800&q=80",
-        prep_time_minutes=25,
-        difficulty=Difficulty.easy,
-        cost_clp=14900,
-        match_score=78,
-        tags=["Sin Gluten", "Alto en Proteínas"],
-        ingredients=[
-            Ingredient(id="ing_013", name="Filete de salmón",   amount=180, unit=IngredientUnit.g),
-            Ingredient(id="ing_014", name="Espárragos frescos", amount=200, unit=IngredientUnit.g),
-            Ingredient(id="ing_015", name="Limón",              amount=1,   unit=IngredientUnit.units),
-            Ingredient(id="ing_016", name="Eneldo fresco",      amount=10,  unit=IngredientUnit.g),
-            Ingredient(id="ing_017", name="Aceite de oliva",    amount=1,   unit=IngredientUnit.tbsp),
-        ],
-        instructions=[
-            "Precalienta el horno a 200°C.",
-            "Coloca el salmón y los espárragos en una bandeja con papel de horno.",
-            "Rocía con aceite de oliva, jugo de limón y espolvorea eneldo.",
-            "Hornea por 15–18 minutos hasta que el salmón se desmenuza fácilmente.",
-            "Sirve con rodajas de limón y acompaña con ensalada verde si deseas.",
-        ],
-        nutritional_info=NutritionalInfo(calories_kcal=350, protein_g=36, carbs_g=8, fat_g=19, fiber_g=3),
-        is_favorite=True,
-        created_at=datetime(2026, 3, 30, 18, 40, 0, tzinfo=timezone.utc),
-    ),
-]
+_DEFAULT_PREFS = {
+    "dietary_restrictions": [],
+    "allergen_exclusions": [],
+    "cooking_skill": "intermediate",
+    "max_budget_clp": 15000,
+}
 
-_RECIPE_INDEX: dict[str, Recipe] = {r.id: r for r in _MOCK_RECIPES}
+
+def _db_recipe_to_schema(r: RecipeDB) -> Recipe:
+    """Converts a RecipeDB ORM object to the Recipe Pydantic schema."""
+    ingredients = [
+        Ingredient(
+            id=ing.get("id", f"ing_{i}"),
+            name=ing["name"],
+            amount=ing["amount"],
+            unit=IngredientUnit(ing["unit"]),
+        )
+        for i, ing in enumerate(r.ingredients or [])
+    ]
+    nutritional_info_data = r.nutritional_info or {}
+    nutritional_info = NutritionalInfo(
+        calories_kcal=nutritional_info_data.get("calories_kcal", 0),
+        protein_g=nutritional_info_data.get("protein_g", 0),
+        carbs_g=nutritional_info_data.get("carbs_g", 0),
+        fat_g=nutritional_info_data.get("fat_g", 0),
+        fiber_g=nutritional_info_data.get("fiber_g", 0),
+    )
+    return Recipe(
+        id=r.id,
+        title=r.title,
+        description=r.description,
+        image_url=r.image_url,
+        prep_time_minutes=r.prep_time_minutes,
+        difficulty=Difficulty(r.difficulty),
+        cost_clp=r.cost_clp,
+        match_score=r.match_score,
+        tags=r.tags or [],
+        ingredients=ingredients,
+        instructions=r.instructions or [],
+        nutritional_info=nutritional_info,
+        is_favorite=r.is_favorite,
+        created_at=r.created_at,
+    )
+
+
+def _llm_dict_to_recipe_db(raw: dict, user_id: str, now: datetime) -> RecipeDB:
+    """
+    Converts a raw LLM recipe dict into a RecipeDB ORM instance ready for insertion.
+    IDs are always generated server-side to guarantee uniqueness.
+    """
+    recipe_id = f"rec_{uuid.uuid4().hex}"
+
+    ingredients = []
+    for i, ing in enumerate(raw.get("ingredients") or []):
+        ingredients.append({
+            "id": f"ing_{uuid.uuid4().hex[:8]}",
+            "name": ing.get("name", f"Ingrediente {i+1}"),
+            "amount": float(ing.get("amount", 0)),
+            "unit": ing.get("unit", "g"),
+        })
+
+    ni = raw.get("nutritional_info") or {}
+
+    # Validate difficulty — default to "easy" if the LLM returns something unexpected
+    raw_diff = str(raw.get("difficulty", "easy")).lower()
+    difficulty = raw_diff if raw_diff in {"easy", "medium", "hard"} else "easy"
+
+    return RecipeDB(
+        id=recipe_id,
+        user_id=user_id,
+        title=raw.get("title", "Receta sin nombre"),
+        description=raw.get("description", ""),
+        image_url=raw.get("image_url", ""),
+        prep_time_minutes=int(raw.get("prep_time_minutes", 30)),
+        difficulty=difficulty,
+        cost_clp=int(raw.get("cost_clp", 0)),
+        match_score=int(raw.get("match_score", 80)),
+        tags=raw.get("tags") or [],
+        ingredients=ingredients,
+        instructions=raw.get("instructions") or [],
+        nutritional_info={
+            "calories_kcal": float(ni.get("calories_kcal", 0)),
+            "protein_g": float(ni.get("protein_g", 0)),
+            "carbs_g": float(ni.get("carbs_g", 0)),
+            "fat_g": float(ni.get("fat_g", 0)),
+            "fiber_g": float(ni.get("fiber_g", 0)),
+        },
+        is_favorite=False,
+        created_at=now,
+    )
 
 
 @router.post("/generate", response_model=GenerateRecipeResponse)
-def generate_recipe(body: GenerateRecipeRequest) -> GenerateRecipeResponse:
-    return GenerateRecipeResponse(recipes=_MOCK_RECIPES)
+def generate_recipe(
+    body: GenerateRecipeRequest,
+    current_user: UserDB = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> GenerateRecipeResponse:
+    """
+    Genera sugerencias de recetas personalizadas via Gemini LLM y las persiste en DB.
+    """
+    prefs = current_user.preferences
+    dietary_restrictions = prefs.dietary_restrictions if prefs else _DEFAULT_PREFS["dietary_restrictions"]
+    allergen_exclusions  = prefs.allergen_exclusions  if prefs else _DEFAULT_PREFS["allergen_exclusions"]
+    cooking_skill        = prefs.cooking_skill        if prefs else _DEFAULT_PREFS["cooking_skill"]
+    max_budget_clp       = prefs.max_budget_clp       if prefs else _DEFAULT_PREFS["max_budget_clp"]
+
+    now = datetime.now(timezone.utc)
+    current_date = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    try:
+        raw_recipes = generate_recipes_from_llm(
+            user_prompt=body.prompt or "",
+            dietary_restrictions=dietary_restrictions,
+            allergen_exclusions=allergen_exclusions,
+            cooking_skill=cooking_skill,
+            max_budget_clp=max_budget_clp,
+            current_date=current_date,
+        )
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except (ValueError, Exception) as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Error al generar recetas con el LLM: {exc}",
+        ) from exc
+
+    result_recipes: list[Recipe] = []
+    for raw in raw_recipes:
+        record = _llm_dict_to_recipe_db(raw, current_user.id, now)
+        db.add(record)
+        db.flush()  # get the id assigned before building the schema
+        result_recipes.append(_db_recipe_to_schema(record))
+
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Error al guardar las recetas generadas")
+
+    return GenerateRecipeResponse(recipes=result_recipes)
 
 
 @router.get("/history", response_model=RecipeHistoryResponse)
-def get_history(page: int = 1, limit: int = 12) -> RecipeHistoryResponse:
+def get_history(
+    page: int = 1,
+    limit: int = 12,
+    favorites_only: bool = False,
+    current_user: UserDB = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> RecipeHistoryResponse:
+    """Devuelve el historial de recetas guardadas por el usuario autenticado."""
+    query = db.query(RecipeDB).filter(RecipeDB.user_id == current_user.id)
+    
+    if favorites_only:
+        query = query.filter(RecipeDB.is_favorite == True)
+
+    total = query.count()
     start = (page - 1) * limit
-    items = _MOCK_RECIPES[start : start + limit]
-    return RecipeHistoryResponse(items=items, total=len(_MOCK_RECIPES), page=page)
+    db_recipes = (
+        query.order_by(RecipeDB.created_at.desc())
+        .offset(start)
+        .limit(limit)
+        .all()
+    )
+    items = [_db_recipe_to_schema(r) for r in db_recipes]
+    return RecipeHistoryResponse(items=items, total=total, page=page)
 
 
 @router.get("/{recipe_id}", response_model=SingleRecipeResponse)
-def get_recipe(recipe_id: str) -> SingleRecipeResponse:
-    recipe = _RECIPE_INDEX.get(recipe_id)
+def get_recipe(
+    recipe_id: str,
+    current_user: UserDB = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> SingleRecipeResponse:
+    recipe = db.query(RecipeDB).filter(
+        RecipeDB.id == recipe_id,
+        RecipeDB.user_id == current_user.id,
+    ).first()
     if recipe is None:
         raise HTTPException(status_code=404, detail="Receta no encontrada")
-    return SingleRecipeResponse(recipe=recipe)
+    return SingleRecipeResponse(recipe=_db_recipe_to_schema(recipe))
 
 
 @router.post("/{recipe_id}/save", status_code=201)
-def save_recipe(recipe_id: str) -> Response:
+def save_recipe(
+    recipe_id: str,
+    current_user: UserDB = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> Response:
+    """Marca una receta como favorita en la DB."""
+    recipe = db.query(RecipeDB).filter(
+        RecipeDB.id == recipe_id,
+        RecipeDB.user_id == current_user.id,
+    ).first()
+    if recipe:
+        recipe.is_favorite = not recipe.is_favorite
+        db.commit()
     return Response(status_code=201)
+
+@router.delete("/{recipe_id}", status_code=204)
+def delete_recipe(
+    recipe_id: str,
+    current_user: UserDB = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> Response:
+    """Elimina una receta del historial del usuario."""
+    recipe = db.query(RecipeDB).filter(
+        RecipeDB.id == recipe_id,
+        RecipeDB.user_id == current_user.id,
+    ).first()
+    if recipe:
+        db.delete(recipe)
+        db.commit()
+    return Response(status_code=204)

@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import List, Literal, Optional
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, field_validator
 
 
 class CookingSkill(str, Enum):
@@ -26,6 +26,11 @@ class UserProfile(BaseModel):
     avatar_url: str
     plan: Literal["free", "premium"]
     created_at: datetime
+
+    @field_validator("avatar_url", mode="before")
+    @classmethod
+    def avatar_none_to_empty(cls, v: object) -> str:
+        return v or ""
 
 
 class Preferences(BaseModel):
@@ -53,6 +58,7 @@ class PaymentMethod(BaseModel):
 class UpdateProfileRequest(BaseModel):
     name: Optional[str] = None
     avatar_url: Optional[str] = None
+    plan: Optional[Literal["free", "premium"]] = None
 
 
 class UpdatePreferencesRequest(BaseModel):

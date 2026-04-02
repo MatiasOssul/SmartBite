@@ -8,6 +8,7 @@
 //   DELETE /api/profile/cards/:id      → 204
 
 import { apiGet, apiPost, apiPut, apiDelete } from './client.js';
+import { getToken } from '@js/modules/session.js';
 
 /**
  * @typedef {object} UserProfile
@@ -79,4 +80,31 @@ export async function addPaymentCard(cardData) {
  */
 export async function deletePaymentCard(cardId) {
   return apiDelete(`/profile/cards/${cardId}`);
+}
+
+/**
+ * @param {File} file
+ * @returns {Promise<{data: {avatar_url: string}|null, error: object|null}>}
+ */
+export async function uploadAvatar(file) {
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
+  const token = getToken();
+  const form = new FormData();
+  form.append('file', file);
+
+  try {
+    const res = await fetch(BASE_URL + '/profile/avatar', {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: form,
+    });
+    if (!res.ok) {
+      let message = res.statusText;
+      try { message = (await res.json()).detail ?? message; } catch (_) {}
+      return { data: null, error: { status: res.status, detail: message } };
+    }
+    return { data: await res.json(), error: null };
+  } catch (err) {
+    return { data: null, error: { status: 0, detail: 'Falla de red.' } };
+  }
 }

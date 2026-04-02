@@ -25,7 +25,8 @@ async function handleResponse(res) {
     try { message = (await res.json()).detail ?? message; } catch (_) {}
     return { data: null, error: { status: res.status, message } };
   }
-  const data = res.status === 204 ? null : await res.json();
+  const text = await res.text();
+  const data = text ? JSON.parse(text) : null;
   return { data, error: null };
 }
 
@@ -43,7 +44,10 @@ async function executeFetch(fetchPromise) {
 }
 
 export function apiGet(path) {
-  return executeFetch(fetch(BASE_URL + path, { headers: authHeaders() }));
+  return executeFetch(fetch(BASE_URL + path, { 
+    headers: { ...authHeaders(), 'Cache-Control': 'no-cache' },
+    cache: 'no-store'
+  }));
 }
 
 export function apiPost(path, body) {

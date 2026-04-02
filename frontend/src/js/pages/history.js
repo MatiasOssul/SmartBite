@@ -1,9 +1,10 @@
 // History page entry
-import '@styles/main.css';
+
 import { guardPrivate } from '@js/modules/guard.js';
 import { isNewUser } from '@js/modules/session.js';
 import { initNavbar } from '@js/modules/navbar.js';
-import { getHistory } from '@js/api/recipes.js';
+import { getHistory, saveRecipe, removeRecipe } from '@js/api/recipes.js';
+import { showToast } from '@js/modules/toast.js';
 
 guardPrivate();
 initNavbar('history');
@@ -24,8 +25,20 @@ function renderHistory(items) {
 
   grid.innerHTML = items.map(recipe => `
     <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative dark:bg-slate-900 dark:border-slate-800">
-      <button class="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm ${recipe.is_favorite ? 'text-red-500 hover:scale-110' : 'text-slate-300 hover:text-red-500'} transition-colors dark:shadow-none">
-        <i class="fa-solid fa-heart"></i>
+      <button
+        class="delete-btn absolute top-3 left-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm transition-all text-slate-300 hover:text-red-500 hover:scale-110 dark:shadow-none dark:bg-slate-800/90 dark:text-slate-400 dark:hover:text-red-400"
+        data-recipe-id="${recipe.id}"
+        title="Eliminar receta"
+      >
+        <i class="fa-solid fa-trash-can"></i>
+      </button>
+      <button
+        class="fav-btn absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm transition-all dark:shadow-none dark:bg-slate-800/90 ${recipe.is_favorite ? 'text-red-500 hover:scale-110 dark:text-red-400' : 'text-slate-300 hover:text-red-500 dark:text-slate-400 dark:hover:text-red-400'}"
+        data-recipe-id="${recipe.id}"
+        data-is-fav="${recipe.is_favorite}"
+        title="${recipe.is_favorite ? 'Quitar de favoritos' : 'Guardar en favoritos'}"
+      >
+        <i class="fa-${recipe.is_favorite ? 'solid' : 'regular'} fa-heart"></i>
       </button>
       <div class="h-44 w-full overflow-hidden shrink-0">
         <img src="${recipe.image_url}" alt="${recipe.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
@@ -40,27 +53,179 @@ function renderHistory(items) {
         </div>
       </div>
     </div>`).join('');
+
+  // Wire favorite buttons with API sync
+  grid.querySelectorAll('.fav-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const recipeId = btn.dataset.recipeId;
+      const wasFav = btn.dataset.isFav === 'true';
+      const nowFav = !wasFav;
+
+      // Optimistic UI update
+      btn.dataset.isFav = String(nowFav);
+      btn.title = nowFav ? 'Quitar de favoritos' : 'Guardar en favoritos';
+      btn.className = `fav-btn absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm transition-all dark:shadow-none ${nowFav ? 'text-red-500 hover:scale-110' : 'text-slate-300 hover:text-red-500'}`;
+      btn.innerHTML = `<i class="fa-${nowFav ? 'solid' : 'regular'} fa-heart"></i>`;
+
+      // Actualizar el estado global para que no se pierda al Cargar Más
+      const recipe = loadedRecipes.find(r => r.id === recipeId);
+      if (recipe) recipe.is_favorite = nowFav;
+
+      showToast(
+        nowFav ? '¡Receta guardada en favoritos!' : 'Receta eliminada de favoritos',
+        nowFav ? 'success' : 'error',
+      );
+
+      // Sync con backend
+      const { error } = await saveRecipe(recipeId);
+      if (error) {
+        // Revertir si falla la API
+        if (recipe) recipe.is_favorite = wasFav;
+        btn.dataset.isFav = String(wasFav);
+        btn.innerHTML = `<i class="fa-${wasFav ? 'solid' : 'regular'} fa-heart"></i>`;
+        showToast('Error al sincronizar favorito', 'error');
+      }
+    });
+  });
+
+  // Wire delete buttons
+  grid.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (!confirm('¿Estás seguro de que quieres eliminar esta receta del historial? Esta acción no se puede deshacer.')) return;
+      
+      const recipeId = btn.dataset.recipeId;
+      const card = btn.closest('.bg-white');
+      
+      // Optimistic delete
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.95)';
+      setTimeout(() => card.remove(), 250);
+
+      loadedRecipes = loadedRecipes.filter(r => r.id !== recipeId);
+
+      const { error } = await removeRecipe(recipeId);
+      if (error) {
+        showToast('Error al eliminar receta', 'error');
+      } else {
+        showToast('Receta eliminada del historial', 'success');
+        // Si el estado queda vacío, lo forzamos recargando la página 1
+        if (loadedRecipes.length === 0) {
+          loadPage(1, false);
+        }
+      }
+    });
+  });
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
+let currentPage = 1;
+const LIMIT = 8;
+let loadedRecipes = [];
+let currentFilterFavorites = false;
+
+async function loadPage(page, append = false) {
   const skeletonHistory = document.getElementById('skeleton-history');
   const realHistory     = document.getElementById('real-history');
   const emptyHistory    = document.getElementById('history-empty-state');
+  const loadMoreWrapper = document.getElementById('load-more-wrapper');
 
-  skeletonHistory?.classList.remove('hidden');
-  realHistory?.classList.add('hidden');
-  emptyHistory?.classList.add('hidden');
+  if (!append) {
+    skeletonHistory?.classList.remove('hidden');
+    realHistory?.classList.add('hidden');
+    emptyHistory?.classList.add('hidden');
+    loadMoreWrapper?.classList.add('hidden');
+  }
 
-  const { data, error } = await getHistory();
+  const { data, error } = await getHistory(page, LIMIT, currentFilterFavorites);
   const isEmpty = isNewUser() || error || !data?.items?.length;
 
-  skeletonHistory?.classList.add('hidden');
+  if (!append) skeletonHistory?.classList.add('hidden');
 
-  if (isEmpty) {
+  if (isEmpty && !append) {
     emptyHistory?.classList.remove('hidden');
-  } else {
-    renderHistory(data.items);
+    if (emptyHistory) {
+      const h3 = emptyHistory.querySelector('h3');
+      const p = emptyHistory.querySelector('p');
+      if (h3) h3.textContent = currentFilterFavorites ? 'No tienes recetas favoritas' : 'Aún no hay recetas aquí';
+      if (p) p.textContent = currentFilterFavorites ? 'Marca algunas recetas con el corazón para verlas agrupadas aquí.' : 'Cuando generes tu primer menú y decidas cocinar algo, aparecerá mágicamente en este historial.';
+    }
+  } else if (!error && data) {
+    if (append) {
+      loadedRecipes = [...loadedRecipes, ...data.items];
+    } else {
+      loadedRecipes = data.items;
+      emptyHistory?.classList.add('hidden');
+    }
+
+    renderHistory(loadedRecipes);
     realHistory?.classList.remove('hidden');
-    realHistory?.classList.add('fade-in');
+    if (!append) {
+      realHistory?.classList.remove('fade-in');
+      void realHistory?.offsetWidth; // triger reflow
+      realHistory?.classList.add('fade-in');
+    }
+
+    if (loadedRecipes.length < data.total) {
+      loadMoreWrapper?.classList.remove('hidden');
+    } else {
+      loadMoreWrapper?.classList.add('hidden');
+    }
   }
+  
+  return { data, error };
+}
+
+function setFilterActive(activeBtn, inactiveBtns) {
+  const activeClasses = ['bg-slate-900', 'text-white', 'shadow-sm'];
+  const inactiveClasses = ['bg-white', 'text-slate-600', 'border', 'border-slate-200', 'hover:bg-slate-50', 'dark:bg-slate-900', 'dark:border-slate-700', 'dark:text-slate-300', 'dark:hover:bg-slate-800'];
+
+  activeBtn.classList.remove(...inactiveClasses);
+  activeBtn.classList.add(...activeClasses);
+
+  inactiveBtns.forEach(btn => {
+    btn.classList.remove(...activeClasses);
+    btn.classList.add(...inactiveClasses);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const loadMoreBtn = document.getElementById('load-more-btn');
+  const filterAll = document.getElementById('filter-all');
+  const filterFavs = document.getElementById('filter-favs');
+  const filterMonth = document.getElementById('filter-month'); // Opcional, lo dejamos inactivo 
+
+  await loadPage(1, false);
+
+  loadMoreBtn?.addEventListener('click', async () => {
+    const originalText = loadMoreBtn.innerHTML;
+    loadMoreBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Cargando...';
+    loadMoreBtn.disabled = true;
+
+    currentPage++;
+    const { error } = await loadPage(currentPage, true);
+    
+    loadMoreBtn.innerHTML = originalText;
+    loadMoreBtn.disabled = false;
+
+    if (error) {
+      showToast('Error al cargar más recetas', 'error');
+    }
+  });
+
+  filterAll?.addEventListener('click', async () => {
+    if (!currentFilterFavorites) return;
+    currentFilterFavorites = false;
+    currentPage = 1;
+    setFilterActive(filterAll, [filterFavs, filterMonth]);
+    await loadPage(1, false);
+  });
+
+  filterFavs?.addEventListener('click', async () => {
+    if (currentFilterFavorites) return;
+    currentFilterFavorites = true;
+    currentPage = 1;
+    setFilterActive(filterFavs, [filterAll, filterMonth]);
+    await loadPage(1, false);
+  });
 });

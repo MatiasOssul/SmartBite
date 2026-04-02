@@ -6,7 +6,7 @@
 //   GET  /api/recipes/:id         → { recipe: Recipe }
 //   POST /api/recipes/:id/save    → 201
 
-import { apiGet, apiPost } from './client.js';
+import { apiGet, apiPost, apiDelete } from './client.js';
 
 /**
  * @typedef {object} Ingredient
@@ -55,10 +55,11 @@ export async function generateRecipe(prompt, filters = []) {
 /**
  * @param {number} [page]
  * @param {number} [limit]
+ * @param {boolean} [favoritesOnly]
  * @returns {Promise<{data: {items: Recipe[], total: number, page: number}|null, error: object|null}>}
  */
-export async function getHistory(page = 1, limit = 12) {
-  return apiGet(`/recipes/history?page=${page}&limit=${limit}`);
+export async function getHistory(page = 1, limit = 12, favoritesOnly = false) {
+  return apiGet(`/recipes/history?page=${page}&limit=${limit}&favorites_only=${favoritesOnly}`);
 }
 
 /**
@@ -75,4 +76,12 @@ export async function getRecipe(id) {
  */
 export async function saveRecipe(id) {
   return apiPost(`/recipes/${id}/save`, {});
+}
+
+/**
+ * @param {string} id
+ * @returns {Promise<{data: null, error: object|null}>}
+ */
+export async function removeRecipe(id) {
+  return apiDelete(`/recipes/${id}`);
 }

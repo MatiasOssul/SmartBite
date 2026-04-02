@@ -1,5 +1,5 @@
 // Login / Register page entry
-import '@styles/main.css';
+
 import { guardPublic } from '@js/modules/guard.js';
 import { initModal } from '@js/modules/modals.js';
 import { login, register } from '@js/api/auth.js';

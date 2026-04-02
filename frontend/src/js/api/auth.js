@@ -6,7 +6,7 @@
 //   POST /api/auth/logout    → 204
 //   POST /api/auth/reset     → 200
 
-import { apiPost } from './client.js';
+import { apiPost, apiPut } from './client.js';
 import { setSessionState, setToken, clearSession } from '../modules/session.js';
 
 /**
@@ -66,4 +66,16 @@ export async function logout() {
  */
 export async function requestPasswordReset(email) {
   return apiPost('/auth/reset', { email });
+}
+
+/**
+ * @param {string} currentPassword
+ * @param {string} newPassword
+ * @returns {Promise<{data: {message: string}|null, error: object|null}>}
+ */
+export async function changePassword(currentPassword, newPassword) {
+  return apiPut('/auth/change-password', {
+    current_password: currentPassword,
+    new_password: newPassword,
+  });
 }

@@ -2,8 +2,9 @@
 // Replaces ~150 lines of duplicated navbar HTML + toggle functions across 8 pages.
 
 import navbarHtml from '/templates/navbar.html?raw';
-import { clearSession } from './session.js';
+import { clearSession, getToken } from './session.js';
 import { getCart } from './store.js';
+import { getProfile } from '../api/profile.js';
 
 /**
  * Injects the shared navbar into #navbar-mount, sets the active link,
@@ -59,6 +60,29 @@ export function initNavbar(activePage) {
   // Cart badge — set on mount and keep reactive within the page
   _updateCartBadge();
   window.addEventListener('cartUpdated', _updateCartBadge);
+
+  // Fetch and update user profile info in navbar
+  if (getToken()) {
+    getProfile().then(res => {
+      const user = res.data?.user;
+      if (user) {
+        document.getElementById('navbar-user-name').innerText = user.name || 'Usuario';
+        document.getElementById('navbar-user-email').innerText = user.email || '';
+
+        const avatarImg = document.getElementById('navbar-avatar-img');
+        const avatarIcon = document.getElementById('navbar-avatar-icon');
+
+        if (user.avatar_url && avatarImg) {
+          avatarImg.src = user.avatar_url;
+          avatarImg.classList.remove('hidden');
+          if (avatarIcon) avatarIcon.classList.add('hidden');
+        } else {
+          if (avatarImg) avatarImg.classList.add('hidden');
+          if (avatarIcon) avatarIcon.classList.remove('hidden');
+        }
+      }
+    });
+  }
 }
 
 function _updateCartBadge() {

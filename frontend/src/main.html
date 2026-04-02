@@ -18,6 +18,7 @@
     <script>if (localStorage.getItem('smartbite_theme') === 'dark') document.documentElement.classList.add('dark');</script>
 
     <script type="module" src="/js/pages/main.js"></script>
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body class="bg-slate-50 text-slate-800 relative pb-20 sm:pb-0 h-full flex flex-col dark:bg-slate-800 dark:text-slate-100">
 
@@ -35,6 +36,7 @@
             
             <div class="bg-white p-2 rounded-2xl shadow-soft border border-slate-100 relative group transition-all duration-300 focus-within:ring-2 focus-within:ring-brand-500 focus-within:border-brand-500 dark:bg-slate-900 dark:shadow-none dark:border-slate-800">
                 <textarea
+                    id="prompt-input"
                     class="w-full h-32 p-4 text-slate-700 bg-transparent resize-none outline-none placeholder:text-slate-400 text-lg leading-relaxed dark:text-slate-200"
                     placeholder='Ej: "Tengo 3 pechugas de pollo, poco tiempo y mi presupuesto es de $15.000. Somos 3 personas y uno es celíaco."'
                 ></textarea>
@@ -43,7 +45,7 @@
                     <!-- Quick Filters -->
                     <div class="flex flex-wrap items-center gap-2">
                         <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mr-1 dark:text-slate-500">Filtros</span>
-                        <button data-filter-btn class="flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 text-brand-700 border border-brand-200 rounded-full text-sm font-medium hover:bg-brand-100 transition-colors shadow-sm dark:bg-brand-900/30 dark:hover:bg-brand-900/50 dark:shadow-none">
+                        <button data-filter-btn class="flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-50 transition-colors dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 dark:hover:bg-slate-800">
                             <i class="fa-solid fa-wheat-awn-circle-exclamation text-xs"></i> Sin Gluten
                         </button>
                         <button data-filter-btn class="flex items-center gap-1.5 px-3 py-1.5 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-50 transition-colors dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 dark:hover:bg-slate-800">
@@ -76,42 +78,42 @@
         </div>
 
         <!-- Skeleton Loader (Hidden initially) -->
-        <div id="recipe-skeleton" class="hidden fade-in w-full animate-pulse">
-            <div class="h-8 bg-slate-200 rounded-lg w-64 mb-6"></div>
+        <div id="recipe-skeleton" class="hidden fade-in w-full">
+            <div class="skeleton h-8 rounded-lg w-64 mb-6"></div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
                 <!-- Skeleton Card 1 -->
                 <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden dark:bg-slate-900 dark:border-slate-700">
-                    <div class="h-48 w-full bg-slate-200"></div>
+                    <div class="skeleton h-48 w-full"></div>
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-4">
-                            <div class="h-6 bg-slate-200 rounded-lg w-3/4"></div>
-                            <div class="h-6 bg-slate-200 rounded-lg w-16"></div>
+                            <div class="skeleton h-6 rounded-lg w-3/4"></div>
+                            <div class="skeleton h-6 rounded-lg w-16"></div>
                         </div>
                         <div class="space-y-2 mb-6">
-                            <div class="h-4 bg-slate-200 rounded w-full"></div>
-                            <div class="h-4 bg-slate-200 rounded w-5/6"></div>
+                            <div class="skeleton h-4 rounded w-full"></div>
+                            <div class="skeleton h-4 rounded w-5/6"></div>
                         </div>
                         <div class="flex gap-4">
-                            <div class="h-4 bg-slate-200 rounded w-16"></div>
-                            <div class="h-4 bg-slate-200 rounded w-16"></div>
+                            <div class="skeleton h-4 rounded w-16"></div>
+                            <div class="skeleton h-4 rounded w-16"></div>
                         </div>
                     </div>
                 </div>
                 <!-- Skeleton Card 2 -->
                 <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden dark:bg-slate-900 dark:border-slate-700">
-                    <div class="h-48 w-full bg-slate-200"></div>
+                    <div class="skeleton h-48 w-full"></div>
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-4">
-                            <div class="h-6 bg-slate-200 rounded-lg w-2/3"></div>
-                            <div class="h-6 bg-slate-200 rounded-lg w-16"></div>
+                            <div class="skeleton h-6 rounded-lg w-2/3"></div>
+                            <div class="skeleton h-6 rounded-lg w-16"></div>
                         </div>
                         <div class="space-y-2 mb-6">
-                            <div class="h-4 bg-slate-200 rounded w-full"></div>
-                            <div class="h-4 bg-slate-200 rounded w-4/5"></div>
+                            <div class="skeleton h-4 rounded w-full"></div>
+                            <div class="skeleton h-4 rounded w-4/5"></div>
                         </div>
                         <div class="flex gap-4">
-                            <div class="h-4 bg-slate-200 rounded w-16"></div>
-                            <div class="h-4 bg-slate-200 rounded w-16"></div>
+                            <div class="skeleton h-4 rounded w-16"></div>
+                            <div class="skeleton h-4 rounded w-16"></div>
                         </div>
                     </div>
                 </div>

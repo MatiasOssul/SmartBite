@@ -13,17 +13,7 @@
             </nav>
             <div class="h-5 w-px bg-slate-200 hidden sm:block dark:bg-slate-700"></div>
 
-            <!-- Cart button with badge -->
-            <div class="relative flex items-center">
-                <button id="cart-btn" title="Lista de ingredientes"
-                    class="text-slate-500 hover:text-brand-600 transition-colors focus:outline-none dark:text-slate-400">
-                    <i class="fa-solid fa-bag-shopping text-xl"></i>
-                </button>
-                <span id="cart-badge"
-                    class="hidden absolute -top-1.5 -right-1.5 min-w-[1.1rem] h-[1.1rem] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-0.5 pointer-events-none">
-                    0
-                </span>
-            </div>
+
 
             <!-- Notification Bell -->
             <div class="relative flex items-center">
@@ -37,13 +27,14 @@
 
             <!-- Profile Dropdown -->
             <div class="relative">
-                <button id="profile-menu-btn" class="w-9 h-9 block rounded-full border-2 border-brand-200 bg-slate-200 overflow-hidden cursor-pointer hover:border-brand-500 hover:shadow-md transition-all focus:outline-none">
-                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80" alt="User Profile" class="w-full h-full object-cover">
+                <button id="profile-menu-btn" class="w-9 h-9 block flex items-center justify-center rounded-full border-2 border-brand-200 bg-slate-200 overflow-hidden cursor-pointer hover:border-brand-500 hover:shadow-md transition-all focus:outline-none text-slate-400">
+                    <img id="navbar-avatar-img" src="" alt="User Profile" class="w-full h-full object-cover hidden">
+                    <i id="navbar-avatar-icon" class="fa-solid fa-user mt-1 hidden"></i>
                 </button>
                 <div id="profile-dropdown" class="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-float border border-slate-100 py-2 opacity-0 pointer-events-none transform -translate-y-2 transition-all duration-200 z-50 dark:bg-slate-900 dark:border-slate-800">
                     <div class="px-4 py-3 border-b border-slate-100 mb-1 bg-slate-50/50 dark:border-slate-800">
-                        <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Usuario de Prueba</p>
-                        <p class="text-xs text-slate-500 truncate dark:text-slate-400">usuario@ejemplo.com</p>
+                        <p id="navbar-user-name" class="text-sm font-bold text-slate-800 dark:text-slate-100">Usuario</p>
+                        <p id="navbar-user-email" class="text-xs text-slate-500 truncate dark:text-slate-400"></p>
                     </div>
                     <a href="/profile.html" class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition-colors dark:text-slate-300 dark:hover:bg-slate-800">
                         <i class="fa-regular fa-user w-4 text-center"></i> Mi Perfil

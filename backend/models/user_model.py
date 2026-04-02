@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, JSON, String, UniqueConstraint
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, JSON, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.database import Base
@@ -29,6 +29,9 @@ class UserDB(Base):
     )
     recipes: Mapped[list["RecipeDB"]] = relationship(  # type: ignore[name-defined]
         "RecipeDB", back_populates="user", cascade="all, delete-orphan"
+    )
+    reset_codes: Mapped[list["PasswordResetCodeDB"]] = relationship(
+        "PasswordResetCodeDB", back_populates="user", cascade="all, delete-orphan"
     )
 
 
@@ -59,3 +62,32 @@ class PaymentMethodDB(Base):
     is_default: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     user: Mapped["UserDB"] = relationship("UserDB", back_populates="payment_methods")
+
+
+class PasswordResetCodeDB(Base):
+    """
+    Audit trail de solicitudes de cambio de contraseña.
+    Preparado para flujo de email futúro:
+      - `code` almacena el token hasheado (bcrypt) — nunca en texto plano.
+      - `expires_at` define cuándo vence el token (por defecto 1 hora).
+      - `used` se marca True en cuanto se consume el código.
+    Para el flujo actual (cambio directo con contraseña actual) el registro
+    se crea con `used=True` de inmediato como registro de auditoría.
+    """
+    __tablename__ = "password_reset_codes"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    user_id: Mapped[str] = mapped_column(String, ForeignKey("users.id"), nullable=False)
+    # Token hasheado; nunca se guarda en texto plano
+    code_hash: Mapped[str] = mapped_column(String, nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    used: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+    # Contexto opcional para trazabilidad (IP, user-agent, etc.)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    user: Mapped["UserDB"] = relationship("UserDB", back_populates="reset_codes")

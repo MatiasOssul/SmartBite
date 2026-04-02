@@ -1,9 +1,9 @@
 // Dashboard page entry
-import '@styles/main.css';
+
 import { guardPrivate } from '@js/modules/guard.js';
 import { isNewUser, setSessionState } from '@js/modules/session.js';
 import { initNavbar } from '@js/modules/navbar.js';
-import { generateRecipe } from '@js/api/recipes.js';
+import { generateRecipe, saveRecipe } from '@js/api/recipes.js';
 import { setButtonLoading, showToast } from '@js/modules/toast.js';
 import { toggleFavorite, isFavorite } from '@js/modules/store.js';
 
@@ -52,7 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
     suggestionsView?.classList.add('hidden');
     skeletonView?.classList.remove('hidden');
 
-    const { data, error } = await generateRecipe();
+    const prompt = document.getElementById('prompt-input')?.value?.trim() ?? '';
+    const activeFilters = [...document.querySelectorAll('[data-filter-btn].bg-brand-50')]
+      .map(btn => btn.textContent.trim());
+
+    const { data, error } = await generateRecipe(prompt || null, activeFilters);
 
     skeletonView?.classList.add('hidden');
     setButtonLoading(generateBtn, false);
@@ -159,17 +163,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const cost = document.getElementById('detail-cost');
     if (cost) cost.textContent = formatCLP(recipe.cost_clp);
 
-    // Sync save button with store state
+    // Sync save button — usa is_favorite del backend como fuente de verdad
     const saveBtn = document.getElementById('detail-save-btn');
     if (saveBtn) {
-      _syncFavoriteBtn(saveBtn, isFavorite(recipe.id));
-      saveBtn.onclick = () => {
-        const nowFavorite = toggleFavorite(recipe.id);
-        _syncFavoriteBtn(saveBtn, nowFavorite);
+      // Sincronizar localStorage con el estado real del backend
+      if (recipe.is_favorite && !isFavorite(recipe.id)) toggleFavorite(recipe.id);
+      if (!recipe.is_favorite && isFavorite(recipe.id)) toggleFavorite(recipe.id);
+
+      _syncFavoriteBtn(saveBtn, recipe.is_favorite);
+      let currentFav = recipe.is_favorite;
+
+      saveBtn.onclick = async () => {
+        currentFav = !currentFav;
+        // Optimistic UI update
+        _syncFavoriteBtn(saveBtn, currentFav);
+        toggleFavorite(recipe.id);
         showToast(
-          nowFavorite ? '¡Receta guardada en favoritos!' : 'Receta eliminada de favoritos',
-          nowFavorite ? 'success' : 'error',
+          currentFav ? '¡Receta guardada en favoritos!' : 'Receta eliminada de favoritos',
+          currentFav ? 'success' : 'error',
         );
+        // Sync con backend (silent — no bloquea la UI)
+        await saveRecipe(recipe.id);
       };
     }
   }

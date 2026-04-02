@@ -16,6 +16,7 @@
 
     <script>if (localStorage.getItem('smartbite_theme') === 'dark') document.documentElement.classList.add('dark');</script>
     <script type="module" src="/js/pages/biteplus.js"></script>
+    <link rel="stylesheet" href="/styles/main.css">
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col dark:bg-slate-800 dark:text-slate-100">
 
@@ -72,7 +73,7 @@
                     <li class="flex items-start gap-3"><i class="fa-solid fa-check text-brand-500 mt-1"></i> <span class="text-slate-600 dark:text-slate-300">Exportación simple de listas de compras.</span></li>
                     <li class="flex items-start gap-3 text-slate-400 dark:text-slate-500"><i class="fa-solid fa-xmark mt-1"></i> <span>Sin cálculo de macronutrientes.</span></li>
                 </ul>
-                <button class="w-full py-3.5 rounded-xl font-bold border-2 border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors mt-auto dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Es tu plan actual</button>
+                <button id="btn-free-plan" class="w-full py-3.5 rounded-xl font-bold border-2 border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors mt-auto dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">Es tu plan actual</button>
             </div>
 
             <!-- Bite+ Tier -->
@@ -92,7 +93,7 @@
                     <li class="flex items-start gap-3"><i class="fa-solid fa-check text-amber-500 mt-1"></i> <span class="text-slate-300">Integración nativa <strong class="text-white">1-clic con Lider, Jumbo y Santa Isabel</strong>.</span></li>
                     <li class="flex items-start gap-3"><i class="fa-solid fa-check text-amber-500 mt-1"></i> <span class="text-slate-300">Desglose nutricional de Macros (Calorías, Proteínas, Grasas).</span></li>
                 </ul>
-                <button class="w-full py-3.5 rounded-xl font-bold text-slate-900 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 transition-all shadow-lg hover:shadow-amber-500/25 mt-auto dark:text-white">Hacer Upgrade a PRO</button>
+                <button id="btn-upgrade" class="w-full py-3.5 rounded-xl font-bold text-slate-900 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 transition-all shadow-lg hover:shadow-amber-500/25 mt-auto dark:text-white">Hacer Upgrade a PRO</button>
             </div>
         </div>
     </main>
@@ -114,6 +115,12 @@
             </div>
         </div>
     </footer>
+
+    <!-- Toast notification -->
+    <div id="toast-notification" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-float translate-y-20 opacity-0 transition-all duration-300 dark:bg-slate-700">
+        <i class="fa-solid fa-circle-check text-brand-400 text-xl"></i>
+        <span id="toast-message" class="text-sm font-medium"></span>
+    </div>
 
 </body>
 </html>

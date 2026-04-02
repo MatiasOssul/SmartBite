@@ -16,3 +16,9 @@ __pycache__/
 CLAUDE.md
 backend/smartbite.db
 backend/*.db
+
+# Avatars de usuarios — contenido generado en runtime, no va al repo
+backend/static/avatars/*.png
+backend/static/avatars/*.jpg
+backend/static/avatars/*.jpeg
+backend/static/avatars/*.webp

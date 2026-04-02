@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).parent / ".env")  # loads GOOGLE_API_KEY etc. from backend/.env
 
 from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -24,6 +25,37 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("smartbite")
 
 # ---------------------------------------------------------------------------
+# Etiquetas legibles para los campos de los schemas
+# ---------------------------------------------------------------------------
+# Artículo incluido para concordancia de género
+_FIELD_LABELS: dict[str, str] = {
+    "email":            "El correo electrónico",
+    "password":         "La contraseña",
+    "name":             "El nombre",
+    "current_password": "La contraseña actual",
+    "new_password":     "La nueva contraseña",
+}
+
+
+def _pydantic_error_to_spanish(err: dict) -> str:
+    field_key   = str(err["loc"][-1]) if err.get("loc") else "campo"
+    field_label = _FIELD_LABELS.get(field_key, f"El campo '{field_key}'")
+    etype       = err.get("type", "")
+    ctx         = err.get("ctx", {})
+
+    if etype == "string_too_short":
+        return f"{field_label} debe tener al menos {ctx.get('min_length', '?')} caracteres."
+    if etype == "string_too_long":
+        return f"{field_label} es demasiado larga (máximo {ctx.get('max_length', '?')} caracteres)."
+    if etype in ("value_error", "email_address_invalid") or "email" in etype:
+        return f"{field_label} no tiene un formato válido."
+    if etype == "missing":
+        return f"{field_label} es obligatorio."
+    if etype == "string_type":
+        return f"{field_label} debe ser texto."
+    return f"{field_label} no es válido."
+
+# ---------------------------------------------------------------------------
 # Rate limiter (global — routers añaden límites por endpoint)
 # ---------------------------------------------------------------------------
 limiter = Limiter(key_func=get_remote_address, default_limits=["200/minute"])
@@ -33,6 +65,14 @@ app = FastAPI(title="SmartBite API", docs_url=None, redoc_url=None)  # disable d
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Convierte errores de validación Pydantic (422) a mensajes en español."""
+    errors = exc.errors()
+    message = _pydantic_error_to_spanish(errors[0]) if errors else "Datos de entrada inválidos."
+    return JSONResponse(status_code=422, content={"detail": message})
 
 # ---------------------------------------------------------------------------
 # Security headers

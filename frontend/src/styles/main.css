@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* FontAwesome — self-hosted via npm, no CDN dependency */
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: #f1f5f9; }

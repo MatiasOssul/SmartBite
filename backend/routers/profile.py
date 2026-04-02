@@ -1,7 +1,7 @@
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 
@@ -160,6 +160,7 @@ def delete_payment_card(
 
 @router.post("/avatar", status_code=200)
 async def upload_avatar(
+    request: Request,
     file: UploadFile,
     current_user: UserDB = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -176,7 +177,8 @@ async def upload_avatar(
     dest = AVATARS_DIR / filename
     dest.write_bytes(contents)
 
-    avatar_url = f"/api/static/avatars/{filename}"
+    base = str(request.base_url).rstrip("/")
+    avatar_url = f"{base}/api/static/avatars/{filename}"
     current_user.avatar_url = avatar_url
     db.commit()
 

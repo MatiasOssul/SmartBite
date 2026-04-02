@@ -1,6 +1,7 @@
 // Navbar injection and toggle logic
 // Replaces ~150 lines of duplicated navbar HTML + toggle functions across 8 pages.
 
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import navbarHtml from '/templates/navbar.html?raw';
 import { clearSession, getToken } from './session.js';
 import { getCart } from './store.js';

@@ -2,8 +2,10 @@ import secrets
 import uuid
 from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import Response
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
 
 from core.database import get_db
@@ -21,10 +23,12 @@ from schemas.auth_schemas import (
 )
 
 router = APIRouter(prefix="/api/auth", tags=["Auth"])
+limiter = Limiter(key_func=get_remote_address)
 
 
 @router.post("/register", response_model=AuthResponse)
-def register(body: RegisterRequest, db: Session = Depends(get_db)) -> AuthResponse:
+@limiter.limit("5/minute")
+def register(request: Request, body: RegisterRequest, db: Session = Depends(get_db)) -> AuthResponse:
     if db.query(UserDB).filter(UserDB.email == body.email).first():
         raise HTTPException(status_code=400, detail="El email ya está registrado")
 
@@ -58,7 +62,8 @@ def register(body: RegisterRequest, db: Session = Depends(get_db)) -> AuthRespon
 
 
 @router.post("/login", response_model=AuthResponse)
-def login(body: LoginRequest, db: Session = Depends(get_db)) -> AuthResponse:
+@limiter.limit("10/minute")
+def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)) -> AuthResponse:
     user_db = db.query(UserDB).filter(UserDB.email == body.email).first()
     if not user_db or not verify_password(body.password, user_db.hashed_password):
         raise HTTPException(status_code=401, detail="Credenciales inválidas")
@@ -95,11 +100,7 @@ def change_password(
     if not verify_password(body.current_password, current_user.hashed_password):
         raise HTTPException(status_code=400, detail="La contraseña actual es incorrecta")
 
-    # 2. Validar nueva contraseña (mínimo 6 caracteres)
-    if len(body.new_password) < 6:
-        raise HTTPException(status_code=422, detail="La nueva contraseña debe tener al menos 6 caracteres")
-
-    # 3. Registrar código de auditoría (hash del token, nunca en texto plano)
+    # 2. Registrar código de auditoría (hash del token, nunca en texto plano)
     #    Cuando se implemente email: guardar used=False y enviar el código al usuario.
     #    Luego agregar endpoint POST /confirm-reset para consumir el código.
     raw_code = secrets.token_urlsafe(32)

@@ -1,9 +1,11 @@
 import uuid
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from sqlalchemy import cast, String
 from fastapi.responses import Response
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session
 
 from core.database import get_db
@@ -26,6 +28,7 @@ from schemas.recipe_schemas import (
 )
 
 router = APIRouter(prefix="/api/recipes", tags=["Recipes"])
+limiter = Limiter(key_func=get_remote_address)
 
 _DAILY_LIMIT = {"free": 2, "premium": 3}
 
@@ -143,7 +146,9 @@ def get_quota(
 
 
 @router.post("/validate", response_model=ValidatePromptResponse)
+@limiter.limit("20/minute")
 def validate_recipe_prompt(
+    request: Request,
     body: ValidatePromptRequest,
     current_user: UserDB = Depends(get_current_user),
     db: Session = Depends(get_db),
@@ -163,7 +168,9 @@ def validate_recipe_prompt(
 
 
 @router.post("/generate", response_model=GenerateRecipeResponse)
+@limiter.limit("5/minute")
 def generate_recipe(
+    request: Request,
     body: GenerateRecipeRequest,
     current_user: UserDB = Depends(get_current_user),
     db: Session = Depends(get_db),

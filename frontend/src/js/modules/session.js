@@ -1,5 +1,10 @@
 // Session state management
-// Replaces the per-page localStorage routing blocks across all HTML files.
+//
+// NOTA DE SEGURIDAD: El token JWT se almacena en localStorage por simplicidad
+// en esta versión. Para producción de alta seguridad se recomienda migrar a
+// httpOnly + Secure cookies (inmune a XSS) con refresh-token flow.
+// El riesgo actual es aceptable mientras el frontend no tenga XSS — la CSP
+// y la ausencia de innerHTML con datos del usuario lo mitigan en gran parte.
 
 const SESSION_KEY = 'smartbite_session_state';
 const TOKEN_KEY   = 'smartbite_token';
@@ -25,7 +30,6 @@ export function setToken(token) {
 }
 
 export function clearSession() {
-  localStorage.removeItem(SESSION_KEY);
-  localStorage.removeItem(TOKEN_KEY);
+  // Limpiar todas las claves conocidas del dominio
+  [TOKEN_KEY, SESSION_KEY].forEach(k => localStorage.removeItem(k));
 }
-

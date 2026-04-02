@@ -138,6 +138,80 @@
 
     </main>
 
+    <!-- Recipe Detail Modal -->
+    <div id="recipe-detail-modal" class="fixed inset-0 z-[200] flex items-end sm:items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <!-- Backdrop -->
+        <div id="recipe-detail-backdrop" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+
+        <!-- Panel -->
+        <div id="recipe-detail-panel" class="relative z-10 bg-white dark:bg-slate-900 w-full sm:max-w-5xl max-h-[92vh] sm:max-h-[88vh] rounded-t-3xl sm:rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col transform translate-y-8 sm:translate-y-0 sm:scale-95 transition-all duration-300 overflow-hidden">
+
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800 shrink-0">
+                <h2 id="modal-title" class="text-lg font-bold text-slate-900 dark:text-white truncate pr-4"></h2>
+                <button id="close-recipe-modal" class="w-9 h-9 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Scrollable Body -->
+            <div class="overflow-y-auto flex-grow">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 lg:gap-8 p-6 lg:p-8 items-start">
+
+                    <!-- LEFT: Recipe details -->
+                    <div class="lg:col-span-7 space-y-6">
+
+                        <!-- Cover Image -->
+                        <div class="h-56 sm:h-72 w-full rounded-2xl overflow-hidden relative">
+                            <img id="modal-img" src="" alt="" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                            <!-- Favorite button over image -->
+                            <button id="modal-fav-btn" class="absolute top-3 right-3 w-10 h-10 flex items-center justify-center bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-full shadow-sm transition-all">
+                                <i class="fa-regular fa-heart text-slate-400 text-lg"></i>
+                            </button>
+                        </div>
+
+                        <!-- Meta -->
+                        <div id="modal-meta" class="flex flex-wrap items-center gap-3 text-sm text-slate-500 dark:text-slate-400"></div>
+
+                        <!-- Description -->
+                        <p id="modal-description" class="text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+
+                        <!-- Instructions -->
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2 mb-4">Instrucciones Paso a Paso</h3>
+                            <div id="modal-steps" class="space-y-5"></div>
+                        </div>
+
+                        <!-- Nutritional Info -->
+                        <div id="modal-nutrition-wrapper" class="hidden">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2 mb-4">Información Nutricional</h3>
+                            <div id="modal-nutrition" class="grid grid-cols-3 sm:grid-cols-5 gap-3"></div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Shopping list -->
+                    <div class="lg:col-span-5 mt-8 lg:mt-0">
+                        <div class="bg-slate-50 dark:bg-slate-800 rounded-2xl p-5 lg:sticky lg:top-4">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-5">
+                                <i class="fa-solid fa-basket-shopping text-brand-500"></i> Lista de Compras
+                            </h3>
+                            <div id="modal-ingredients" class="space-y-3 max-h-72 overflow-y-auto pr-1"></div>
+                            <div class="mt-5 pt-5 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center">
+                                <span class="font-bold text-slate-900 dark:text-white">Total estimado</span>
+                                <span id="modal-cost" class="text-2xl font-black text-brand-600"></span>
+                            </div>
+                            <a href="https://www.lider.cl/cart" target="_blank" rel="noopener noreferrer" class="mt-4 w-full bg-slate-900 hover:bg-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 text-white py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all">
+                                <i class="fa-solid fa-cart-shopping"></i> Comprar en Líder
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-100 mt-16 pt-10 pb-8 dark:bg-slate-900 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">

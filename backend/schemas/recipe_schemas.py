@@ -7,11 +7,19 @@ from pydantic import BaseModel
 
 class IngredientUnit(str, Enum):
     g = "g"
+    kg = "kg"
     ml = "ml"
+    l = "l"
     units = "units"
     tbsp = "tbsp"
     tsp = "tsp"
     cups = "cups"
+    slices = "slices"
+    pieces = "pieces"
+    cloves = "cloves"
+    pinch = "pinch"
+    oz = "oz"
+    lb = "lb"
 
 
 class Difficulty(str, Enum):

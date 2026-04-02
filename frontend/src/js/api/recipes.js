@@ -56,6 +56,10 @@ export async function generateRecipe(prompt, filters = []) {
   return apiPost('/recipes/generate', { prompt, filters });
 }
 
+export async function getQuota() {
+  return apiGet('/recipes/quota');
+}
+
 /**
  * @param {number} [page]
  * @param {number} [limit]

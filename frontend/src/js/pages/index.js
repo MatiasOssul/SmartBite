@@ -91,8 +91,8 @@ async function handleAuth(event) {
   if (result.error) {
     showToast(result.error.message ?? 'Error de conexión', 'error');
     if (errorEl) {
-      errorEl.querySelector('span')?.remove();
-      errorEl.textContent = result.error.message ?? 'Error al iniciar sesión.';
+      const msg = result.error.message ?? 'Error al iniciar sesión.';
+      errorEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${msg}`;
       errorEl.classList.remove('hidden');
     }
     return;

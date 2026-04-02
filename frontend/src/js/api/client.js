@@ -14,10 +14,12 @@ function authHeaders() {
   };
 }
 
-async function handleResponse(res) {
+async function handleResponse(res, options = {}) {
   if (res.status === 401) {
-    clearSession();
-    window.location.replace('/index.html');
+    if (!options.skipRedirectOn401) {
+      clearSession();
+      window.location.replace('/index.html');
+    }
     return { data: null, error: { status: 401, message: 'Sesión expirada' } };
   }
   if (!res.ok) {
@@ -30,10 +32,10 @@ async function handleResponse(res) {
   return { data, error: null };
 }
 
-async function executeFetch(fetchPromise) {
+async function executeFetch(fetchPromise, options = {}) {
   try {
     const res = await fetchPromise;
-    return await handleResponse(res);
+    return await handleResponse(res, options);
   } catch (err) {
     console.error('Network Error:', err);
     return {
@@ -50,12 +52,12 @@ export function apiGet(path) {
   }));
 }
 
-export function apiPost(path, body) {
+export function apiPost(path, body, options = {}) {
   return executeFetch(fetch(BASE_URL + path, {
     method: 'POST',
     headers: authHeaders(),
     body: JSON.stringify(body),
-  }));
+  }), options);
 }
 
 export function apiPut(path, body) {

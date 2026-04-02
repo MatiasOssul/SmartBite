@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, JSON, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, JSON, String, Text, UniqueConstraint, Date
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.database import Base
@@ -32,6 +32,9 @@ class UserDB(Base):
     )
     reset_codes: Mapped[list["PasswordResetCodeDB"]] = relationship(
         "PasswordResetCodeDB", back_populates="user", cascade="all, delete-orphan"
+    )
+    daily_usage: Mapped[list["DailyUsageDB"]] = relationship(
+        "DailyUsageDB", back_populates="user", cascade="all, delete-orphan"
     )
 
 
@@ -91,3 +94,16 @@ class PasswordResetCodeDB(Base):
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     user: Mapped["UserDB"] = relationship("UserDB", back_populates="reset_codes")
+
+
+class DailyUsageDB(Base):
+    """Tracks how many recipe-generation requests a user has made on a given UTC date."""
+    __tablename__ = "daily_usage"
+    __table_args__ = (UniqueConstraint("user_id", "date", name="uq_daily_usage_user_date"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(String, ForeignKey("users.id"), nullable=False)
+    date: Mapped[str] = mapped_column(String(10), nullable=False)  # "YYYY-MM-DD" UTC
+    count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+
+    user: Mapped["UserDB"] = relationship("UserDB", back_populates="daily_usage")

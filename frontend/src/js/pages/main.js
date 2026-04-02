@@ -3,7 +3,7 @@
 import { guardPrivate } from '@js/modules/guard.js';
 import { isNewUser, setSessionState } from '@js/modules/session.js';
 import { initNavbar } from '@js/modules/navbar.js';
-import { validatePrompt, generateRecipe, saveRecipe, getHistory } from '@js/api/recipes.js';
+import { validatePrompt, generateRecipe, saveRecipe, getHistory, getQuota } from '@js/api/recipes.js';
 import { setButtonLoading, showToast } from '@js/modules/toast.js';
 import { toggleFavorite, isFavorite } from '@js/modules/store.js';
 
@@ -82,13 +82,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function handleGenerate() {
     clearPromptError();
+    setButtonLoading(generateBtn, true, 'Verificando...');
+
+    // Fase 0 — Verificar cuota (sin llamar a la IA)
+    const { data: quota, error: quotaError } = await getQuota();
+    if (!quotaError && quota && quota.used >= quota.limit) {
+      setButtonLoading(generateBtn, false);
+      const upsell = quota.limit < 3 ? ' Actualiza a Plan Pro para obtener más.' : '';
+      showPromptError(`Has alcanzado tu límite de ${quota.limit} generaciones por hoy.${upsell}`);
+      return;
+    }
 
     // Fase 1 — Validación
-    setButtonLoading(generateBtn, true, 'Verificando...');
 
     const prompt = document.getElementById('prompt-input')?.value?.trim() ?? '';
     const activeFilters = [...document.querySelectorAll('[data-filter-btn].bg-brand-50')]
-      .map(btn => btn.textContent.trim());
+      .map(btn => btn.dataset.filter ?? btn.textContent.trim());
 
     const { data: vData, error: vError } = await validatePrompt(prompt);
 
@@ -248,10 +257,14 @@ function _syncFavoriteBtn(btn, isFav) {
 
 function toggleFilter(btn) {
   if (btn.classList.contains('bg-brand-50')) {
+    // Deactivate
     btn.classList.remove('bg-brand-50', 'text-brand-700', 'border-brand-200', 'shadow-sm', 'hover:bg-brand-100');
-    btn.classList.add('bg-white', 'text-slate-600', 'border-slate-200', 'hover:bg-slate-50');
+    btn.classList.add('bg-white', 'text-slate-600', 'border-slate-200', 'hover:bg-slate-50',
+      'dark:bg-slate-900', 'dark:text-slate-300', 'dark:border-slate-700', 'dark:hover:bg-slate-800');
   } else {
-    btn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200', 'hover:bg-slate-50');
+    // Activate — remove dark: overrides so brand colors show
+    btn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200', 'hover:bg-slate-50',
+      'dark:bg-slate-900', 'dark:text-slate-300', 'dark:border-slate-700', 'dark:hover:bg-slate-800');
     btn.classList.add('bg-brand-50', 'text-brand-700', 'border-brand-200', 'shadow-sm', 'hover:bg-brand-100');
   }
 }

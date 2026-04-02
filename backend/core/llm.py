@@ -26,6 +26,7 @@ Debes diseñar sugerencias de recetas deliciosas, creativas y factibles basadas 
 ### CONTEXTO DEL USUARIO:
 - Petición del usuario (Prompt): "{user_prompt}"
 - Restricciones dietéticas: {dietary_restrictions}
+- Filtros activos del usuario (OBLIGATORIO respetar): {active_filters}
 - Alimentos excluidos (Alergias/Odios): {allergen_exclusions}
 - Nivel de habilidad en la cocina: {cooking_skill}
 - Presupuesto máximo (CLP): {max_budget_clp}
@@ -176,6 +177,7 @@ def generate_recipes_from_llm(
     cooking_skill: str,
     max_budget_clp: int,
     current_date: str,
+    active_filters: list[str] | None = None,
 ) -> list[dict]:
     """
     Calls Gemini and returns a list of recipe dicts enriched with real Pexels images.
@@ -246,6 +248,7 @@ def generate_recipes_from_llm(
     prompt_text = _PROMPT_TEMPLATE.format(
         user_prompt=user_prompt or "Sugiéreme algo rico y saludable",
         dietary_restrictions=", ".join(dietary_restrictions) if dietary_restrictions else "Ninguna",
+        active_filters=", ".join(active_filters) if active_filters else "Ninguno",
         allergen_exclusions=", ".join(allergen_exclusions) if allergen_exclusions else "Ninguna",
         cooking_skill=cooking_skill,
         max_budget_clp=max_budget_clp,

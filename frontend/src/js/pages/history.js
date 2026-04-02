@@ -6,10 +6,123 @@ import { initNavbar } from '@js/modules/navbar.js';
 import { getHistory, saveRecipe, removeRecipe } from '@js/api/recipes.js';
 import { showToast } from '@js/modules/toast.js';
 
+// --- Recipe Detail Modal ---
+
+const DIFF_LABEL = { easy: 'Fácil', medium: 'Media', hard: 'Avanzado' };
+
+function formatCLP(n) {
+  return '$' + Number(n).toLocaleString('es-CL');
+}
+
+function openRecipeDetail(recipe) {
+  const modal   = document.getElementById('recipe-detail-modal');
+  const panel   = document.getElementById('recipe-detail-panel');
+
+  // Populate
+  document.getElementById('modal-title').textContent       = recipe.title;
+  document.getElementById('modal-img').src                 = recipe.image_url;
+  document.getElementById('modal-img').alt                 = recipe.title;
+  document.getElementById('modal-description').textContent = recipe.description ?? '';
+  document.getElementById('modal-cost').textContent        = formatCLP(recipe.cost_clp);
+
+  // Meta pills
+  const meta = document.getElementById('modal-meta');
+  const tags = (recipe.tags ?? []).map(t =>
+    `<span class="flex items-center gap-1 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded text-xs font-bold border border-amber-200 dark:border-amber-700"><i class="fa-solid fa-tag"></i> ${t}</span>`
+  ).join('');
+  meta.innerHTML = `
+    <span class="flex items-center gap-1.5"><i class="fa-regular fa-clock"></i> ${recipe.prep_time_minutes} min</span>
+    <span class="flex items-center gap-1.5"><i class="fa-solid fa-fire-burner"></i> ${DIFF_LABEL[recipe.difficulty] ?? recipe.difficulty}</span>
+    ${tags}
+  `;
+
+  // Steps
+  const steps = document.getElementById('modal-steps');
+  steps.innerHTML = (recipe.instructions ?? []).map((step, i) => `
+    <div class="flex gap-4">
+      <div class="flex-shrink-0 w-8 h-8 bg-brand-100 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 rounded-full flex items-center justify-center font-bold font-mono text-sm">${i + 1}</div>
+      <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed pt-1">${step}</p>
+    </div>`).join('');
+
+  // Ingredients
+  const ingList = document.getElementById('modal-ingredients');
+  ingList.innerHTML = (recipe.ingredients ?? []).map(ing => `
+    <div class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+      <span class="text-sm font-semibold text-slate-800 dark:text-slate-100">${ing.name}</span>
+      <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">${ing.amount} ${ing.unit}</span>
+    </div>`).join('');
+
+  // Nutritional info
+  const nutWrapper = document.getElementById('modal-nutrition-wrapper');
+  const nut = recipe.nutritional_info;
+  if (nut) {
+    const nutGrid = document.getElementById('modal-nutrition');
+    nutGrid.innerHTML = [
+      { label: 'Calorías', value: `${Math.round(nut.calories_kcal)} kcal`, icon: 'fa-fire' },
+      { label: 'Proteínas', value: `${Math.round(nut.protein_g)}g`, icon: 'fa-drumstick-bite' },
+      { label: 'Carbos', value: `${Math.round(nut.carbs_g)}g`, icon: 'fa-bread-slice' },
+      { label: 'Grasas', value: `${Math.round(nut.fat_g)}g`, icon: 'fa-droplet' },
+      { label: 'Fibra', value: `${Math.round(nut.fiber_g)}g`, icon: 'fa-leaf' },
+    ].map(item => `
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-center">
+        <i class="fa-solid ${item.icon} text-brand-500 mb-1 text-sm"></i>
+        <p class="text-xs text-slate-500 dark:text-slate-400">${item.label}</p>
+        <p class="text-sm font-bold text-slate-800 dark:text-slate-100">${item.value}</p>
+      </div>`).join('');
+    nutWrapper.classList.remove('hidden');
+  } else {
+    nutWrapper.classList.add('hidden');
+  }
+
+  // Favorite button
+  const favBtn = document.getElementById('modal-fav-btn');
+  let currentFav = recipe.is_favorite ?? false;
+  _syncModalFavBtn(favBtn, currentFav);
+
+  favBtn.onclick = async () => {
+    currentFav = !currentFav;
+    recipe.is_favorite = currentFav;
+    const rec = loadedRecipes.find(r => r.id === recipe.id);
+    if (rec) rec.is_favorite = currentFav;
+    _syncModalFavBtn(favBtn, currentFav);
+    showToast(
+      currentFav ? '¡Receta guardada en favoritos!' : 'Receta eliminada de favoritos',
+      currentFav ? 'success' : 'error',
+    );
+    await saveRecipe(recipe.id);
+  };
+
+  // Show modal
+  modal.classList.remove('pointer-events-none', 'opacity-0');
+  modal.classList.add('opacity-100');
+  requestAnimationFrame(() => {
+    panel.classList.remove('translate-y-8', 'scale-95');
+    panel.classList.add('translate-y-0', 'scale-100');
+  });
+  document.body.style.overflow = 'hidden';
+}
+
+function closeRecipeDetail() {
+  const modal = document.getElementById('recipe-detail-modal');
+  const panel = document.getElementById('recipe-detail-panel');
+  modal.classList.remove('opacity-100');
+  modal.classList.add('opacity-0');
+  panel.classList.remove('translate-y-0', 'scale-100');
+  panel.classList.add('translate-y-8', 'scale-95');
+  setTimeout(() => {
+    modal.classList.add('pointer-events-none');
+    document.body.style.overflow = '';
+  }, 300);
+}
+
+function _syncModalFavBtn(btn, isFav) {
+  btn.innerHTML = `<i class="${isFav ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart text-slate-400'} text-lg"></i>`;
+  btn.title = isFav ? 'Quitar de favoritos' : 'Guardar en favoritos';
+}
+
 guardPrivate();
 initNavbar('history');
 
-const DIFFICULTY = { easy: 'Fácil', medium: 'Media', hard: 'Avanzado' };
 
 function formatDate(iso) {
   const diff = Math.floor((Date.now() - new Date(iso)) / 86400000);
@@ -24,7 +137,7 @@ function renderHistory(items) {
   if (!grid) return;
 
   grid.innerHTML = items.map(recipe => `
-    <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft transition-all h-full flex flex-col relative dark:bg-slate-900 dark:border-slate-800">
+    <div class="bg-white border border-slate-100 rounded-2xl overflow-hidden group cursor-pointer hover:shadow-soft hover:-translate-y-0.5 transition-all h-full flex flex-col relative dark:bg-slate-900 dark:border-slate-800" data-recipe-id="${recipe.id}">
       <button
         class="delete-btn absolute top-3 left-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-full shadow-sm transition-all text-slate-300 hover:text-red-500 hover:scale-110 dark:shadow-none dark:bg-slate-800/90 dark:text-slate-400 dark:hover:text-red-400"
         data-recipe-id="${recipe.id}"
@@ -47,12 +160,21 @@ function renderHistory(items) {
         <span class="text-xs text-brand-600 font-bold mb-2 block uppercase tracking-wide">${formatDate(recipe.created_at)}</span>
         <h3 class="font-bold text-slate-800 text-lg mb-2 leading-tight dark:text-slate-100">${recipe.title}</h3>
         <div class="flex items-center gap-4 mt-auto pt-4 text-sm text-slate-500 border-t border-slate-50 dark:text-slate-400 dark:border-slate-800">
-          <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> ${DIFFICULTY[recipe.difficulty] ?? recipe.difficulty}</span>
+          <span title="Dificultad"><i class="fa-solid fa-fire-burner"></i> ${DIFF_LABEL[recipe.difficulty] ?? recipe.difficulty}</span>
           <span title="Tiempo de preparación"><i class="fa-solid fa-clock"></i> ${recipe.prep_time_minutes}m</span>
           <span title="Costo"><i class="fa-solid fa-basket-shopping"></i> $${Math.round(recipe.cost_clp / 1000)}k</span>
         </div>
       </div>
     </div>`).join('');
+
+  // Wire card click → open detail modal
+  grid.querySelectorAll('[data-recipe-id]').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.fav-btn') || e.target.closest('.delete-btn')) return;
+      const recipe = loadedRecipes.find(r => r.id === card.dataset.recipeId);
+      if (recipe) openRecipeDetail(recipe);
+    });
+  });
 
   // Wire favorite buttons with API sync
   grid.querySelectorAll('.fav-btn').forEach(btn => {
@@ -203,6 +325,13 @@ function setFilterActive(activeBtn, inactiveBtns) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // Modal close handlers
+  document.getElementById('close-recipe-modal')?.addEventListener('click', closeRecipeDetail);
+  document.getElementById('recipe-detail-backdrop')?.addEventListener('click', closeRecipeDetail);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeRecipeDetail();
+  });
+
   const loadMoreBtn = document.getElementById('load-more-btn');
   const filterAll = document.getElementById('filter-all');
   const filterFavs = document.getElementById('filter-favs');

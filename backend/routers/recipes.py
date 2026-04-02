@@ -10,7 +10,7 @@ from core.database import get_db
 from core.deps import get_current_user
 from core.llm import generate_recipes_from_llm, validate_prompt
 from models.recipe_model import RecipeDB
-from models.user_model import UserDB
+from models.user_model import DailyUsageDB, UserDB
 from schemas.recipe_schemas import (
     Difficulty,
     GenerateRecipeRequest,
@@ -27,6 +27,8 @@ from schemas.recipe_schemas import (
 
 router = APIRouter(prefix="/api/recipes", tags=["Recipes"])
 
+_DAILY_LIMIT = {"free": 2, "premium": 3}
+
 _DEFAULT_PREFS = {
     "dietary_restrictions": [],
     "allergen_exclusions": [],
@@ -42,7 +44,7 @@ def _db_recipe_to_schema(r: RecipeDB) -> Recipe:
             id=ing.get("id", f"ing_{i}"),
             name=ing["name"],
             amount=ing["amount"],
-            unit=IngredientUnit(ing["unit"]),
+            unit=IngredientUnit(ing["unit"]) if ing["unit"] in IngredientUnit._value2member_map_ else IngredientUnit.units,
         )
         for i, ing in enumerate(r.ingredients or [])
     ]
@@ -119,6 +121,27 @@ def _llm_dict_to_recipe_db(raw: dict, user_id: str, now: datetime) -> RecipeDB:
     )
 
 
+def _get_or_create_usage(db: Session, user_id: str, today: str) -> DailyUsageDB:
+    usage = db.query(DailyUsageDB).filter_by(user_id=user_id, date=today).first()
+    if not usage:
+        usage = DailyUsageDB(user_id=user_id, date=today, count=0)
+        db.add(usage)
+        db.flush()
+    return usage
+
+
+@router.get("/quota")
+def get_quota(
+    current_user: UserDB = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Devuelve el uso diario del usuario y su límite según el plan."""
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    usage = db.query(DailyUsageDB).filter_by(user_id=current_user.id, date=today).first()
+    limit = _DAILY_LIMIT.get(current_user.plan, _DAILY_LIMIT["free"])
+    return {"used": usage.count if usage else 0, "limit": limit}
+
+
 @router.post("/validate", response_model=ValidatePromptResponse)
 def validate_recipe_prompt(
     body: ValidatePromptRequest,
@@ -148,6 +171,17 @@ def generate_recipe(
     """
     Genera sugerencias de recetas personalizadas via Gemini LLM y las persiste en DB.
     """
+    # --- Quota check (antes de cualquier llamada a IA) ---
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    usage = _get_or_create_usage(db, current_user.id, today)
+    limit = _DAILY_LIMIT.get(current_user.plan, _DAILY_LIMIT["free"])
+    if usage.count >= limit:
+        upsell = " Actualiza a Plan Pro para obtener más generaciones." if current_user.plan == "free" else ""
+        raise HTTPException(
+            status_code=429,
+            detail=f"Has alcanzado tu límite de {limit} generaciones por hoy.{upsell}",
+        )
+
     prefs = current_user.preferences
     dietary_restrictions = prefs.dietary_restrictions if prefs else _DEFAULT_PREFS["dietary_restrictions"]
     allergen_exclusions  = prefs.allergen_exclusions  if prefs else _DEFAULT_PREFS["allergen_exclusions"]
@@ -165,6 +199,7 @@ def generate_recipe(
             cooking_skill=cooking_skill,
             max_budget_clp=max_budget_clp,
             current_date=current_date,
+            active_filters=body.filters or [],
         )
     except RuntimeError as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
@@ -180,6 +215,9 @@ def generate_recipe(
         db.add(record)
         db.flush()  # get the id assigned before building the schema
         result_recipes.append(_db_recipe_to_schema(record))
+
+    # Increment usage counter
+    usage.count += 1
 
     try:
         db.commit()

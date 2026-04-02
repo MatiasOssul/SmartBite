@@ -30,10 +30,13 @@ import { setSessionState, setToken, clearSession } from '../modules/session.js';
  * @returns {Promise<{data: AuthResponse|null, error: object|null}>}
  */
 export async function login(email, password) {
-  const { data, error } = await apiPost('/auth/login', { email, password });
+  const { data, error } = await apiPost('/auth/login', { email, password }, { skipRedirectOn401: true });
   if (data) {
     setToken(data.token);
     setSessionState('populated');
+  }
+  if (error?.status === 401) {
+    error.message = 'Correo o contraseña incorrectos.';
   }
   return { data, error };
 }
@@ -45,7 +48,7 @@ export async function login(email, password) {
  * @returns {Promise<{data: AuthResponse|null, error: object|null}>}
  */
 export async function register(name, email, password) {
-  const { data, error } = await apiPost('/auth/register', { name, email, password });
+  const { data, error } = await apiPost('/auth/register', { name, email, password }, { skipRedirectOn401: true });
   if (data) {
     setToken(data.token);
     setSessionState('empty');

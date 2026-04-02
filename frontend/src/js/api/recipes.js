@@ -48,6 +48,10 @@ import { apiGet, apiPost, apiDelete } from './client.js';
  * @param {string[]} [filters]
  * @returns {Promise<{data: {recipes: Recipe[]}|null, error: object|null}>}
  */
+export async function validatePrompt(prompt) {
+  return apiPost('/recipes/validate', { prompt });
+}
+
 export async function generateRecipe(prompt, filters = []) {
   return apiPost('/recipes/generate', { prompt, filters });
 }
@@ -56,10 +60,14 @@ export async function generateRecipe(prompt, filters = []) {
  * @param {number} [page]
  * @param {number} [limit]
  * @param {boolean} [favoritesOnly]
+ * @param {string} [ingredient]
+ * @param {boolean} [monthOnly]
  * @returns {Promise<{data: {items: Recipe[], total: number, page: number}|null, error: object|null}>}
  */
-export async function getHistory(page = 1, limit = 12, favoritesOnly = false) {
-  return apiGet(`/recipes/history?page=${page}&limit=${limit}&favorites_only=${favoritesOnly}`);
+export async function getHistory(page = 1, limit = 12, favoritesOnly = false, ingredient = '', monthOnly = false) {
+  const params = new URLSearchParams({ page, limit, favorites_only: favoritesOnly, month_only: monthOnly });
+  if (ingredient) params.set('ingredient', ingredient);
+  return apiGet(`/recipes/history?${params}`);
 }
 
 /**

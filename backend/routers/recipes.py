@@ -1,13 +1,14 @@
 import uuid
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import cast, String
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 
 from core.database import get_db
 from core.deps import get_current_user
-from core.llm import generate_recipes_from_llm
+from core.llm import generate_recipes_from_llm, validate_prompt
 from models.recipe_model import RecipeDB
 from models.user_model import UserDB
 from schemas.recipe_schemas import (
@@ -20,6 +21,8 @@ from schemas.recipe_schemas import (
     Recipe,
     RecipeHistoryResponse,
     SingleRecipeResponse,
+    ValidatePromptRequest,
+    ValidatePromptResponse,
 )
 
 router = APIRouter(prefix="/api/recipes", tags=["Recipes"])
@@ -116,6 +119,26 @@ def _llm_dict_to_recipe_db(raw: dict, user_id: str, now: datetime) -> RecipeDB:
     )
 
 
+@router.post("/validate", response_model=ValidatePromptResponse)
+def validate_recipe_prompt(
+    body: ValidatePromptRequest,
+    current_user: UserDB = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> ValidatePromptResponse:
+    """Valida si el prompt del usuario es apropiado para un asistente de recetas."""
+    if not body.prompt.strip():
+        return ValidatePromptResponse(is_valid=False, reason="Escribe algo antes de generar recetas.")
+
+    try:
+        result = validate_prompt(body.prompt)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except Exception:
+        return ValidatePromptResponse(is_valid=True, reason=None)
+
+    return ValidatePromptResponse(is_valid=result["is_valid"], reason=result.get("reason"))
+
+
 @router.post("/generate", response_model=GenerateRecipeResponse)
 def generate_recipe(
     body: GenerateRecipeRequest,
@@ -172,14 +195,24 @@ def get_history(
     page: int = 1,
     limit: int = 12,
     favorites_only: bool = False,
+    month_only: bool = False,
+    ingredient: str = Query(default="", alias="ingredient"),
     current_user: UserDB = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> RecipeHistoryResponse:
     """Devuelve el historial de recetas guardadas por el usuario autenticado."""
     query = db.query(RecipeDB).filter(RecipeDB.user_id == current_user.id)
-    
+
     if favorites_only:
         query = query.filter(RecipeDB.is_favorite == True)
+
+    if month_only:
+        now = datetime.now(timezone.utc)
+        month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        query = query.filter(RecipeDB.created_at >= month_start)
+
+    if ingredient:
+        query = query.filter(cast(RecipeDB.ingredients, String).ilike(f"%{ingredient}%"))
 
     total = query.count()
     start = (page - 1) * limit

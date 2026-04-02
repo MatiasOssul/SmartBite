@@ -27,7 +27,7 @@
 
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-5 sm:mt-8 pt-4 pb-24 lg:pt-8 w-full">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-5 sm:mt-8 pt-4 pb-8 lg:pt-8 w-full flex-grow">
 
         <!-- Hero & Input Section -->
         <section class="max-w-3xl mx-auto text-center mb-10 text-balance fade-in">
@@ -38,9 +38,9 @@
                 <textarea
                     id="prompt-input"
                     class="w-full h-32 p-4 text-slate-700 bg-transparent resize-none outline-none placeholder:text-slate-400 text-lg leading-relaxed dark:text-slate-200"
-                    placeholder='Ej: "Tengo 3 pechugas de pollo, poco tiempo y mi presupuesto es de $15.000. Somos 3 personas y uno es celíaco."'
+                    placeholder='Ej: "Tengo 3 pechugas de pollo... "'
                 ></textarea>
-                
+                <p id="prompt-error" class="hidden text-sm text-red-500 font-medium text-left px-4 pb-2 flex items-center gap-2"></p>
                 <div class="flex flex-wrap items-center justify-between p-2 border-t border-slate-50 mt-2 gap-4 dark:border-slate-800">
                     <!-- Quick Filters -->
                     <div class="flex flex-wrap items-center gap-2">
@@ -65,7 +65,7 @@
             </div>
         </section>
 
-        <!-- Empty State (shown for new users — hidden by main.js for returning users) -->
+        <!-- Empty State (shown only for truly new users) -->
         <div id="empty-state" class="hidden fade-in py-16 flex flex-col items-center justify-center text-center mt-4">
             <div class="w-32 h-32 bg-brand-50 rounded-[40px] flex items-center justify-center mb-8 shadow-inner border border-brand-100 rotate-3 hover:rotate-0 transition-transform duration-500 dark:bg-brand-900/30 dark:shadow-none">
                 <i class="fa-solid fa-robot text-6xl text-brand-400"></i>
@@ -229,10 +229,37 @@
         </div>
 
         </div> <!-- End detailed view -->
+        <!-- Persistent History Preview at the bottom -->
+        <div id="bottom-history-view" class="hidden fade-in bg-gradient-to-br from-brand-600 to-brand-800 mt-12 py-6 px-6 sm:px-8 rounded-3xl text-white shadow-xl relative overflow-hidden mb-0">
+            <div class="absolute -right-16 -top-16 text-brand-500 opacity-20 transform rotate-12 pointer-events-none">
+                <i class="fa-solid fa-clock-rotate-left text-9xl"></i>
+            </div>
+            
+            <div class="relative z-10 flex items-center justify-between mb-4">
+                <div class="space-y-0.5">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left"></i> De vuelta a tu cocina
+                    </h3>
+                    <p class="text-brand-100 text-xs">Un vistazo rápido a lo último que has generado.</p>
+                </div>
+                <a href="/history.html" class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur border border-white/10 text-white rounded-lg font-bold text-sm transition-all shadow-sm">
+                    Ver todo
+                </a>
+            </div>
+            <div id="recent-history-grid" class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Tiny cards injected by JS -->
+            </div>
+            <div class="relative z-10 mt-4 text-center sm:hidden">
+                <a href="/history.html" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur border border-white/10 text-white rounded-xl font-bold transition-all shadow-sm w-full justify-center">
+                    Ver todo
+                </a>
+            </div>
+        </div>
+
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-100 mt-16 pt-10 pb-8 dark:bg-slate-900 dark:border-slate-800">
+    <!-- Support Chat Widget JS -->
+    <footer class="bg-white border-t border-slate-100 mt-4 pt-10 pb-8 dark:bg-slate-900 dark:border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
             <div class="flex items-center gap-2 text-slate-900 font-bold text-lg dark:text-white">
                 <i class="fa-solid fa-leaf text-brand-600"></i> SmartBite <span class="text-slate-400 font-normal text-sm ml-2 dark:text-slate-500">© 2026</span>

@@ -84,6 +84,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       renderPaymentMethods(profile.payment_methods);
+
+      // Plan section
+      const isPro = profile.user.plan === 'premium';
+      document.getElementById(isPro ? 'plan-pro' : 'plan-free')?.classList.remove('hidden');
     }
 
     // History section
@@ -109,6 +113,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       realProfile.classList.remove('hidden');
     }
   }
+
+  // ── Cancel plan ──────────────────────────────────────────────────────────────
+  document.getElementById('cancel-plan-btn')?.addEventListener('click', () => {
+    const confirmed = confirm(
+      '¿Estás seguro de que quieres cancelar tu suscripción Bite+ Pro?\n\nSeguirás teniendo acceso hasta el final del período ya pagado.'
+    );
+    if (!confirmed) return;
+    showToast('Suscripción cancelada. Tu acceso Pro se mantendrá hasta el fin del período actual.', 'error');
+    // Actualizar UI sin recargar
+    document.getElementById('plan-pro')?.classList.add('hidden');
+    document.getElementById('plan-free')?.classList.remove('hidden');
+  });
 
   // ── Avatar upload ────────────────────────────────────────────────────────────
   const avatarBtn       = document.getElementById('avatar-btn');

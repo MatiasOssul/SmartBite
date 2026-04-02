@@ -73,3 +73,12 @@ class RecipeHistoryResponse(BaseModel):
 
 class SingleRecipeResponse(BaseModel):
     recipe: Recipe
+
+
+class ValidatePromptRequest(BaseModel):
+    prompt: str
+
+
+class ValidatePromptResponse(BaseModel):
+    is_valid: bool
+    reason: Optional[str] = None

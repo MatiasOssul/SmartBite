@@ -123,6 +123,8 @@ let currentPage = 1;
 const LIMIT = 8;
 let loadedRecipes = [];
 let currentFilterFavorites = false;
+let currentFilterMonth = false;
+let currentIngredientSearch = '';
 
 async function loadPage(page, append = false) {
   const skeletonHistory = document.getElementById('skeleton-history');
@@ -137,7 +139,7 @@ async function loadPage(page, append = false) {
     loadMoreWrapper?.classList.add('hidden');
   }
 
-  const { data, error } = await getHistory(page, LIMIT, currentFilterFavorites);
+  const { data, error } = await getHistory(page, LIMIT, currentFilterFavorites, currentIngredientSearch, currentFilterMonth);
   const isEmpty = isNewUser() || error || !data?.items?.length;
 
   if (!append) skeletonHistory?.classList.add('hidden');
@@ -147,8 +149,19 @@ async function loadPage(page, append = false) {
     if (emptyHistory) {
       const h3 = emptyHistory.querySelector('h3');
       const p = emptyHistory.querySelector('p');
-      if (h3) h3.textContent = currentFilterFavorites ? 'No tienes recetas favoritas' : 'Aún no hay recetas aquí';
-      if (p) p.textContent = currentFilterFavorites ? 'Marca algunas recetas con el corazón para verlas agrupadas aquí.' : 'Cuando generes tu primer menú y decidas cocinar algo, aparecerá mágicamente en este historial.';
+      if (currentIngredientSearch) {
+        if (h3) h3.textContent = 'Sin resultados para ese ingrediente';
+        if (p) p.textContent = `No encontramos recetas que incluyan "${currentIngredientSearch}". Intenta con otro ingrediente.`;
+      } else if (currentFilterFavorites) {
+        if (h3) h3.textContent = 'No tienes recetas favoritas';
+        if (p) p.textContent = 'Marca algunas recetas con el corazón para verlas agrupadas aquí.';
+      } else if (currentFilterMonth) {
+        if (h3) h3.textContent = 'Sin recetas este mes';
+        if (p) p.textContent = 'Todavía no has generado ninguna receta este mes. ¡Es un buen momento para planear algo rico!';
+      } else {
+        if (h3) h3.textContent = 'Aún no hay recetas aquí';
+        if (p) p.textContent = 'Cuando generes tu primer menú y decidas cocinar algo, aparecerá mágicamente en este historial.';
+      }
     }
   } else if (!error && data) {
     if (append) {
@@ -193,9 +206,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   const loadMoreBtn = document.getElementById('load-more-btn');
   const filterAll = document.getElementById('filter-all');
   const filterFavs = document.getElementById('filter-favs');
-  const filterMonth = document.getElementById('filter-month'); // Opcional, lo dejamos inactivo 
+  const filterMonth = document.getElementById('filter-month'); // Opcional, lo dejamos inactivo
+  const searchInput = document.getElementById('search-ingredient');
 
   await loadPage(1, false);
+
+  let searchDebounce;
+  searchInput?.addEventListener('input', () => {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(async () => {
+      currentIngredientSearch = searchInput.value.trim();
+      currentPage = 1;
+      await loadPage(1, false);
+    }, 400);
+  });
 
   loadMoreBtn?.addEventListener('click', async () => {
     const originalText = loadMoreBtn.innerHTML;
@@ -214,8 +238,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   filterAll?.addEventListener('click', async () => {
-    if (!currentFilterFavorites) return;
+    if (!currentFilterFavorites && !currentFilterMonth) return;
     currentFilterFavorites = false;
+    currentFilterMonth = false;
     currentPage = 1;
     setFilterActive(filterAll, [filterFavs, filterMonth]);
     await loadPage(1, false);
@@ -224,8 +249,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   filterFavs?.addEventListener('click', async () => {
     if (currentFilterFavorites) return;
     currentFilterFavorites = true;
+    currentFilterMonth = false;
     currentPage = 1;
     setFilterActive(filterFavs, [filterAll, filterMonth]);
+    await loadPage(1, false);
+  });
+
+  filterMonth?.addEventListener('click', async () => {
+    if (currentFilterMonth) return;
+    currentFilterMonth = true;
+    currentFilterFavorites = false;
+    currentPage = 1;
+    setFilterActive(filterMonth, [filterAll, filterFavs]);
     await loadPage(1, false);
   });
 });

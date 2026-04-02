@@ -3,7 +3,7 @@
 import { guardPrivate } from '@js/modules/guard.js';
 import { isNewUser, setSessionState } from '@js/modules/session.js';
 import { initNavbar } from '@js/modules/navbar.js';
-import { generateRecipe, saveRecipe } from '@js/api/recipes.js';
+import { validatePrompt, generateRecipe, saveRecipe, getHistory } from '@js/api/recipes.js';
 import { setButtonLoading, showToast } from '@js/modules/toast.js';
 import { toggleFavorite, isFavorite } from '@js/modules/store.js';
 
@@ -22,15 +22,50 @@ document.addEventListener('DOMContentLoaded', () => {
   const suggestionsView = document.getElementById('recipe-suggestions');
   const detailsView     = document.getElementById('recipe-details');
   const generateBtn     = document.getElementById('generate-recipe-btn');
+  const bottomHistoryView = document.getElementById('bottom-history-view');
 
   // Set initial view based on session state
   if (isNewUser()) {
     emptyState?.classList.remove('hidden');
-    suggestionsView?.classList.add('hidden');
+    bottomHistoryView?.classList.add('hidden');
   } else {
     emptyState?.classList.add('hidden');
-    suggestionsView?.classList.remove('hidden');
+    bottomHistoryView?.classList.remove('hidden');
+    loadBottomHistory();
   }
+
+  async function loadBottomHistory() {
+    const { data } = await getHistory(1, 3);
+    if (!data) return;
+
+    const grid = document.getElementById('recent-history-grid');
+    if (grid && data.items && data.items.length > 0) {
+      grid.innerHTML = data.items.map(recipe => `
+        <a href="/history.html" class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-soft border border-slate-200 hover:border-brand-300 transition-all group flex flex-col h-28 block dark:bg-slate-900 dark:border-slate-700 dark:shadow-none">
+            <div class="h-full w-full overflow-hidden shrink-0 relative">
+                <img src="${recipe.image_url}" alt="${recipe.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-4">
+                    <h4 class="text-white font-bold leading-tight line-clamp-2 drop-shadow-md text-sm">${recipe.title}</h4>
+                </div>
+            </div>
+        </a>
+      `).join('');
+    } else if (grid) {
+      grid.innerHTML = `<p class="text-sm text-slate-500 col-span-full">Aún no hay recetas en tu historial.</p>`;
+    }
+  }
+
+  // Prompt error helpers
+  const promptErrorEl = document.getElementById('prompt-error');
+  const showPromptError = (msg) => {
+    promptErrorEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${msg}`;
+    promptErrorEl.classList.remove('hidden');
+  };
+  const clearPromptError = () => {
+    promptErrorEl.classList.add('hidden');
+    promptErrorEl.innerHTML = '';
+  };
+  document.getElementById('prompt-input')?.addEventListener('input', clearPromptError);
 
   // Filter pill toggle
   document.querySelectorAll('[data-filter-btn]').forEach(btn => {
@@ -46,15 +81,29 @@ document.addEventListener('DOMContentLoaded', () => {
     ?.addEventListener('click', hideRecipeDetails);
 
   async function handleGenerate() {
-    setButtonLoading(generateBtn, true, 'Generando...');
-    emptyState?.classList.add('hidden');
-    detailsView?.classList.add('hidden');
-    suggestionsView?.classList.add('hidden');
-    skeletonView?.classList.remove('hidden');
+    clearPromptError();
+
+    // Fase 1 — Validación
+    setButtonLoading(generateBtn, true, 'Verificando...');
 
     const prompt = document.getElementById('prompt-input')?.value?.trim() ?? '';
     const activeFilters = [...document.querySelectorAll('[data-filter-btn].bg-brand-50')]
       .map(btn => btn.textContent.trim());
+
+    const { data: vData, error: vError } = await validatePrompt(prompt);
+
+    if (!vError && vData && !vData.is_valid) {
+      setButtonLoading(generateBtn, false);
+      showPromptError(vData.reason ?? 'Tu prompt no es válido para una app de recetas. Describe ingredientes, platos o tus ganas de cocinar.');
+      return;
+    }
+
+    // Fase 2 — Generación
+    generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Generando...';
+    emptyState?.classList.add('hidden');
+    detailsView?.classList.add('hidden');
+    suggestionsView?.classList.add('hidden');
+    skeletonView?.classList.remove('hidden');
 
     const { data, error } = await generateRecipe(prompt || null, activeFilters);
 

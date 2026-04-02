@@ -69,16 +69,24 @@ export function initNavbar(activePage) {
         document.getElementById('navbar-user-name').innerText = user.name || 'Usuario';
         document.getElementById('navbar-user-email').innerText = user.email || '';
 
+        const isPro = user.plan === 'premium';
+        const biteplusBadge = document.getElementById('navbar-biteplus-badge');
+        const biteplusLink  = document.getElementById('navbar-biteplus-link');
+        if (biteplusBadge && isPro) {
+          biteplusBadge.textContent = 'Pro';
+          biteplusBadge.className = 'text-[10px] bg-brand-100 text-brand-700 px-2 py-0.5 rounded-full';
+          biteplusLink.classList.remove('text-amber-600', 'hover:bg-amber-50', 'hover:text-amber-700');
+          biteplusLink.classList.add('text-brand-600', 'hover:bg-brand-50', 'hover:text-brand-700');
+        }
+
         const avatarImg = document.getElementById('navbar-avatar-img');
         const avatarIcon = document.getElementById('navbar-avatar-icon');
 
-        if (user.avatar_url && avatarImg) {
-          avatarImg.src = user.avatar_url;
+        if (avatarImg) {
+          avatarImg.src = user.avatar_url 
+             || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name || 'User') + '&background=16a34a&color=fff&size=50';
           avatarImg.classList.remove('hidden');
           if (avatarIcon) avatarIcon.classList.add('hidden');
-        } else {
-          if (avatarImg) avatarImg.classList.add('hidden');
-          if (avatarIcon) avatarIcon.classList.remove('hidden');
         }
       }
     });

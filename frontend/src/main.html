@@ -61,6 +61,7 @@
                     </button>
                 </div>
             </div>
+
         </section>
 
         <!-- Empty State (shown only for truly new users) -->
@@ -73,6 +74,13 @@
             <div class="flex items-center gap-3 text-sm font-bold text-brand-600 bg-brand-50 px-6 py-3 rounded-full dark:bg-brand-900/30">
                 <i class="fa-solid fa-arrow-up animate-bounce"></i> Escribe tu primer prompt arriba
             </div>
+        </div>
+
+        <!-- Generating indicator (shown while AI is processing) -->
+        <div id="generating-indicator" class="hidden flex justify-center mb-6">
+            <span class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-500 rounded-full font-medium text-sm dark:bg-slate-800 dark:text-slate-400">
+                <i class="fa-solid fa-microchip animate-spin text-brand-500"></i> Inteligencia Artificial procesando solicitud...
+            </span>
         </div>
 
         <!-- Skeleton Loader (Hidden initially) -->
@@ -117,11 +125,6 @@
                 </div>
             </div>
             
-            <div class="text-center mt-4 pb-8">
-                <span class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-500 rounded-full font-medium text-sm dark:bg-slate-800 dark:text-slate-400">
-                    <i class="fa-solid fa-microchip animate-spin text-brand-500"></i> Inteligencia Artificial procesando solicitud...
-                </span>
-            </div>
         </div>
 
         <!-- Results Dashboard (Master-Detail Layout) -->

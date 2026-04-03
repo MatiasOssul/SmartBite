@@ -68,6 +68,14 @@ export function apiPut(path, body) {
   }));
 }
 
+export function apiPatch(path, body) {
+  return executeFetch(fetch(BASE_URL + path, {
+    method: 'PATCH',
+    headers: authHeaders(),
+    body: body !== undefined ? JSON.stringify(body) : undefined,
+  }));
+}
+
 export function apiDelete(path) {
   return executeFetch(fetch(BASE_URL + path, {
     method: 'DELETE',

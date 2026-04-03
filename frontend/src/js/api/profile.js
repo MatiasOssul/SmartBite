@@ -7,7 +7,7 @@
 //   POST   /api/profile/cards          → { card: PaymentMethod }
 //   DELETE /api/profile/cards/:id      → 204
 
-import { apiGet, apiPost, apiPut, apiDelete } from './client.js';
+import { apiGet, apiPost, apiPut, apiPatch, apiDelete } from './client.js';
 import { getToken } from '@js/modules/session.js';
 
 /**
@@ -80,6 +80,14 @@ export async function addPaymentCard(cardData) {
  */
 export async function deletePaymentCard(cardId) {
   return apiDelete(`/profile/cards/${cardId}`);
+}
+
+/**
+ * @param {string} cardId
+ * @returns {Promise<{data: {payment_methods: PaymentMethod[]}|null, error: object|null}>}
+ */
+export async function setDefaultPaymentCard(cardId) {
+  return apiPatch(`/profile/cards/${cardId}/default`);
 }
 
 /**

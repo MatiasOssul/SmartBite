@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import List, Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class CookingSkill(str, Enum):
@@ -56,7 +56,7 @@ class PaymentMethod(BaseModel):
 # --- Request bodies ---
 
 class UpdateProfileRequest(BaseModel):
-    name: Optional[str] = None
+    name: Optional[str] = Field(default=None, min_length=1, max_length=100)
     avatar_url: Optional[str] = None
     plan: Optional[Literal["free", "premium"]] = None
 
@@ -94,3 +94,7 @@ class UpdatePreferencesResponse(BaseModel):
 
 class AddPaymentCardResponse(BaseModel):
     card: PaymentMethod
+
+
+class SetDefaultCardResponse(BaseModel):
+    payment_methods: List[PaymentMethod]

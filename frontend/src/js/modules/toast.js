@@ -14,7 +14,7 @@ export function setButtonLoading(btn, isLoading, loadingText = 'Cargando...') {
   if (!btn) return;
   if (isLoading) {
     btn.dataset.originalHtml = btn.innerHTML;
-    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i>${loadingText}`;
+    btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin mr-2"></i>${loadingText}`;
     btn.disabled = true;
     btn.classList.add('opacity-80', 'cursor-not-allowed');
   } else {

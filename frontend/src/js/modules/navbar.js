@@ -80,14 +80,22 @@ export function initNavbar(activePage) {
           biteplusLink.classList.add('text-brand-600', 'hover:bg-brand-50', 'hover:text-brand-700');
         }
 
-        const avatarImg = document.getElementById('navbar-avatar-img');
+        const avatarImg  = document.getElementById('navbar-avatar-img');
         const avatarIcon = document.getElementById('navbar-avatar-icon');
 
         if (avatarImg) {
-          avatarImg.src = user.avatar_url 
-             || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name || 'User') + '&background=16a34a&color=fff&size=50';
-          avatarImg.classList.remove('hidden');
-          if (avatarIcon) avatarIcon.classList.add('hidden');
+          const src = user.avatar_url
+            || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name || 'U') + '&background=16a34a&color=fff&size=50';
+
+          avatarImg.onload = () => {
+            avatarImg.classList.remove('hidden');
+            avatarIcon?.classList.add('hidden');
+          };
+          avatarImg.onerror = () => {
+            avatarImg.classList.add('hidden');
+            avatarIcon?.classList.remove('hidden');
+          };
+          avatarImg.src = src;
         }
       }
     });

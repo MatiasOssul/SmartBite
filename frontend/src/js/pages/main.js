@@ -17,10 +17,11 @@ function formatCLP(n) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const emptyState      = document.getElementById('empty-state');
-  const skeletonView    = document.getElementById('recipe-skeleton');
-  const suggestionsView = document.getElementById('recipe-suggestions');
-  const detailsView     = document.getElementById('recipe-details');
+  const emptyState         = document.getElementById('empty-state');
+  const skeletonView       = document.getElementById('recipe-skeleton');
+  const suggestionsView    = document.getElementById('recipe-suggestions');
+  const detailsView        = document.getElementById('recipe-details');
+  const generatingIndicator = document.getElementById('generating-indicator');
   const generateBtn     = document.getElementById('generate-recipe-btn');
   const bottomHistoryView = document.getElementById('bottom-history-view');
 
@@ -108,15 +109,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Fase 2 — Generación
-    generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Generando...';
+    generateBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-2"></i>Generando...';
     emptyState?.classList.add('hidden');
     detailsView?.classList.add('hidden');
     suggestionsView?.classList.add('hidden');
     skeletonView?.classList.remove('hidden');
+    generatingIndicator?.classList.remove('hidden');
 
     const { data, error } = await generateRecipe(prompt || null, activeFilters);
 
     skeletonView?.classList.add('hidden');
+    generatingIndicator?.classList.add('hidden');
     setButtonLoading(generateBtn, false);
 
     if (error) {

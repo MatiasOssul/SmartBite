@@ -21,6 +21,7 @@ from schemas.profile_schemas import (
     PaymentMethod,
     Preferences,
     ProfileResponse,
+    SetDefaultCardResponse,
     UpdatePreferencesRequest,
     UpdatePreferencesResponse,
     UpdateProfileRequest,
@@ -137,6 +138,38 @@ def add_payment_card(
         raise HTTPException(status_code=500, detail="Error al agregar tarjeta") from exc
 
     return AddPaymentCardResponse(card=PaymentMethod.model_validate(card_db))
+
+
+@router.patch("/cards/{card_id}/default", response_model=SetDefaultCardResponse)
+def set_default_payment_card(
+    card_id: str,
+    current_user: UserDB = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> SetDefaultCardResponse:
+    card = db.query(PaymentMethodDB).filter(
+        PaymentMethodDB.id == card_id,
+        PaymentMethodDB.user_id == current_user.id,
+    ).first()
+
+    if not card:
+        raise HTTPException(status_code=404, detail="Tarjeta no encontrada")
+
+    # Desmarcar todas y marcar solo la seleccionada
+    db.query(PaymentMethodDB).filter(
+        PaymentMethodDB.user_id == current_user.id
+    ).update({"is_default": False})
+    card.is_default = True
+
+    try:
+        db.commit()
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Error al actualizar tarjeta predeterminada") from exc
+
+    updated = db.query(PaymentMethodDB).filter(
+        PaymentMethodDB.user_id == current_user.id
+    ).all()
+    return SetDefaultCardResponse(payment_methods=[PaymentMethod.model_validate(c) for c in updated])
 
 
 @router.delete("/cards/{card_id}", status_code=204)

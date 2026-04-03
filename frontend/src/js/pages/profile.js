@@ -6,7 +6,7 @@ import { initDarkModeToggle } from '@js/modules/theme.js';
 import { showToast, setButtonLoading } from '@js/modules/toast.js';
 import { initModal } from '@js/modules/modals.js';
 
-import { getProfile, updateProfile, updatePreferences, uploadAvatar, addPaymentCard } from '@js/api/profile.js';
+import { getProfile, updateProfile, updatePreferences, uploadAvatar, addPaymentCard, deletePaymentCard, setDefaultPaymentCard } from '@js/api/profile.js';
 import { getHistory } from '@js/api/recipes.js';
 import { changePassword } from '@js/api/auth.js';
 
@@ -16,6 +16,9 @@ initNavbar('profile');
 document.addEventListener('DOMContentLoaded', async () => {
   // Dark mode toggle
   initDarkModeToggle('dark-mode-toggle');
+
+  // Card actions (event delegation — attach once)
+  setupCardActions();
 
   // Budget slider — live label update
   const slider  = document.getElementById('pref-budget-slider');
@@ -33,6 +36,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     openBtnIds:  ['add-card-btn'],
     closeBtnIds: ['close-modal-btn', 'cancel-modal-btn'],
     backdropId:  'modal-backdrop',
+  });
+
+  // CVC: solo dígitos en tiempo real
+  document.getElementById('card-cvc')?.addEventListener('input', (e) => {
+    e.target.value = e.target.value.replace(/\D/g, '');
   });
 
   // Change Password modal
@@ -218,7 +226,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       clearError();
 
       if (!currentPwd || !newPwd || !confirmPwd) { showError('Completa todos los campos.'); return; }
-      if (newPwd.length < 6) { showError('La nueva contraseña debe tener al menos 6 caracteres.'); return; }
+      if (newPwd.length < 8) { showError('La nueva contraseña debe tener al menos 8 caracteres.'); return; }
       if (newPwd !== confirmPwd) { showError('Las contraseñas nuevas no coinciden.'); return; }
 
       setButtonLoading(submitPwdBtn, true, 'Actualizando...');
@@ -257,11 +265,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       const expVal = (expEl?.value || '').trim();
       const cvcVal = (cvcEl?.value || '').trim();
 
-      if (!nameEl?.value || !numVal || !expVal || !cvcVal) {
+      if (!nameEl?.value.trim() || !numVal || !expVal || !cvcVal) {
         return showError('Por favor, completa todos los campos.');
       }
-      if (numVal.length < 15 || numVal.length > 19 || !/^\d+$/.test(numVal)) {
-        return showError('El número de tarjeta no es válido.');
+      if (!/^\d{16}$/.test(numVal)) {
+        return showError('El número de tarjeta debe tener exactamente 16 dígitos.');
+      }
+      if (!/^\d{3}$/.test(cvcVal)) {
+        return showError('El CVC debe tener exactamente 3 dígitos numéricos.');
       }
       if (!/^\d{2}\/\d{2}$/.test(expVal)) {
         return showError('La fecha de vencimiento debe tener el formato MM/AA.');
@@ -271,6 +282,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       const year = parseInt('20' + yy, 10);
       if (month < 1 || month > 12) {
         return showError('Mes inválido.');
+      }
+      const now = new Date();
+      const expDate = new Date(year, month, 1); // primer día del mes siguiente a la expiración
+      if (expDate <= new Date(now.getFullYear(), now.getMonth(), 1)) {
+        return showError('La tarjeta está vencida.');
       }
 
       // Infer brand from first digit
@@ -310,10 +326,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // ── Render helpers ────────────────────────────────────────────────────────────
 
+let _paymentMethods = [];
+
 function renderPaymentMethods(methods) {
   const grid = document.getElementById('payment-methods-grid');
   if (!grid) return;
-  if (!methods || methods.length === 0) {
+
+  _paymentMethods = methods || [];
+
+  if (_paymentMethods.length === 0) {
     grid.innerHTML = '<p class="text-sm text-slate-500 col-span-2">No tienes métodos de pago guardados.</p>';
     return;
   }
@@ -324,24 +345,64 @@ function renderPaymentMethods(methods) {
     amex:       '<i class="fa-brands fa-cc-amex text-2xl text-cyan-600"></i>',
   };
 
-  grid.innerHTML = methods.map(pm => `
-    <div class="border ${pm.is_default ? 'border-brand-200 bg-brand-50/50' : 'border-slate-200 bg-white hover:border-slate-300'} p-4 rounded-2xl flex items-start justify-between relative overflow-hidden group transition-colors dark:border-slate-700 dark:bg-slate-900">
+  grid.innerHTML = _paymentMethods.map(pm => `
+    <div class="border ${pm.is_default ? 'border-brand-200 bg-brand-50/50' : 'border-slate-200 bg-white hover:border-slate-300'} p-4 rounded-2xl flex flex-col gap-2 group transition-colors dark:border-slate-700 dark:bg-slate-900">
       <div class="flex items-center gap-4">
-        <div class="w-12 h-8 bg-white rounded border border-slate-200 flex items-center justify-center p-1 dark:bg-slate-900 dark:border-slate-700">
+        <div class="w-12 h-8 flex-shrink-0 bg-white rounded border border-slate-200 flex items-center justify-center p-1 dark:bg-slate-900 dark:border-slate-700">
           ${BRAND_ICONS[pm.brand] || '<i class="fa-regular fa-credit-card text-2xl text-slate-500"></i>'}
         </div>
-        <div>
+        <div class="flex-1 min-w-0">
           <p class="font-semibold text-slate-800 dark:text-slate-100 capitalize">${pm.brand} terminada en ${pm.last_four}</p>
           <p class="text-xs text-slate-500 dark:text-slate-400">Expira ${pm.exp_month}/${String(pm.exp_year).slice(-2)}</p>
         </div>
+        <div class="flex-shrink-0 flex items-center gap-2">
+          ${pm.is_default ? '<span class="bg-brand-100 text-brand-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">Predeterminada</span>' : ''}
+          <button data-action="delete" data-card-id="${pm.id}" class="opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-red-500 dark:text-slate-500"><i class="fa-solid fa-trash pointer-events-none"></i></button>
+        </div>
       </div>
-      ${pm.is_default ? '<span class="bg-brand-100 text-brand-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">Predeterminada</span>' : ''}
-      <div class="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-3">
-        ${!pm.is_default ? '<button class="text-xs font-semibold text-slate-600 hover:text-brand-600 dark:text-slate-300">Hacer predeterminada</button>' : ''}
-        <button class="text-slate-400 hover:text-red-500 transition-colors dark:text-slate-500"><i class="fa-solid fa-trash"></i></button>
-      </div>
+      ${!pm.is_default ? `
+      <div class="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+        <button data-action="set-default" data-card-id="${pm.id}" class="text-xs font-semibold text-slate-500 hover:text-brand-600 dark:text-slate-400">Hacer predeterminada</button>
+      </div>` : ''}
     </div>
   `).join('');
+}
+
+function setupCardActions() {
+  const grid = document.getElementById('payment-methods-grid');
+  if (!grid) return;
+
+  grid.addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+
+    const cardId = btn.dataset.cardId;
+    const action = btn.dataset.action;
+
+    if (action === 'delete') {
+      btn.disabled = true;
+      const { error } = await deletePaymentCard(cardId);
+      if (error) {
+        btn.disabled = false;
+        showToast(error.detail ?? 'Error al eliminar la tarjeta', 'error');
+        return;
+      }
+      renderPaymentMethods(_paymentMethods.filter(pm => pm.id !== cardId));
+      showToast('Tarjeta eliminada correctamente', 'success');
+    }
+
+    if (action === 'set-default') {
+      btn.disabled = true;
+      const { data, error } = await setDefaultPaymentCard(cardId);
+      if (error) {
+        btn.disabled = false;
+        showToast(error.detail ?? error.message ?? 'Error al actualizar tarjeta predeterminada', 'error');
+        return;
+      }
+      renderPaymentMethods(data.payment_methods);
+      showToast('Tarjeta predeterminada actualizada', 'success');
+    }
+  });
 }
 
 function renderHistoryShort(items, container) {
